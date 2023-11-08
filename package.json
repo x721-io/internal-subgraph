@@ -1,0 +1,15 @@
+{
+  "name": "protocol",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ rarible/protocol",
+    "create-local": "graph create --node http://localhost:8020/ u2u/sfc-network",
+    "remove-local": "graph remove --node http://localhost:8020/ u2u/sfc-network",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 u2u/sfc-network"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-ts": "0.31.0"
+  }
+}

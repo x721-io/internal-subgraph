@@ -1,0 +1,49 @@
+specVersion: 0.0.4
+description: Tracker of U2U marketplace
+repository: https://github.com/rariblecom/subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: ERC721Factory
+    network: {{network}}
+    source:
+      address: {{address}}
+      abi: ERC721Factory
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/CollectionState.ts
+      entities:
+        - CollectionStat
+      abis:
+        - name: ERC721Factory
+          file: ./abis/ERC721Factory.json
+      eventHandlers:
+        - event: Create721RaribleProxy(address)
+          handler: handle721Proxy
+        - event: Create721RaribleUserProxy(address)
+          handler: handle1155UserProxy
+templates:
+- kind: ethereum/contract
+  name: ERC721Proxy
+  network: {{network}}
+  source:
+    abi: ERC721Proxy
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.6
+    language: wasm/assemblyscript
+    file: ./src/mapping/Item.ts
+    entities:
+      - Item
+  abis:
+    - name: ERC721Proxy
+      file: ./abis/ERC721Proxy.json
+  eventHandlers:
+    - event: Transfer(address,address,uint256)
+      handler: handleTransfer
+    # - event: Buy(indexed address,indexed uint256,address,address,uint256,uint256)
+    #   handler: handleBuy

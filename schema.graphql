@@ -1,0 +1,204 @@
+enum DealType {
+  Order
+  Bid
+}
+
+enum ContractType {
+  ExchangeV2
+  ERC721Factory
+  ERC721Proxy
+  ERC1155Factory
+  ERC1155Proxy
+  NFTTransferProxies
+  Royalties
+}
+
+type Block @entity {
+  id: ID!
+  number: BigInt
+  time: BigInt
+}
+
+enum ActionType {
+  BURN
+}
+
+enum ActionState {
+  PENDING
+  EXECUTED
+}
+
+type Action @entity {
+  id: ID!
+  type: ActionType!
+  token: String!
+  tokenId: String! 
+  createdAt: String!
+  lastUpdatedAt: String!
+  state: ActionState!
+  actionAt: String!
+}
+
+type BurnItemAction @entity {
+  id: ID!
+  type: ActionType!
+  token: String!
+  tokenId: String!
+  createdAt: String!
+  lastUpdatedAt: String!
+  state: ActionState!
+  actionAt: String!
+}
+
+type Part {
+  account: String!
+  value: Int!
+}
+
+
+union ItemEvent = ItemMintEvent | ItemBurnEvent | ItemTransferEvent | ItemCreatorsEvent | LazyItemMintEvent | LazyItemBurnEvent
+
+type ItemMintEvent {
+  supply: String
+  owner: String
+  entityId: String
+  log: String
+}
+
+type ItemBurnEvent {
+  supply: String
+  owner: String
+  entityId: String
+  log: String
+  compact: Boolean
+}
+
+type ItemTransferEvent {
+  from: String
+  to: String
+  entityId: String
+  log: String
+  compact: Boolean
+}
+
+type ItemCreatorsEvent {
+  creators: [Part]
+  entityId: String
+  log: String
+  compact: Boolean
+}
+
+
+type LazyItemBurnEvent {
+  supply: String;
+  creators: [Part]
+  entityId: String
+  log: String
+  compact: Boolean
+}
+
+type LazyItemMintEvent {
+  supply: String;
+  creators: [Part]
+  entityId: String
+  log: String
+  compact: Boolean
+}
+
+type Item @entity {
+  id: ID! 
+  token: String! 
+  tokenId: String! 
+  creators: [Part]! 
+  creatorsFinal: Boolean!
+  supply: String! 
+  lazySupply: String! 
+  royalties: [Part]! 
+  owners: [String!]! 
+  date: String! 
+  mintedAt: String 
+  deleted: Boolean!
+  lastLazyEventTimestamp: BigInt 
+  isRaribleContract: Boolean
+  revertableEvents: [ItemEvent!]! 
+}
+
+type ItemMintEvent {
+  id: ID!
+  entityId: String!
+  log: String!
+  compact: Boolean!
+  supply: String! # EthUInt256 represented as String
+  owner: String! # Address represented as String
+  tokenUri: String
+}
+
+type Ownership @entity {
+  token: String!
+  tokenId: String!
+  owner: String!
+  creators: [Part]!
+  blockNumber: BlockNumber
+  value: String!
+  lazyValue: String
+  lastUpdatedAt: String
+  deleted: Boolean!
+  lastLazyEventTimestamp: BigInt
+}
+
+type CollectionStat @entity {
+  id: String!
+  totalItemSupply: BigInt!
+  totalOwnersCount: Int!
+  lastUpdatedAt: String!
+}
+
+enum class InconsistentItemStatus {
+    NEW,
+    FIXED,
+    UNFIXED,
+    RELAPSED,
+}
+
+enum class ItemProblemType {
+    NOT_FOUND,
+    SUPPLY_MISMATCH
+}
+
+type InconsistentItem @entity {
+  token: String!
+  tokenId: String!
+  status: InconsistentItemStatus
+  type: ItemProblemType!
+  fixVersionApplied: Int
+  lastUpdatedAt: String!
+  supply: String
+  ownerships: String
+  ownershipsValue: BigInt
+  relaspeCount: Int
+}
+
+type ItemCreator @entity {
+  id: ID!
+  creator: String!
+}
+
+type TokenId @entity {
+  id: ID!
+  value: BigInt!
+}
+
+
+type Royalty @entity {
+  address: String!
+  tokenId: String!
+  royalty: [Part]!
+}
+
+type Counter @entity {
+  id: ID!
+  count: BigInt!
+  firstBlock: Block!
+  lastBlock: Block!
+  contract: ContractType!
+}
