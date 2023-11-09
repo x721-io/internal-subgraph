@@ -9,12 +9,10 @@ export namespace ContractAddress {
 }
 
 export namespace ContractName {
-    export const TOKEN_SALE = "TokenSale"
-    export const ERC_721_SALE_V1 = "ERC721SaleV1"
-    export const ERC_721_SALE_V2 = "ERC721SaleV2"
-    export const ERC_1155_SALE_V1 = "ERC1155SaleV1"
-    export const ERC_1155_SALE_V2 = "ERC1155SaleV2"
-    export const EXCHANGE_V1 = "ExchangeV1"
+    export const ERC_721 = "ERC721"
+    export const ERC_1155 = "ERC1155"
+    // export const TransferProxies = "ERC1155"
+    export const EXCHANGE_V2 = "ExchangeV2"
 }
 
 export namespace Coefficient {

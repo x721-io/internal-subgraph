@@ -85,6 +85,419 @@ export class Block extends Entity {
   }
 }
 
+export class NFT extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save NFT entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type NFT must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("NFT", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): NFT | null {
+    return changetype<NFT | null>(store.get_in_block("NFT", id));
+  }
+
+  static load(id: string): NFT | null {
+    return changetype<NFT | null>(store.get("NFT", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get creators(): Array<string> | null {
+    let value = this.get("creators");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set creators(value: Array<string> | null) {
+    if (!value) {
+      this.unset("creators");
+    } else {
+      this.set("creators", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get mintedAt(): BigInt {
+    let value = this.get("mintedAt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set mintedAt(value: BigInt) {
+    this.set("mintedAt", Value.fromBigInt(value));
+  }
+
+  get lastUpdatedAt(): BigInt {
+    let value = this.get("lastUpdatedAt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set lastUpdatedAt(value: BigInt) {
+    this.set("lastUpdatedAt", Value.fromBigInt(value));
+  }
+
+  get deleted(): boolean {
+    let value = this.get("deleted");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set deleted(value: boolean) {
+    this.set("deleted", Value.fromBoolean(value));
+  }
+
+  get sellers(): i32 {
+    let value = this.get("sellers");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set sellers(value: i32) {
+    this.set("sellers", Value.fromI32(value));
+  }
+
+  get collection(): string | null {
+    let value = this.get("collection");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set collection(value: string | null) {
+    if (!value) {
+      this.unset("collection");
+    } else {
+      this.set("collection", Value.fromString(<string>value));
+    }
+  }
+
+  get contract(): string | null {
+    let value = this.get("contract");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set contract(value: string | null) {
+    if (!value) {
+      this.unset("contract");
+    } else {
+      this.set("contract", Value.fromString(<string>value));
+    }
+  }
+
+  get tokenId(): BigInt | null {
+    let value = this.get("tokenId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set tokenId(value: BigInt | null) {
+    if (!value) {
+      this.unset("tokenId");
+    } else {
+      this.set("tokenId", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get meta(): string | null {
+    let value = this.get("meta");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set meta(value: string | null) {
+    if (!value) {
+      this.unset("meta");
+    } else {
+      this.set("meta", Value.fromString(<string>value));
+    }
+  }
+
+  get totalStock(): i32 {
+    let value = this.get("totalStock");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set totalStock(value: i32) {
+    this.set("totalStock", Value.fromI32(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+}
+
+export class Collection extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Collection entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Collection must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Collection", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Collection | null {
+    return changetype<Collection | null>(store.get_in_block("Collection", id));
+  }
+
+  static load(id: string): Collection | null {
+    return changetype<Collection | null>(store.get("Collection", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get type(): string | null {
+    let value = this.get("type");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set type(value: string | null) {
+    if (!value) {
+      this.unset("type");
+    } else {
+      this.set("type", Value.fromString(<string>value));
+    }
+  }
+
+  get name(): string | null {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string | null) {
+    if (!value) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(<string>value));
+    }
+  }
+
+  get features(): string | null {
+    let value = this.get("features");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set features(value: string | null) {
+    if (!value) {
+      this.unset("features");
+    } else {
+      this.set("features", Value.fromString(<string>value));
+    }
+  }
+
+  get parent(): string | null {
+    let value = this.get("parent");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set parent(value: string | null) {
+    if (!value) {
+      this.unset("parent");
+    } else {
+      this.set("parent", Value.fromString(<string>value));
+    }
+  }
+
+  get symbol(): string | null {
+    let value = this.get("symbol");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set symbol(value: string | null) {
+    if (!value) {
+      this.unset("symbol");
+    } else {
+      this.set("symbol", Value.fromString(<string>value));
+    }
+  }
+
+  get minters(): Array<string> | null {
+    let value = this.get("minters");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set minters(value: Array<string> | null) {
+    if (!value) {
+      this.unset("minters");
+    } else {
+      this.set("minters", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get meta(): string | null {
+    let value = this.get("meta");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set meta(value: string | null) {
+    if (!value) {
+      this.unset("meta");
+    } else {
+      this.set("meta", Value.fromString(<string>value));
+    }
+  }
+
+  get owner(): string | null {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set owner(value: string | null) {
+    if (!value) {
+      this.unset("owner");
+    } else {
+      this.set("owner", Value.fromString(<string>value));
+    }
+  }
+
+  get bestBidOrder(): string | null {
+    let value = this.get("bestBidOrder");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set bestBidOrder(value: string | null) {
+    if (!value) {
+      this.unset("bestBidOrder");
+    } else {
+      this.set("bestBidOrder", Value.fromString(<string>value));
+    }
+  }
+
+  get bestSellOrder(): string | null {
+    let value = this.get("bestSellOrder");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set bestSellOrder(value: string | null) {
+    if (!value) {
+      this.unset("bestSellOrder");
+    } else {
+      this.set("bestSellOrder", Value.fromString(<string>value));
+    }
+  }
+}
+
 export class Deal extends Entity {
   constructor(id: string) {
     super();
@@ -293,17 +706,17 @@ export class Deal extends Entity {
     this.set("blockTime", Value.fromBigInt(value));
   }
 
-  get contract(): string {
-    let value = this.get("contract");
+  get contractAddress(): Bytes {
+    let value = this.get("contractAddress");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toString();
+      return value.toBytes();
     }
   }
 
-  set contract(value: string) {
-    this.set("contract", Value.fromString(value));
+  set contractAddress(value: Bytes) {
+    this.set("contractAddress", Value.fromBytes(value));
   }
 }
 
@@ -396,5 +809,1178 @@ export class Counter extends Entity {
 
   set contract(value: string) {
     this.set("contract", Value.fromString(value));
+  }
+}
+
+export class Transaction extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Transaction entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Transaction must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Transaction", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Transaction | null {
+    return changetype<Transaction | null>(
+      store.get_in_block("Transaction", id)
+    );
+  }
+
+  static load(id: string): Transaction | null {
+    return changetype<Transaction | null>(store.get("Transaction", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get nftSide(): string | null {
+    let value = this.get("nftSide");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set nftSide(value: string | null) {
+    if (!value) {
+      this.unset("nftSide");
+    } else {
+      this.set("nftSide", Value.fromString(<string>value));
+    }
+  }
+
+  get hash(): string | null {
+    let value = this.get("hash");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set hash(value: string | null) {
+    if (!value) {
+      this.unset("hash");
+    } else {
+      this.set("hash", Value.fromString(<string>value));
+    }
+  }
+
+  get from(): Bytes | null {
+    let value = this.get("from");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set from(value: Bytes | null) {
+    if (!value) {
+      this.unset("from");
+    } else {
+      this.set("from", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get to(): Bytes | null {
+    let value = this.get("to");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set to(value: Bytes | null) {
+    if (!value) {
+      this.unset("to");
+    } else {
+      this.set("to", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get nftAddress(): Bytes | null {
+    let value = this.get("nftAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set nftAddress(value: Bytes | null) {
+    if (!value) {
+      this.unset("nftAddress");
+    } else {
+      this.set("nftAddress", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get nftId(): BigInt | null {
+    let value = this.get("nftId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftId(value: BigInt | null) {
+    if (!value) {
+      this.unset("nftId");
+    } else {
+      this.set("nftId", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get paymentTokenAddress(): Bytes | null {
+    let value = this.get("paymentTokenAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set paymentTokenAddress(value: Bytes | null) {
+    if (!value) {
+      this.unset("paymentTokenAddress");
+    } else {
+      this.set("paymentTokenAddress", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get paymentAmount(): BigInt | null {
+    let value = this.get("paymentAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set paymentAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("paymentAmount");
+    } else {
+      this.set("paymentAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get nftValue(): BigInt | null {
+    let value = this.get("nftValue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftValue(value: BigInt | null) {
+    if (!value) {
+      this.unset("nftValue");
+    } else {
+      this.set("nftValue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get nftTakeValue(): BigInt | null {
+    let value = this.get("nftTakeValue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftTakeValue(value: BigInt | null) {
+    if (!value) {
+      this.unset("nftTakeValue");
+    } else {
+      this.set("nftTakeValue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get paymentValue(): BigInt | null {
+    let value = this.get("paymentValue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set paymentValue(value: BigInt | null) {
+    if (!value) {
+      this.unset("paymentValue");
+    } else {
+      this.set("paymentValue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get paymentTakeValue(): BigInt | null {
+    let value = this.get("paymentTakeValue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set paymentTakeValue(value: BigInt | null) {
+    if (!value) {
+      this.unset("paymentTakeValue");
+    } else {
+      this.set("paymentTakeValue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get originFee(): BigInt | null {
+    let value = this.get("originFee");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set originFee(value: BigInt | null) {
+    if (!value) {
+      this.unset("originFee");
+    } else {
+      this.set("originFee", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get nftData(): string | null {
+    let value = this.get("nftData");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set nftData(value: string | null) {
+    if (!value) {
+      this.unset("nftData");
+    } else {
+      this.set("nftData", Value.fromString(<string>value));
+    }
+  }
+
+  get nftDataLength(): BigInt | null {
+    let value = this.get("nftDataLength");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftDataLength(value: BigInt | null) {
+    if (!value) {
+      this.unset("nftDataLength");
+    } else {
+      this.set("nftDataLength", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get paymentData(): string | null {
+    let value = this.get("paymentData");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set paymentData(value: string | null) {
+    if (!value) {
+      this.unset("paymentData");
+    } else {
+      this.set("paymentData", Value.fromString(<string>value));
+    }
+  }
+
+  get paymentDataLength(): BigInt | null {
+    let value = this.get("paymentDataLength");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set paymentDataLength(value: BigInt | null) {
+    if (!value) {
+      this.unset("paymentDataLength");
+    } else {
+      this.set("paymentDataLength", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get blockHeight(): BigInt | null {
+    let value = this.get("blockHeight");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockHeight(value: BigInt | null) {
+    if (!value) {
+      this.unset("blockHeight");
+    } else {
+      this.set("blockHeight", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get exchange(): string | null {
+    let value = this.get("exchange");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set exchange(value: string | null) {
+    if (!value) {
+      this.unset("exchange");
+    } else {
+      this.set("exchange", Value.fromString(<string>value));
+    }
+  }
+
+  get total(): BigInt | null {
+    let value = this.get("total");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set total(value: BigInt | null) {
+    if (!value) {
+      this.unset("total");
+    } else {
+      this.set("total", Value.fromBigInt(<BigInt>value));
+    }
+  }
+}
+
+export class DirectTransaction extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DirectTransaction entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DirectTransaction must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("DirectTransaction", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): DirectTransaction | null {
+    return changetype<DirectTransaction | null>(
+      store.get_in_block("DirectTransaction", id)
+    );
+  }
+
+  static load(id: string): DirectTransaction | null {
+    return changetype<DirectTransaction | null>(
+      store.get("DirectTransaction", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get nftSide(): string | null {
+    let value = this.get("nftSide");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set nftSide(value: string | null) {
+    if (!value) {
+      this.unset("nftSide");
+    } else {
+      this.set("nftSide", Value.fromString(<string>value));
+    }
+  }
+
+  get hash(): string | null {
+    let value = this.get("hash");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set hash(value: string | null) {
+    if (!value) {
+      this.unset("hash");
+    } else {
+      this.set("hash", Value.fromString(<string>value));
+    }
+  }
+
+  get from(): Bytes | null {
+    let value = this.get("from");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set from(value: Bytes | null) {
+    if (!value) {
+      this.unset("from");
+    } else {
+      this.set("from", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get to(): Bytes | null {
+    let value = this.get("to");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set to(value: Bytes | null) {
+    if (!value) {
+      this.unset("to");
+    } else {
+      this.set("to", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get nftAddress(): Bytes | null {
+    let value = this.get("nftAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set nftAddress(value: Bytes | null) {
+    if (!value) {
+      this.unset("nftAddress");
+    } else {
+      this.set("nftAddress", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get nftId(): BigInt | null {
+    let value = this.get("nftId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftId(value: BigInt | null) {
+    if (!value) {
+      this.unset("nftId");
+    } else {
+      this.set("nftId", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get paymentTokenAddress(): Bytes | null {
+    let value = this.get("paymentTokenAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set paymentTokenAddress(value: Bytes | null) {
+    if (!value) {
+      this.unset("paymentTokenAddress");
+    } else {
+      this.set("paymentTokenAddress", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get paymentAmount(): BigInt | null {
+    let value = this.get("paymentAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set paymentAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("paymentAmount");
+    } else {
+      this.set("paymentAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get nftValue(): BigInt | null {
+    let value = this.get("nftValue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftValue(value: BigInt | null) {
+    if (!value) {
+      this.unset("nftValue");
+    } else {
+      this.set("nftValue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get nftTakeValue(): BigInt | null {
+    let value = this.get("nftTakeValue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftTakeValue(value: BigInt | null) {
+    if (!value) {
+      this.unset("nftTakeValue");
+    } else {
+      this.set("nftTakeValue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get paymentValue(): BigInt | null {
+    let value = this.get("paymentValue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set paymentValue(value: BigInt | null) {
+    if (!value) {
+      this.unset("paymentValue");
+    } else {
+      this.set("paymentValue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get paymentTakeValue(): BigInt | null {
+    let value = this.get("paymentTakeValue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set paymentTakeValue(value: BigInt | null) {
+    if (!value) {
+      this.unset("paymentTakeValue");
+    } else {
+      this.set("paymentTakeValue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get originFee(): BigInt | null {
+    let value = this.get("originFee");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set originFee(value: BigInt | null) {
+    if (!value) {
+      this.unset("originFee");
+    } else {
+      this.set("originFee", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get nftData(): string | null {
+    let value = this.get("nftData");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set nftData(value: string | null) {
+    if (!value) {
+      this.unset("nftData");
+    } else {
+      this.set("nftData", Value.fromString(<string>value));
+    }
+  }
+
+  get nftDataLength(): BigInt | null {
+    let value = this.get("nftDataLength");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftDataLength(value: BigInt | null) {
+    if (!value) {
+      this.unset("nftDataLength");
+    } else {
+      this.set("nftDataLength", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get paymentData(): string | null {
+    let value = this.get("paymentData");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set paymentData(value: string | null) {
+    if (!value) {
+      this.unset("paymentData");
+    } else {
+      this.set("paymentData", Value.fromString(<string>value));
+    }
+  }
+
+  get paymentDataLength(): BigInt | null {
+    let value = this.get("paymentDataLength");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set paymentDataLength(value: BigInt | null) {
+    if (!value) {
+      this.unset("paymentDataLength");
+    } else {
+      this.set("paymentDataLength", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get blockHeight(): BigInt | null {
+    let value = this.get("blockHeight");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockHeight(value: BigInt | null) {
+    if (!value) {
+      this.unset("blockHeight");
+    } else {
+      this.set("blockHeight", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get exchange(): string | null {
+    let value = this.get("exchange");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set exchange(value: string | null) {
+    if (!value) {
+      this.unset("exchange");
+    } else {
+      this.set("exchange", Value.fromString(<string>value));
+    }
+  }
+
+  get total(): BigInt | null {
+    let value = this.get("total");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set total(value: BigInt | null) {
+    if (!value) {
+      this.unset("total");
+    } else {
+      this.set("total", Value.fromBigInt(<BigInt>value));
+    }
+  }
+}
+
+export class DirectPurchase extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DirectPurchase entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DirectPurchase must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("DirectPurchase", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): DirectPurchase | null {
+    return changetype<DirectPurchase | null>(
+      store.get_in_block("DirectPurchase", id)
+    );
+  }
+
+  static load(id: string): DirectPurchase | null {
+    return changetype<DirectPurchase | null>(store.get("DirectPurchase", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get blockNumber(): BigInt | null {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt | null) {
+    if (!value) {
+      this.unset("blockNumber");
+    } else {
+      this.set("blockNumber", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get sellOrderMaker(): Bytes | null {
+    let value = this.get("sellOrderMaker");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set sellOrderMaker(value: Bytes | null) {
+    if (!value) {
+      this.unset("sellOrderMaker");
+    } else {
+      this.set("sellOrderMaker", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get sellOrderNftAmount(): BigInt | null {
+    let value = this.get("sellOrderNftAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sellOrderNftAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("sellOrderNftAmount");
+    } else {
+      this.set("sellOrderNftAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get nftAssetClass(): Bytes | null {
+    let value = this.get("nftAssetClass");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set nftAssetClass(value: Bytes | null) {
+    if (!value) {
+      this.unset("nftAssetClass");
+    } else {
+      this.set("nftAssetClass", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get nftData(): Bytes | null {
+    let value = this.get("nftData");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set nftData(value: Bytes | null) {
+    if (!value) {
+      this.unset("nftData");
+    } else {
+      this.set("nftData", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get sellOrderPaymentAmount(): BigInt | null {
+    let value = this.get("sellOrderPaymentAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sellOrderPaymentAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("sellOrderPaymentAmount");
+    } else {
+      this.set("sellOrderPaymentAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get paymentToken(): Bytes | null {
+    let value = this.get("paymentToken");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set paymentToken(value: Bytes | null) {
+    if (!value) {
+      this.unset("paymentToken");
+    } else {
+      this.set("paymentToken", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get sellOrderSalt(): BigInt | null {
+    let value = this.get("sellOrderSalt");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sellOrderSalt(value: BigInt | null) {
+    if (!value) {
+      this.unset("sellOrderSalt");
+    } else {
+      this.set("sellOrderSalt", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get sellOrderStart(): BigInt | null {
+    let value = this.get("sellOrderStart");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sellOrderStart(value: BigInt | null) {
+    if (!value) {
+      this.unset("sellOrderStart");
+    } else {
+      this.set("sellOrderStart", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get sellOrderEnd(): BigInt | null {
+    let value = this.get("sellOrderEnd");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sellOrderEnd(value: BigInt | null) {
+    if (!value) {
+      this.unset("sellOrderEnd");
+    } else {
+      this.set("sellOrderEnd", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get sellOrderDataType(): Bytes | null {
+    let value = this.get("sellOrderDataType");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set sellOrderDataType(value: Bytes | null) {
+    if (!value) {
+      this.unset("sellOrderDataType");
+    } else {
+      this.set("sellOrderDataType", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get sellOrderData(): Bytes | null {
+    let value = this.get("sellOrderData");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set sellOrderData(value: Bytes | null) {
+    if (!value) {
+      this.unset("sellOrderData");
+    } else {
+      this.set("sellOrderData", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get sellOrderSignature(): Bytes | null {
+    let value = this.get("sellOrderSignature");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set sellOrderSignature(value: Bytes | null) {
+    if (!value) {
+      this.unset("sellOrderSignature");
+    } else {
+      this.set("sellOrderSignature", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get buyOrderPaymentAmount(): BigInt | null {
+    let value = this.get("buyOrderPaymentAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set buyOrderPaymentAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("buyOrderPaymentAmount");
+    } else {
+      this.set("buyOrderPaymentAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get buyOrderNftAmount(): BigInt | null {
+    let value = this.get("buyOrderNftAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set buyOrderNftAmount(value: BigInt | null) {
+    if (!value) {
+      this.unset("buyOrderNftAmount");
+    } else {
+      this.set("buyOrderNftAmount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get buyOrderData(): Bytes | null {
+    let value = this.get("buyOrderData");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set buyOrderData(value: Bytes | null) {
+    if (!value) {
+      this.unset("buyOrderData");
+    } else {
+      this.set("buyOrderData", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get nftId(): BigInt | null {
+    let value = this.get("nftId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nftId(value: BigInt | null) {
+    if (!value) {
+      this.unset("nftId");
+    } else {
+      this.set("nftId", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get nftAddress(): Bytes | null {
+    let value = this.get("nftAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set nftAddress(value: Bytes | null) {
+    if (!value) {
+      this.unset("nftAddress");
+    } else {
+      this.set("nftAddress", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
+export class DirectAcceptBid extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DirectAcceptBid entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DirectAcceptBid must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("DirectAcceptBid", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): DirectAcceptBid | null {
+    return changetype<DirectAcceptBid | null>(
+      store.get_in_block("DirectAcceptBid", id)
+    );
+  }
+
+  static load(id: string): DirectAcceptBid | null {
+    return changetype<DirectAcceptBid | null>(store.get("DirectAcceptBid", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get blockNumber(): BigInt | null {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt | null) {
+    if (!value) {
+      this.unset("blockNumber");
+    } else {
+      this.set("blockNumber", Value.fromBigInt(<BigInt>value));
+    }
   }
 }

@@ -1,0 +1,15 @@
+{
+
+    "network": "testnet",
+    "startBlock": "10466045",
+    "erc721factory": {
+      "address": "0x346d828a9CD9f72ed967c18538196Ca64468805d"
+    },
+    "erc1155factory": {
+      "address": "0x9e8Fd98d43c5Ef66D8e8472bbDD3CF57Eecd1A3c"
+    },
+    "exchangev2": {
+      "address" : "0xd8c5F75Aa01dC3db284F9F3C697C76C0D9DeB3A3"
+    }
+  }
+    

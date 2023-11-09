@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ERC721Factory
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x346d828a9CD9f72ed967c18538196Ca64468805d'
+      address: '{{erc721factory.address}}'
       abi: ERC721Factory
-      startBlock: 10461046
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -28,11 +28,11 @@ dataSources:
           handler: handle721UserProxy
   - kind: ethereum/contract
     name: ERC1155Factory
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x9e8Fd98d43c5Ef66D8e8472bbDD3CF57Eecd1A3c'
+      address: '{{erc1155factory.address}}'
       abi: ERC1155Factory
-      startBlock: 10461046
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -50,11 +50,11 @@ dataSources:
           handler: handle1155UserProxy
   - kind: ethereum/contract
     name: ExchangeV2
-    network: testnet
+    network: {{network}}
     source:
-      address: '0xd8c5F75Aa01dC3db284F9F3C697C76C0D9DeB3A3'
+      address: '{{exchangev2.address}}'
       abi: ExchangeV2
-      startBlock: 10461046
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -87,7 +87,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: ERC721Proxy
-    network: testnet
+    network: {{network}}
     source: 
       abi: ERC721Proxy
     mapping:
@@ -124,7 +124,7 @@ templates:
           handler: handleTransfer
   - kind: ethereum/contract
     name: ERC1155Proxy
-    network: testnet
+    network: {{network}}
     source: 
       abi: ERC1155Proxy
     mapping:

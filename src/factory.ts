@@ -40,7 +40,7 @@ export function initDeal(event: ethereum.Event, contract: string): Deal {
         deal.txHash = event.transaction.hash
         deal.blockNumber = block.number as BigInt
         deal.blockTime = block.time as BigInt
-        deal.contract = contract
+        deal.contractAddress = contract
     }
     initCounter(contract, block)
 

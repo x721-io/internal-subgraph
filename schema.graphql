@@ -19,181 +19,202 @@ type Block @entity {
   time: BigInt
 }
 
-enum ActionType {
-  BURN
+type NFT @entity {
+  id: ID!
+  creators: [String!]
+  mintedAt: BigInt!
+  lastUpdatedAt: BigInt!
+  deleted: Boolean!
+  sellers: Int
+  collection: Collection
+  contract: String
+  tokenId: BigInt
+  meta: String
+  totalStock: Int
+  owner: String!
 }
+
+type Collection @entity {
+  id: ID!
+  type: String
+  name: String
+  features: String
+  parent: ID
+  symbol: String
+  minters: [String!]
+  meta: String
+  owner: String
+  bestBidOrder: String
+  bestSellOrder: String
+}
+
+type Deal @entity {
+  id: ID!
+  type: DealType!
+  seller: Bytes!
+  buyer: Bytes!
+  sellTokenId: BigInt!
+  sellToken: Bytes!
+  buyToken: Bytes!
+  sellAmount: BigInt!
+  buyAmount: BigInt!
+  price: BigInt!
+  fee: BigDecimal!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  blockTime: BigInt!
+  contractAddress: Bytes!
+}
+
+# pending confirmation
+# type Order @entity {
+#   id: ID!
+#   fill: Int!
+#   status: String
+#   makeStock: Int!
+#   cancelled: Boolean!
+#   createdAt: BigInt!
+#   lastUpdatedAt: BigInt!
+#   maker: String!
+#   make
+#   take
+#   salt: Int!
+#   data: String!
+#   startedAt: BigInt
+#   endedAt: BigInt
+#   makePrice: BigInt
+#   takePrice: BigInt
+#   taker: String
+#   signature: String
+# }
+
+# const make: {
+#     assetType: {
+#         assetClass: any;
+#         data: any;
+#     };
+#     value: any;
+# }
+# enum ActionType {
+#   BURN
+#   MINT
+# }
 
 enum ActionState {
   PENDING
   EXECUTED
 }
 
-type Action @entity {
-  id: ID!
-  type: ActionType!
-  token: String!
-  tokenId: String! 
-  createdAt: String!
-  lastUpdatedAt: String!
-  state: ActionState!
-  actionAt: String!
-}
+# type Action @entity {
+#   id: ID!
+#   type: ActionType!
+#   token: String!
+#   tokenId: String! 
+#   createdAt: String!
+#   lastUpdatedAt: String!
+#   state: ActionState!
+#   actionAt: String!
+# }
 
-type BurnItemAction @entity {
-  id: ID!
-  type: ActionType!
-  token: String!
-  tokenId: String!
-  createdAt: String!
-  lastUpdatedAt: String!
-  state: ActionState!
-  actionAt: String!
-}
-
-type Part {
-  account: String!
-  value: Int!
-}
+# type Part @entity {
+#   id: ID!
+#   account: String!
+#   value: Int!
+# }
 
 
-union ItemEvent = ItemMintEvent | ItemBurnEvent | ItemTransferEvent | ItemCreatorsEvent | LazyItemMintEvent | LazyItemBurnEvent
+# type NFT @entity {
+#   id: ID! 
+#   token: String! 
+#   tokenId: String! 
+#   creators: [Part!]! 
+#   creatorsFinal: Boolean!
+#   supply: String! 
+#   # lazySupply: String! 
+#   royalties: [Part!]! 
+#   owners: [String!]! 
+#   date: String! 
+#   mintedAt: String 
+#   deleted: Boolean!
+#   # lastLazyEventTimestamp: BigInt 
+#   isRaribleContract: Boolean
+#   collection: Collection
+#   # revertableEvents: [ItemEvent!]! 
+#   contractType: [ContractType!]!
+# }
 
-type ItemMintEvent {
-  supply: String
-  owner: String
-  entityId: String
-  log: String
-}
+# # type ItemMintEvent {
+# #   id: ID!
+# #   entityId: String!
+# #   log: String!
+# #   compact: Boolean!
+# #   supply: String! 
+# #   owner: String! 
+# #   tokenUri: String
+# # }
 
-type ItemBurnEvent {
-  supply: String
-  owner: String
-  entityId: String
-  log: String
-  compact: Boolean
-}
+# type Ownership @entity {
+#   id: ID!
+#   token: String!
+#   tokenId: String!
+#   owner: String!
+#   creators: [Part!]!
+#   blockNumber: BigInt
+#   value: String!
+#   # lazyValue: String
+#   lastUpdatedAt: String
+#   deleted: Boolean!
+#   # lastLazyEventTimestamp: BigInt
+# }
 
-type ItemTransferEvent {
-  from: String
-  to: String
-  entityId: String
-  log: String
-  compact: Boolean
-}
+# type Collection @entity {
+#   id: ID!
+#   slug: String!
+#   owners: String!
+#   name: String!
+#   avatar: String!
+#   banner: String
+#   description: String
+#   contract: String!
+#   # meta: JSON!
+#   createdAt: BigInt!
+#   lastUpdatedAt: BigInt!
+# }
 
-type ItemCreatorsEvent {
-  creators: [Part]
-  entityId: String
-  log: String
-  compact: Boolean
-}
+# # enum class InconsistentItemStatus {
+# #     NEW,
+# #     FIXED,
+# #     UNFIXED,
+# #     RELAPSED,
+# # }
 
+# # enum class ItemProblemType {
+# #     NOT_FOUND,
+# #     SUPPLY_MISMATCH
+# # }
 
-type LazyItemBurnEvent {
-  supply: String;
-  creators: [Part]
-  entityId: String
-  log: String
-  compact: Boolean
-}
+# # type InconsistentItem @entity {
+# #   token: String!
+# #   tokenId: String!
+# #   status: InconsistentItemStatus
+# #   type: ItemProblemType!
+# #   fixVersionApplied: Int
+# #   lastUpdatedAt: String!
+# #   supply: String
+# #   ownerships: String
+# #   ownershipsValue: BigInt
+# #   relaspeCount: Int
+# # }
 
-type LazyItemMintEvent {
-  supply: String;
-  creators: [Part]
-  entityId: String
-  log: String
-  compact: Boolean
-}
-
-type Item @entity {
-  id: ID! 
-  token: String! 
-  tokenId: String! 
-  creators: [Part]! 
-  creatorsFinal: Boolean!
-  supply: String! 
-  lazySupply: String! 
-  royalties: [Part]! 
-  owners: [String!]! 
-  date: String! 
-  mintedAt: String 
-  deleted: Boolean!
-  lastLazyEventTimestamp: BigInt 
-  isRaribleContract: Boolean
-  revertableEvents: [ItemEvent!]! 
-}
-
-type ItemMintEvent {
-  id: ID!
-  entityId: String!
-  log: String!
-  compact: Boolean!
-  supply: String! # EthUInt256 represented as String
-  owner: String! # Address represented as String
-  tokenUri: String
-}
-
-type Ownership @entity {
-  token: String!
-  tokenId: String!
-  owner: String!
-  creators: [Part]!
-  blockNumber: BlockNumber
-  value: String!
-  lazyValue: String
-  lastUpdatedAt: String
-  deleted: Boolean!
-  lastLazyEventTimestamp: BigInt
-}
-
-type CollectionStat @entity {
-  id: String!
-  totalItemSupply: BigInt!
-  totalOwnersCount: Int!
-  lastUpdatedAt: String!
-}
-
-enum class InconsistentItemStatus {
-    NEW,
-    FIXED,
-    UNFIXED,
-    RELAPSED,
-}
-
-enum class ItemProblemType {
-    NOT_FOUND,
-    SUPPLY_MISMATCH
-}
-
-type InconsistentItem @entity {
-  token: String!
-  tokenId: String!
-  status: InconsistentItemStatus
-  type: ItemProblemType!
-  fixVersionApplied: Int
-  lastUpdatedAt: String!
-  supply: String
-  ownerships: String
-  ownershipsValue: BigInt
-  relaspeCount: Int
-}
-
-type ItemCreator @entity {
-  id: ID!
-  creator: String!
-}
-
-type TokenId @entity {
-  id: ID!
-  value: BigInt!
-}
+# type Royalty @entity {
+#   id: ID!
+#   address: String!
+#   tokenId: String!
+#   royalty: [Part!]!
+# }
 
 
-type Royalty @entity {
-  address: String!
-  tokenId: String!
-  royalty: [Part]!
-}
+
 
 type Counter @entity {
   id: ID!
@@ -201,4 +222,90 @@ type Counter @entity {
   firstBlock: Block!
   lastBlock: Block!
   contract: ContractType!
+}
+
+type Transaction @entity {
+  " hash-nftAddress-id "
+  id: ID!
+  nftSide: String
+  hash: String
+  from: Bytes
+  to: Bytes
+  nftAddress: Bytes
+  nftId: BigInt
+  paymentTokenAddress: Bytes
+  paymentAmount: BigInt
+  " Values related to amt "
+  nftValue: BigInt
+  nftTakeValue: BigInt
+  paymentValue: BigInt
+  paymentTakeValue: BigInt
+  originFee: BigInt
+
+  " Fee related data "
+  nftData: String
+  nftDataLength: BigInt
+
+  paymentData: String
+  paymentDataLength: BigInt
+  blockHeight: BigInt
+  exchange: String
+  total: BigInt
+  # protocolFees: BigInt
+}
+type DirectTransaction @entity {
+  " hash-nftAddress-id "
+  id: ID!
+  nftSide: String
+  hash: String
+  from: Bytes
+  to: Bytes
+  nftAddress: Bytes
+  nftId: BigInt
+  paymentTokenAddress: Bytes
+  paymentAmount: BigInt
+  " Values related to amt "
+  nftValue: BigInt
+  nftTakeValue: BigInt
+  paymentValue: BigInt
+  paymentTakeValue: BigInt
+  originFee: BigInt
+
+  " Fee related data "
+  nftData: String
+  nftDataLength: BigInt
+
+  paymentData: String
+  paymentDataLength: BigInt
+  blockHeight: BigInt
+  exchange: String
+  total: BigInt
+  # protocolFees: BigInt
+}
+
+type DirectPurchase @entity {
+  id: ID!
+  blockNumber: BigInt
+  sellOrderMaker: Bytes
+  sellOrderNftAmount: BigInt
+  nftAssetClass: Bytes
+  nftData: Bytes
+  sellOrderPaymentAmount: BigInt
+  paymentToken: Bytes
+  sellOrderSalt: BigInt
+  sellOrderStart: BigInt
+  sellOrderEnd: BigInt
+  sellOrderDataType: Bytes
+  sellOrderData: Bytes
+  sellOrderSignature: Bytes
+  buyOrderPaymentAmount: BigInt
+  buyOrderNftAmount: BigInt
+  buyOrderData: Bytes
+
+  nftId: BigInt
+  nftAddress: Bytes
+}
+type DirectAcceptBid @entity {
+  id: ID!
+  blockNumber: BigInt
 }
