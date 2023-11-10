@@ -276,7 +276,7 @@ export function handleApproval(event: Approval): void {
   export function handleURI(event: URI): void {
     let token = ERC1155Token.load(event.params.id.toString());
     if (token) {
-      token.uri = event.params.id.toString();
+      token.uri = event.params.value.toString();
       token.save();
     }
   }
