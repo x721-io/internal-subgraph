@@ -46,6 +46,7 @@ type Collection @entity {
   owner: String
   bestBidOrder: String
   bestSellOrder: String
+  txCreation: String!
 }
 
 type Account @entity {
@@ -83,6 +84,8 @@ type ERC721Token @entity {
 	approval: Account!
 	uri: String
 	transfers: [ERC721Transfer!]! @derivedFrom(field: "token")
+  	creators: [ERC721Creator!]! @derivedFrom(field: "collection")
+	txCreation: String!
 }
 type ERC721Operator @entity {
 	id: ID!
@@ -111,11 +114,23 @@ type ERC1155Contract @entity(immutable: true) {
 	transfers: [ERC1155Transfer!]! @derivedFrom(field: "contract")
 }
 
+type ERC1155Creator @entity {
+  id: ID! # Combination of collectionId and creatorId
+  collection: ERC1155Token!
+  creator: Creator!
+  share: BigInt! # The creator's share in the collection
+}
+type ERC721Creator @entity {
+  id: ID! # Combination of collectionId and creatorId
+  collection: ERC721Token!
+  creator: Creator!
+  share: BigInt! # The creator's share in the collection
+}
+
 type Creator @entity {
   id: ID!
-  token: ERC1155Token! @derivedFrom(field: "creators")
-  account: Account!
-  share: BigInt! # Or BigDecimal if you want to store a percentage
+  token1155: [ERC1155Creator!]! @derivedFrom(field: "creator")
+  token721: [ERC721Creator!]! @derivedFrom(field: "creator")
 }
 
 type ERC1155Token @entity {
@@ -126,7 +141,8 @@ type ERC1155Token @entity {
 	totalSupply: ERC1155Balance!
 	balances: [ERC1155Balance!]! @derivedFrom(field: "token")
 	transfers: [ERC1155Transfer!]! @derivedFrom(field: "token")
-  creators: [Creator!]! @derivedFrom(field: "token")
+  	creators: [ERC1155Creator!]! @derivedFrom(field: "collection")
+	txCreation: String!
 }
 type ERC1155Balance @entity {
 	id: ID!
@@ -338,17 +354,6 @@ enum ActionState {
 #   tokenId: String!
 #   royalty: [Part!]!
 # }
-
-
-
-
-type Counter @entity {
-  id: ID!
-  count: BigInt!
-  firstBlock: Block!
-  lastBlock: Block!
-  contract: ContractType!
-}
 
 # type Transaction @entity {
 #   " hash-nftAddress-id "

@@ -293,6 +293,19 @@ export class Collection extends Entity {
       this.set("bestSellOrder", Value.fromString(<string>value));
     }
   }
+
+  get txCreation(): string {
+    let value = this.get("txCreation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set txCreation(value: string) {
+    this.set("txCreation", Value.fromString(value));
+  }
 }
 
 export class Account extends Entity {
@@ -692,6 +705,27 @@ export class ERC721Token extends Entity {
       "transfers"
     );
   }
+
+  get creators(): ERC721CreatorLoader {
+    return new ERC721CreatorLoader(
+      "ERC721Token",
+      this.get("id")!.toString(),
+      "creators"
+    );
+  }
+
+  get txCreation(): string {
+    let value = this.get("txCreation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set txCreation(value: string) {
+    this.set("txCreation", Value.fromString(value));
+  }
 }
 
 export class ERC721Operator extends Entity {
@@ -1008,6 +1042,168 @@ export class ERC1155Contract extends Entity {
   }
 }
 
+export class ERC1155Creator extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ERC1155Creator entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ERC1155Creator must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ERC1155Creator", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): ERC1155Creator | null {
+    return changetype<ERC1155Creator | null>(
+      store.get_in_block("ERC1155Creator", id)
+    );
+  }
+
+  static load(id: string): ERC1155Creator | null {
+    return changetype<ERC1155Creator | null>(store.get("ERC1155Creator", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get collection(): string {
+    let value = this.get("collection");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set collection(value: string) {
+    this.set("collection", Value.fromString(value));
+  }
+
+  get creator(): string {
+    let value = this.get("creator");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set creator(value: string) {
+    this.set("creator", Value.fromString(value));
+  }
+
+  get share(): BigInt {
+    let value = this.get("share");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set share(value: BigInt) {
+    this.set("share", Value.fromBigInt(value));
+  }
+}
+
+export class ERC721Creator extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ERC721Creator entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ERC721Creator must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ERC721Creator", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): ERC721Creator | null {
+    return changetype<ERC721Creator | null>(
+      store.get_in_block("ERC721Creator", id)
+    );
+  }
+
+  static load(id: string): ERC721Creator | null {
+    return changetype<ERC721Creator | null>(store.get("ERC721Creator", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get collection(): string {
+    let value = this.get("collection");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set collection(value: string) {
+    this.set("collection", Value.fromString(value));
+  }
+
+  get creator(): string {
+    let value = this.get("creator");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set creator(value: string) {
+    this.set("creator", Value.fromString(value));
+  }
+
+  get share(): BigInt {
+    let value = this.get("share");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set share(value: BigInt) {
+    this.set("share", Value.fromBigInt(value));
+  }
+}
+
 export class Creator extends Entity {
   constructor(id: string) {
     super();
@@ -1047,38 +1243,20 @@ export class Creator extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get token(): ERC1155TokenLoader {
-    return new ERC1155TokenLoader(
+  get token1155(): ERC1155CreatorLoader {
+    return new ERC1155CreatorLoader(
       "Creator",
       this.get("id")!.toString(),
-      "token"
+      "token1155"
     );
   }
 
-  get account(): string {
-    let value = this.get("account");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set account(value: string) {
-    this.set("account", Value.fromString(value));
-  }
-
-  get share(): BigInt {
-    let value = this.get("share");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set share(value: BigInt) {
-    this.set("share", Value.fromBigInt(value));
+  get token721(): ERC721CreatorLoader {
+    return new ERC721CreatorLoader(
+      "Creator",
+      this.get("id")!.toString(),
+      "token721"
+    );
   }
 }
 
@@ -1195,12 +1373,25 @@ export class ERC1155Token extends Entity {
     );
   }
 
-  get creators(): CreatorLoader {
-    return new CreatorLoader(
+  get creators(): ERC1155CreatorLoader {
+    return new ERC1155CreatorLoader(
       "ERC1155Token",
       this.get("id")!.toString(),
       "creators"
     );
+  }
+
+  get txCreation(): string {
+    let value = this.get("txCreation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set txCreation(value: string) {
+    this.set("txCreation", Value.fromString(value));
   }
 }
 
@@ -1695,98 +1886,6 @@ export class Transaction extends Entity {
 
   set blockNumber(value: BigInt) {
     this.set("blockNumber", Value.fromBigInt(value));
-  }
-}
-
-export class Counter extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Counter entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Counter must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("Counter", id.toString(), this);
-    }
-  }
-
-  static loadInBlock(id: string): Counter | null {
-    return changetype<Counter | null>(store.get_in_block("Counter", id));
-  }
-
-  static load(id: string): Counter | null {
-    return changetype<Counter | null>(store.get("Counter", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get count(): BigInt {
-    let value = this.get("count");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set count(value: BigInt) {
-    this.set("count", Value.fromBigInt(value));
-  }
-
-  get firstBlock(): string {
-    let value = this.get("firstBlock");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set firstBlock(value: string) {
-    this.set("firstBlock", Value.fromString(value));
-  }
-
-  get lastBlock(): string {
-    let value = this.get("lastBlock");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set lastBlock(value: string) {
-    this.set("lastBlock", Value.fromString(value));
-  }
-
-  get contract(): string {
-    let value = this.get("contract");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set contract(value: string) {
-    this.set("contract", Value.fromString(value));
   }
 }
 
@@ -2305,6 +2404,24 @@ export class ERC721TransferLoader extends Entity {
   }
 }
 
+export class ERC721CreatorLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ERC721Creator[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ERC721Creator[]>(value);
+  }
+}
+
 export class ERC1155TokenLoader extends Entity {
   _entity: string;
   _field: string;
@@ -2323,7 +2440,7 @@ export class ERC1155TokenLoader extends Entity {
   }
 }
 
-export class CreatorLoader extends Entity {
+export class ERC1155CreatorLoader extends Entity {
   _entity: string;
   _field: string;
   _id: string;
@@ -2335,8 +2452,8 @@ export class CreatorLoader extends Entity {
     this._field = field;
   }
 
-  load(): Creator[] {
+  load(): ERC1155Creator[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<Creator[]>(value);
+    return changetype<ERC1155Creator[]>(value);
   }
 }

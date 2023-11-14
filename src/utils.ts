@@ -39,7 +39,7 @@ export function fetchOrCreateAccount(address: Address): Account {
     return account as Account;
 }
   
-export function updateERC1155Balance(accountAddress: Address, tokenId: string, value: BigInt, contractAddress: string): void {
+export function updateERC1155Balance(accountAddress: Address, tokenId: string, value: BigInt, contractAddress: string): ERC1155Balance {
     let balanceId = accountAddress.toHex() + "-" + tokenId;
     let balance = ERC1155Balance.load(balanceId);
     if (balance == null) {
@@ -53,4 +53,5 @@ export function updateERC1155Balance(accountAddress: Address, tokenId: string, v
         balance.valueExact = balance.valueExact.plus(value);
     }
     balance.save();
+    return balance
 }
