@@ -355,64 +355,64 @@ enum ActionState {
 #   royalty: [Part!]!
 # }
 
-# type Transaction @entity {
-#   " hash-nftAddress-id "
-#   id: ID!
-#   nftSide: String
-#   hash: String
-#   from: Bytes
-#   to: Bytes
-#   nftAddress: Bytes
-#   nftId: BigInt
-#   paymentTokenAddress: Bytes
-#   paymentAmount: BigInt
-#   " Values related to amt "
-#   nftValue: BigInt
-#   nftTakeValue: BigInt
-#   paymentValue: BigInt
-#   paymentTakeValue: BigInt
-#   originFee: BigInt
+type Transaction1 @entity {
+  " hash-nftAddress-id "
+  id: ID!
+  nftSide: String
+  hash: String
+  from: Bytes
+  to: Bytes
+  nftAddress: Bytes
+  nftId: BigInt
+  paymentTokenAddress: Bytes
+  paymentAmount: BigInt
+  " Values related to amt "
+  nftValue: BigInt
+  nftTakeValue: BigInt
+  paymentValue: BigInt
+  paymentTakeValue: BigInt
+  originFee: BigInt
 
-#   " Fee related data "
-#   nftData: String
-#   nftDataLength: BigInt
+  " Fee related data "
+  nftData: String
+  nftDataLength: BigInt
 
-#   paymentData: String
-#   paymentDataLength: BigInt
-#   blockHeight: BigInt
-#   exchange: String
-#   total: BigInt
-#   # protocolFees: BigInt
-# }
-# type DirectTransaction @entity {
-#   " hash-nftAddress-id "
-#   id: ID!
-#   nftSide: String
-#   hash: String
-#   from: Bytes
-#   to: Bytes
-#   nftAddress: Bytes
-#   nftId: BigInt
-#   paymentTokenAddress: Bytes
-#   paymentAmount: BigInt
-#   " Values related to amt "
-#   nftValue: BigInt
-#   nftTakeValue: BigInt
-#   paymentValue: BigInt
-#   paymentTakeValue: BigInt
-#   originFee: BigInt
+  paymentData: String
+  paymentDataLength: BigInt
+  blockHeight: BigInt
+  exchange: String
+  total: BigInt
+  # protocolFees: BigInt
+}
+type DirectTransaction @entity {
+  " hash-nftAddress-id "
+  id: ID!
+  nftSide: String
+  hash: String
+  from: Bytes
+  to: Bytes
+  nftAddress: Bytes
+  nftId: BigInt
+  paymentTokenAddress: Bytes
+  paymentAmount: BigInt
+  " Values related to amt "
+  nftValue: BigInt
+  nftTakeValue: BigInt
+  paymentValue: BigInt
+  paymentTakeValue: BigInt
+  originFee: BigInt
 
-#   " Fee related data "
-#   nftData: String
-#   nftDataLength: BigInt
+  " Fee related data "
+  nftData: String
+  nftDataLength: BigInt
 
-#   paymentData: String
-#   paymentDataLength: BigInt
-#   blockHeight: BigInt
-#   exchange: String
-#   total: BigInt
-#   # protocolFees: BigInt
-# }
+  paymentData: String
+  paymentDataLength: BigInt
+  blockHeight: BigInt
+  exchange: String
+  total: BigInt
+  # protocolFees: BigInt
+}
 
 type DirectPurchase @entity {
   id: ID!
