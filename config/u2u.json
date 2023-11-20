@@ -10,6 +10,12 @@
     },
     "exchangev2": {
       "address" : "0xd8c5F75Aa01dC3db284F9F3C697C76C0D9DeB3A3"
+    },
+    "erc721marketplace": {
+      "address": "0x01F99D2713303Ed26f6ad5de64Dd5997A592669d"
+    },
+    "erc1155marketplace": {
+      "address": "0x7D6dD8546eA717BF52b924C5164b8865b6f10A84"
     }
   }
     

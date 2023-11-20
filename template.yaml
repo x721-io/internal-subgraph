@@ -49,41 +49,66 @@ dataSources:
         - event: Create1155RaribleUserProxy(address)
           handler: handle1155UserProxy
   - kind: ethereum/contract
-    name: ExchangeV2
+    name: ERC721Marketplace
     network: {{network}}
     source:
-      address: '{{exchangev2.address}}'
-      abi: ExchangeV2
+      address: '{{erc721marketplace.address}}'
+      abi: ERC721Marketplace
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
-      file: ./src/exchange-v-2.ts
+      file: ./src/mapping/Marketplace721.ts
       entities:
-        - Action
-        - Deal
+        - MarketEvent721
       abis:
-        - name: ExchangeV2
-          file: ./abis/ExchangeV2.json
-      # eventHandlers:
-      #   - event: Cancel(bytes32)
-      #     handler: handleCancel
-      #   - event: Match(bytes32,bytes32,newLeftFill)
-      #     handler: handle1155UserProxy
-      #   - event: MatcherChange(bytes4,address)
-      #     handler: handle1155UserProxy
-      #   - event: OwnershipTransferred(address,address)
-      #     handler: handleOwnershipTransferred
-      #   - event: ProxyChange(bytes4,address)
-      #     handler: handleProxyChange
-      callHandlers:
-        - function: matchOrders((address,((bytes4,bytes),uint256),address,((bytes4,bytes),uint256),uint256,uint256,uint256,bytes4,bytes),bytes,(address,((bytes4,bytes),uint256),address,((bytes4,bytes),uint256),uint256,uint256,uint256,bytes4,bytes),bytes)
-          handler: handleMatchOrders
-        - function: directAcceptBid((address,uint256,bytes4,bytes,uint256,address,uint256,uint256,uint256,bytes4,bytes,bytes,uint256,uint256,bytes))
-          handler: handleDirectAcceptBid
-        - function: directPurchase((address,uint256,bytes4,bytes,uint256,address,uint256,uint256,uint256,bytes4,bytes,bytes,uint256,uint256,bytes))
-          handler: handleDirectPurchase
+        - name: ERC721Marketplace
+          file: ./abis/ERC721Marketplace.json
+      eventHandlers:
+        - event: AskNew(indexed address,indexed address,uint256,address,uint256)
+          handler: handleAskNew
+        - event: AskCancel(indexed address,indexed address,uint256)
+          handler: handleAskCancel
+        - event: Trade(indexed address,indexed address,indexed address,uint256,address,uint256,uint256)
+          handler: handleTrade
+        - event: AcceptBid(indexed address,indexed address,indexed address,uint256,address,uint256,uint256)
+          handler: handleAcceptBid
+        - event: Bid(indexed address,indexed address,uint256,address,uint256)
+          handler: handleBid
+        - event: CancelBid(indexed address,indexed address,uint256)
+          handler: handleCancelBid
+
+  - kind: ethereum/contract
+    name: ERC1155Marketplace
+    network: {{network}}
+    source:
+      address: '{{erc1155marketplace.address}}'
+      abi: ERC1155Marketplace
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/Marketplace1155.ts
+      entities:
+        - MarketEvent1155
+      abis:
+        - name: ERC1155Marketplace
+          file: ./abis/ERC1155Marketplace.json
+      eventHandlers:
+        - event: AskNew(indexed address,indexed address,uint256,address,uint256,uint256)
+          handler: handleAskNew
+        - event: AskCancel(indexed address,indexed address,uint256,uint256)
+          handler: handleAskCancel
+        - event: Trade(indexed address,indexed address,indexed address,uint256,address,uint256,uint256,uint256)
+          handler: handleTrade
+        - event: AcceptBid(indexed address,indexed address,indexed address,uint256,address,uint256,uint256,uint256)
+          handler: handleAcceptBid
+        - event: Bid(indexed address,indexed address,uint256,address,uint256,uint256)
+          handler: handleBid
+        - event: CancelBid(indexed address,indexed address,uint256,uint256)
+          handler: handleCancelBid
 templates:
   - kind: ethereum/contract
     name: ERC721Proxy
@@ -113,7 +138,7 @@ templates:
         - event: CreateERC721RaribleUser(address,string,string)
           handler: handleCreateERC721RaribleUser
         - event: Creators(uint256,(address,uint96)[])
-          handler: handleCreators
+          handler: handle721Creators
         - event: DefaultApproval(indexed address,bool)
           handler: handleDefaultApproval
         - event: MinterStatusChanged(indexed address,indexed bool)
@@ -152,7 +177,7 @@ templates:
         - event: CreateERC1155RaribleUser(address,string,string)
           handler: handleCreateERC1155RaribleUser
         - event: Creators(uint256,(address,uint96)[])
-          handler: handleCreators
+          handler: handle1155Creators
         - event: DefaultApproval(indexed address,bool)
           handler: handleDefaultApproval
         - event: MinterStatusChanged(indexed address,indexed bool)
