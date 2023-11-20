@@ -48,42 +48,42 @@ dataSources:
           handler: handle1155Proxy
         - event: Create1155RaribleUserProxy(address)
           handler: handle1155UserProxy
-  - kind: ethereum/contract
-    name: ExchangeV2
-    network: testnet
-    source:
-      address: '0xd8c5F75Aa01dC3db284F9F3C697C76C0D9DeB3A3'
-      abi: ExchangeV2
-      startBlock: 10461046
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./src/exchange-v-2.ts
-      entities:
-        - Action
-        - Deal
-      abis:
-        - name: ExchangeV2
-          file: ./abis/ExchangeV2.json
-      # eventHandlers:
-      #   - event: Cancel(bytes32)
-      #     handler: handleCancel
-      #   - event: Match(bytes32,bytes32,newLeftFill)
-      #     handler: handle1155UserProxy
-      #   - event: MatcherChange(bytes4,address)
-      #     handler: handle1155UserProxy
-      #   - event: OwnershipTransferred(address,address)
-      #     handler: handleOwnershipTransferred
-      #   - event: ProxyChange(bytes4,address)
-      #     handler: handleProxyChange
-      callHandlers:
-        - function: matchOrders((address,((bytes4,bytes),uint256),address,((bytes4,bytes),uint256),uint256,uint256,uint256,bytes4,bytes),bytes,(address,((bytes4,bytes),uint256),address,((bytes4,bytes),uint256),uint256,uint256,uint256,bytes4,bytes),bytes)
-          handler: handleMatchOrders
-        - function: directAcceptBid((address,uint256,bytes4,bytes,uint256,address,uint256,uint256,uint256,bytes4,bytes,bytes,uint256,uint256,bytes))
-          handler: handleDirectAcceptBid
-        - function: directPurchase((address,uint256,bytes4,bytes,uint256,address,uint256,uint256,uint256,bytes4,bytes,bytes,uint256,uint256,bytes))
-          handler: handleDirectPurchase
+  # - kind: ethereum/contract
+  #   name: ExchangeV2
+  #   network: testnet
+  #   source:
+  #     address: '0xd8c5F75Aa01dC3db284F9F3C697C76C0D9DeB3A3'
+  #     abi: ExchangeV2
+  #     startBlock: 10461046
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.6
+  #     language: wasm/assemblyscript
+  #     file: ./src/exchange-v-2.ts
+  #     entities:
+  #       - Action
+  #       - Deal
+  #     abis:
+  #       - name: ExchangeV2
+  #         file: ./abis/ExchangeV2.json
+  #     # eventHandlers:
+  #     #   - event: Cancel(bytes32)
+  #     #     handler: handleCancel
+  #     #   - event: Match(bytes32,bytes32,newLeftFill)
+  #     #     handler: handle1155UserProxy
+  #     #   - event: MatcherChange(bytes4,address)
+  #     #     handler: handle1155UserProxy
+  #     #   - event: OwnershipTransferred(address,address)
+  #     #     handler: handleOwnershipTransferred
+  #     #   - event: ProxyChange(bytes4,address)
+  #     #     handler: handleProxyChange
+  #     callHandlers:
+  #       - function: matchOrders((address,((bytes4,bytes),uint256),address,((bytes4,bytes),uint256),uint256,uint256,uint256,bytes4,bytes),bytes,(address,((bytes4,bytes),uint256),address,((bytes4,bytes),uint256),uint256,uint256,uint256,bytes4,bytes),bytes)
+  #         handler: handleMatchOrders
+  #       - function: directAcceptBid((address,uint256,bytes4,bytes,uint256,address,uint256,uint256,uint256,bytes4,bytes,bytes,uint256,uint256,bytes))
+  #         handler: handleDirectAcceptBid
+  #       - function: directPurchase((address,uint256,bytes4,bytes,uint256,address,uint256,uint256,uint256,bytes4,bytes,bytes,uint256,uint256,bytes))
+  #         handler: handleDirectPurchase
 templates:
   - kind: ethereum/contract
     name: ERC721Proxy
@@ -113,7 +113,7 @@ templates:
         - event: CreateERC721RaribleUser(address,string,string)
           handler: handleCreateERC721RaribleUser
         - event: Creators(uint256,(address,uint96)[])
-          handler: handleCreators
+          handler: handle721Creators
         - event: DefaultApproval(indexed address,bool)
           handler: handleDefaultApproval
         - event: MinterStatusChanged(indexed address,indexed bool)
@@ -152,7 +152,7 @@ templates:
         - event: CreateERC1155RaribleUser(address,string,string)
           handler: handleCreateERC1155RaribleUser
         - event: Creators(uint256,(address,uint96)[])
-          handler: handleCreators
+          handler: handle1155Creators
         - event: DefaultApproval(indexed address,bool)
           handler: handleDefaultApproval
         - event: MinterStatusChanged(indexed address,indexed bool)
