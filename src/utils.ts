@@ -1,5 +1,5 @@
 import { Account, ERC1155Balance } from "../generated/schema"
-import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts/index"
+import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts/index"
 import { Coefficient } from "./enum"
 
 // export function calculatePriceAndFee(deal: Deal): void {
@@ -48,6 +48,7 @@ export function updateERC1155Balance(accountAddress: Address, tokenId: string, v
         balance.valueExact = value;
         balance.token = tokenId;
         balance.contract = contractAddress;
+        balance.account = fetchOrCreateAccount(accountAddress).id;
     } else {
         balance.value = balance.value.plus(value.toBigDecimal());
         balance.valueExact = balance.valueExact.plus(value);
