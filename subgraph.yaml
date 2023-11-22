@@ -83,7 +83,7 @@ dataSources:
     name: ERC1155Marketplace
     network: testnet
     source:
-      address: '0x7D6dD8546eA717BF52b924C5164b8865b6f10A84'
+      address: '0x80827083556A13c1F092a5c30A282C571A76DCb8'
       abi: ERC1155Marketplace
       startBlock: 10466045
     mapping:
@@ -97,17 +97,17 @@ dataSources:
         - name: ERC1155Marketplace
           file: ./abis/ERC1155Marketplace.json
       eventHandlers:
-        - event: AskNew(indexed address,indexed address,uint256,address,uint256,uint256)
+        - event: AskNew(uint256,address,address,uint256,uint256,address,uint256)
           handler: handleAskNew
-        - event: AskCancel(indexed address,indexed address,uint256,uint256)
+        - event: AskCancel(uint256)
           handler: handleAskCancel
-        - event: Trade(indexed address,indexed address,indexed address,uint256,address,uint256,uint256,uint256)
+        - event: Buy(uint256,address,uint256,uint256,uint256)
           handler: handleTrade
-        - event: AcceptBid(indexed address,indexed address,indexed address,uint256,address,uint256,uint256,uint256)
+        - event: OfferAccept(uint256,address,uint256,uint256,uint256)
           handler: handleAcceptBid
-        - event: Bid(indexed address,indexed address,uint256,address,uint256,uint256)
+        - event: OfferNew(uint256,address,address,uint256,uint256,address,uint256)
           handler: handleBid
-        - event: CancelBid(indexed address,indexed address,uint256,uint256)
+        - event: OfferCancel(uint256)
           handler: handleCancelBid
 templates:
   - kind: ethereum/contract
