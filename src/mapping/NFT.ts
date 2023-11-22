@@ -1,4 +1,4 @@
-import { Account, Collection, Creator, ERC1155Balance, ERC1155Creator, ERC1155Token, ERC1155Transfer, ERC721Creator, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
+import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Creator, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
 import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, ERC721Proxy, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, TransferSingle, URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { BigInt, log } from "@graphprotocol/graph-ts";
@@ -16,72 +16,64 @@ export function handleBaseUriChanged(event: BaseUriChanged): void {
 }
 
 export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
-  let collection = Collection.load(event.address.toHexString());
+  let collection = ERC721Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
-    collection.type = 'ERC721';
     collection.save();
   }
   else {
-    let newCollection = new Collection(event.address.toHexString());
+    let newCollection = new ERC721Contract(event.address.toHexString());
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
-    newCollection.owner = event.params.owner.toHexString();
-    newCollection.type = 'ERC721';
+    newCollection.asAccount = fetchOrCreateAccount(event.params.owner).id;
     newCollection.save()
   }
 }
 
 export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): void {
-  let collection = Collection.load(event.address.toHexString());
+  let collection = ERC721Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
-    collection.type = 'ERC721';
     collection.save();
   }
   else {
-    let newCollection = new Collection(event.address.toHexString());
+    let newCollection = new ERC721Contract(event.address.toHexString());
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
-    newCollection.owner = event.params.owner.toHexString();
-    newCollection.type = 'ERC721';
+    newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
     newCollection.save()
   }
 }
 export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
-  let collection = Collection.load(event.address.toHexString());
+  let collection = ERC1155Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
-    collection.type = 'ERC1155';
     collection.save();
   }
   else {
-    let newCollection = new Collection(event.address.toHexString());
+    let newCollection = new ERC1155Contract(event.address.toHexString());
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
-    newCollection.owner = event.params.owner.toHexString();
-    newCollection.type = 'ERC1155';
+    newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
     newCollection.save()
   }
 }
 
 export function handleCreateERC1155RaribleUser(event: CreateERC1155RaribleUser): void {
-  let collection = Collection.load(event.address.toHexString());
+  let collection = ERC1155Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
-    collection.type = 'ERC1155';
     collection.save();
   }
   else {
-    let newCollection = new Collection(event.address.toHexString());
+    let newCollection = new ERC1155Contract(event.address.toHexString());
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
-    newCollection.owner = event.params.owner.toHexString();
-    newCollection.type = 'ERC1155';
+    newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newCollection.save()
   }
 }
@@ -260,11 +252,11 @@ export function handleSupply(event: Supply): void {
 
 export function handle1155Creators(event: Creators): void {
   // let tokenId = event.params.tokenId.toString();
-  let collection = Collection.load(event.address.toHexString());
+  let collection = ERC1155Contract.load(event.address.toHexString());
 
   // Create the Collection entity if it doesn't exist
   if (!collection) {
-    collection = new Collection(event.address.toHexString());
+    collection = new ERC1155Contract(event.address.toHexString());
     // Initialize other necessary fields for Collection
     collection.txCreation = event.transaction.hash.toHexString();
     collection.save();
@@ -294,12 +286,12 @@ export function handle1155Creators(event: Creators): void {
 export function handle721Creators(event: Creators): void {
   // let tokenId = event.params.tokenId.toString();
   // let collectionAddr = event.address.toHexString()
-  let collection = Collection.load(event.address.toHexString());
+  let collection = ERC721Contract.load(event.address.toHexString());
 
   // Create the Collection entity if it doesn't exist
   log.info('tokenId: {} {}', [event.transaction.from.toHexString(), event.address.toHexString()])
   if (!collection) {
-    collection = new Collection(event.address.toHexString());
+    collection = new ERC721Contract(event.address.toHexString());
     // Initialize other necessary fields for Collection
     collection.txCreation = event.transaction.hash.toHexString();
     collection.save();

@@ -97,17 +97,17 @@ dataSources:
         - name: ERC1155Marketplace
           file: ./abis/ERC1155Marketplace.json
       eventHandlers:
-        - event: AskNew(indexed address,indexed address,uint256,address,uint256,uint256)
+        - event: AskNew(uint256,address,address,uint256,uint256,address,uint256)
           handler: handleAskNew
-        - event: AskCancel(indexed address,indexed address,uint256,uint256)
+        - event: AskCancel(uint256)
           handler: handleAskCancel
-        - event: Trade(indexed address,indexed address,indexed address,uint256,address,uint256,uint256,uint256)
+        - event: Buy(uint256,address,uint256,uint256,uint256)
           handler: handleTrade
-        - event: AcceptBid(indexed address,indexed address,indexed address,uint256,address,uint256,uint256,uint256)
+        - event: OfferAccept(uint256,address,uint256,uint256,uint256)
           handler: handleAcceptBid
-        - event: Bid(indexed address,indexed address,uint256,address,uint256,uint256)
+        - event: OfferNew(uint256,address,address,uint256,uint256,address,uint256)
           handler: handleBid
-        - event: CancelBid(indexed address,indexed address,uint256,uint256)
+        - event: OfferCancel(uint256)
           handler: handleCancelBid
 templates:
   - kind: ethereum/contract
