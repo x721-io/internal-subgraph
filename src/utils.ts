@@ -1,5 +1,6 @@
+import { Block } from "../generated/schema"
 import { Account, ERC1155Balance } from "../generated/schema"
-import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts/index"
+import { Address, BigDecimal, BigInt, ethereum, log } from "@graphprotocol/graph-ts/index"
 import { Coefficient } from "./enum"
 
 // export function calculatePriceAndFee(deal: Deal): void {
@@ -55,4 +56,13 @@ export function updateERC1155Balance(accountAddress: Address, tokenId: string, v
     }
     balance.save();
     return balance
+}
+
+
+export function updateBlockEntity(event: ethereum.Event, type: string): void {
+  let block = new Block(event.block.number.toString())
+  block.timestampt = event.block.timestamp.toI32()
+  block.blockNumber = event.block.number.toI32()
+  block.event = type// You need to set this appropriately
+  block.save()
 }

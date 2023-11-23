@@ -8,6 +8,7 @@ import {
   OfferCancel,
 } from "../../generated/ERC1155Marketplace/ERC1155Marketplace"
 import { ERC1155Token, MarketEvent1155 } from "../../generated/schema"
+import { updateBlockEntity } from "../utils";
 
 function createEvent(id: BigInt, action: string): MarketEvent1155 {
   return new MarketEvent1155(id.toString() + "-" + action);
@@ -17,6 +18,7 @@ function createEventId(id: BigInt, action: string): string {
   return id.toString() + "-" + action;
 }
 export function handleAskNew(event: AskNew): void {
+  updateBlockEntity(event, 'handleAskNew-1155')
   let ev = createEvent(event.params.askId, 'Ask');
   const nft = ERC1155Token.load(event.params.tokenId.toString());
   log.info('nft1155: {}', [nft!.id])
@@ -37,6 +39,7 @@ export function handleAskNew(event: AskNew): void {
 }
 
 export function handleAskCancel(event: AskCancel): void {
+  updateBlockEntity(event, 'handleAskCancel-1155')
   const id = createEventId(event.params.askId, 'Ask')
   let ev = MarketEvent1155.load(id);
   if (ev) {
@@ -47,6 +50,7 @@ export function handleAskCancel(event: AskCancel): void {
 }
 
 export function handleTrade(event: Buy): void {
+  updateBlockEntity(event, 'handleTrade-1155')
   let id = createEventId(event.params.askId, "Ask");
   const ev = MarketEvent1155.load(id);
   if (ev) {
@@ -62,6 +66,7 @@ export function handleTrade(event: Buy): void {
 }
 
 export function handleAcceptBid(event: OfferAccept): void {
+  updateBlockEntity(event, 'handleAcceptBid-1155')
   let id = createEventId(event.params.offerId, "Offer");
   const ev = MarketEvent1155.load(id);
   if (ev) {
@@ -77,6 +82,7 @@ export function handleAcceptBid(event: OfferAccept): void {
 }
 
 export function handleBid(event: OfferNew): void {
+  updateBlockEntity(event, 'handleCancelBid-1155')
   let ev = createEvent(event.params.offerId, "Offer");
   const nft = ERC1155Token.load(event.params.tokenId.toString());
   if (nft) {
@@ -94,10 +100,11 @@ export function handleBid(event: OfferNew): void {
 }
 
 export function handleCancelBid(event: OfferCancel): void {
+  updateBlockEntity(event, 'handleCancelBid-1155')
   const id = createEventId(event.params.offerId, 'Offer')
   let ev = MarketEvent1155.load(id);
   if (ev) {
-    ev.event = 'OfferCancel';
+    ev.event = 'CancelBid';
     ev.operationId = event.params.offerId;
     ev.save()
   }

@@ -11,80 +11,6 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Block extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Block entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Block must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("Block", id.toString(), this);
-    }
-  }
-
-  static loadInBlock(id: string): Block | null {
-    return changetype<Block | null>(store.get_in_block("Block", id));
-  }
-
-  static load(id: string): Block | null {
-    return changetype<Block | null>(store.get("Block", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get number(): BigInt | null {
-    let value = this.get("number");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set number(value: BigInt | null) {
-    if (!value) {
-      this.unset("number");
-    } else {
-      this.set("number", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get time(): BigInt | null {
-    let value = this.get("time");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set time(value: BigInt | null) {
-    if (!value) {
-      this.unset("time");
-    } else {
-      this.set("time", Value.fromBigInt(<BigInt>value));
-    }
-  }
-}
-
 export class Account extends Entity {
   constructor(id: string) {
     super();
@@ -1935,6 +1861,85 @@ export class MarketEvent1155 extends Entity {
 
   set operationId(value: BigInt) {
     this.set("operationId", Value.fromBigInt(value));
+  }
+}
+
+export class Block extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Block entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Block must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Block", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Block | null {
+    return changetype<Block | null>(store.get_in_block("Block", id));
+  }
+
+  static load(id: string): Block | null {
+    return changetype<Block | null>(store.get("Block", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestampt(): i32 {
+    let value = this.get("timestampt");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set timestampt(value: i32) {
+    this.set("timestampt", Value.fromI32(value));
+  }
+
+  get blockNumber(): i32 {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set blockNumber(value: i32) {
+    this.set("blockNumber", Value.fromI32(value));
+  }
+
+  get event(): string {
+    let value = this.get("event");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set event(value: string) {
+    this.set("event", Value.fromString(value));
   }
 }
 
