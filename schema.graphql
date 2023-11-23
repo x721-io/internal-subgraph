@@ -12,11 +12,13 @@ enum ContractType {
   NFTTransferProxies
   Royalties
 }
-
-type Block @entity {
-  id: ID!
-  number: BigInt
-  time: BigInt
+enum SellStatus {
+	AskNew
+	AskCancel
+	Trade
+	AcceptBid
+	Bid
+	CancelBid
 }
 
 type Account @entity {
@@ -146,7 +148,7 @@ type Transaction @entity(immutable: true) {
 type MarketEvent721 @entity {
 	id: ID!
 	txHash: String!
-	event: String! # action type
+	event: SellStatus! # action type
 	address: String!
 	nftId: ERC721Token!
 	from: String!
@@ -161,7 +163,7 @@ type MarketEvent721 @entity {
 type MarketEvent1155 @entity {
   id: ID!
   txHash: String!
-  event: String! # Action type, like "AskNew", "Trade", etc.
+  event: SellStatus! # Action type, like "AskNew", "Trade", etc.
   address: String # Address of the ERC1155 contract
   nftId: ERC1155Token # Token ID in ERC1155
   from: String # Address of the sender
@@ -173,6 +175,13 @@ type MarketEvent1155 @entity {
   quoteToken: String # Address of the quote token (e.g., WETH, ERC20)
   amounts: BigInt! # Number of tokens involved in the transaction
   operationId: BigInt!
+}
+
+type Block @entity {
+	id: ID!
+	timestampt: Int!
+	blockNumber: Int!
+	event: String!
 }
 
 enum ActionState {
