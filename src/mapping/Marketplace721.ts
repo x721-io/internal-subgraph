@@ -1,4 +1,4 @@
-import { Address, BigInt, ethereum, log } from "@graphprotocol/graph-ts"
+import { Address, BigInt, log } from "@graphprotocol/graph-ts"
 import {
   AskNew,
   AskCancel,
@@ -11,15 +11,14 @@ import { ERC721Token, MarketEvent721 } from "../../generated/schema"
 import { updateBlockEntity } from "../utils";
 
 function createEvent(contract: Address, tokenId: BigInt): MarketEvent721 {
-  let ev = MarketEvent721.load(contract.toString() + "-" + tokenId.toString());
+  let ev = MarketEvent721.load(contract.toHexString() + "-" + tokenId.toString());
   if (!ev)
-    return new MarketEvent721(contract.toString() + "-" + tokenId.toString());
+    return new MarketEvent721(contract.toHexString() + "-" + tokenId.toString());
   else  
     return ev;
 }
 
 export function handleAskNew(event: AskNew): void {
-  updateBlockEntity(event, 'handleAskCancel-721')
   let ev = createEvent(event.params._nft, event.params._tokenId);
   const nft = ERC721Token.load(event.params._tokenId.toString());
   if (nft) {
@@ -37,7 +36,6 @@ export function handleAskNew(event: AskNew): void {
 }
 
 export function handleAskCancel(event: AskCancel): void {
-  updateBlockEntity(event, 'handleAskCancel-721')
   let ev = createEvent(event.params._nft, event.params._tokenId);
   const nft = ERC721Token.load(event.params._tokenId.toString());
   if (nft) {
@@ -52,7 +50,6 @@ export function handleAskCancel(event: AskCancel): void {
 }
 
 export function handleTrade(event: Trade): void {
-  updateBlockEntity(event, 'handleTrade-721')
   let ev = createEvent(event.params._nft, event.params._tokenId);
   const nft = ERC721Token.load(event.params._tokenId.toString());
   if (nft) {
@@ -71,7 +68,6 @@ export function handleTrade(event: Trade): void {
 }
 
 export function handleAcceptBid(event: AcceptBid): void {
-  updateBlockEntity(event, 'handleAcceptBid-721')
   let ev = createEvent(event.params._nft, event.params._tokenId);
   const nft = ERC721Token.load(event.params._tokenId.toString());
   if (nft) {
@@ -90,7 +86,6 @@ export function handleAcceptBid(event: AcceptBid): void {
 }
 
 export function handleBid(event: Bid): void {
-  updateBlockEntity(event, 'handleBid-721')
   let ev = createEvent(event.params._nft, event.params._tokenId);
   const nft = ERC721Token.load(event.params._tokenId.toString());
   if (nft) {
@@ -107,7 +102,6 @@ export function handleBid(event: Bid): void {
 }
 
 export function handleCancelBid(event: CancelBid): void {
-  updateBlockEntity(event, 'handleCancelBid-721')
   let ev = createEvent(event.params._nft, event.params._tokenId);
   const nft = ERC721Token.load(event.params._tokenId.toString());
   if (nft) {
