@@ -1662,17 +1662,21 @@ export class MarketEvent1155 extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get txHash(): string {
+  get txHash(): string | null {
     let value = this.get("txHash");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set txHash(value: string) {
-    this.set("txHash", Value.fromString(value));
+  set txHash(value: string | null) {
+    if (!value) {
+      this.unset("txHash");
+    } else {
+      this.set("txHash", Value.fromString(<string>value));
+    }
   }
 
   get event(): string {
@@ -1686,6 +1690,19 @@ export class MarketEvent1155 extends Entity {
 
   set event(value: string) {
     this.set("event", Value.fromString(value));
+  }
+
+  get operation(): string {
+    let value = this.get("operation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set operation(value: string) {
+    this.set("operation", Value.fromString(value));
   }
 
   get address(): string | null {
@@ -1753,23 +1770,6 @@ export class MarketEvent1155 extends Entity {
       this.unset("to");
     } else {
       this.set("to", Value.fromString(<string>value));
-    }
-  }
-
-  get metadata(): string | null {
-    let value = this.get("metadata");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set metadata(value: string | null) {
-    if (!value) {
-      this.unset("metadata");
-    } else {
-      this.set("metadata", Value.fromString(<string>value));
     }
   }
 
@@ -1848,19 +1848,6 @@ export class MarketEvent1155 extends Entity {
 
   set amounts(value: BigInt) {
     this.set("amounts", Value.fromBigInt(value));
-  }
-
-  get operationId(): BigInt {
-    let value = this.get("operationId");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set operationId(value: BigInt) {
-    this.set("operationId", Value.fromBigInt(value));
   }
 }
 
