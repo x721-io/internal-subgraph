@@ -162,19 +162,23 @@ type MarketEvent721 @entity {
 
 type MarketEvent1155 @entity {
   id: ID!
-  txHash: String!
+  txHash: String
   event: SellStatus! # Action type, like "AskNew", "Trade", etc.
+  operation: Operation!
   address: String # Address of the ERC1155 contract
   nftId: ERC1155Token # Token ID in ERC1155
   from: String # Address of the sender
-  to: String # Address of the receiver
-  metadata: String # Additional metadata
+  to: String
   timestamp: BigInt!
   price: BigInt # Price per unit
   netPrice: BigInt
   quoteToken: String # Address of the quote token (e.g., WETH, ERC20)
   amounts: BigInt! # Number of tokens involved in the transaction
-  operationId: BigInt!
+}
+
+enum Operation {
+	Ask
+	Offer
 }
 
 type Block @entity {
