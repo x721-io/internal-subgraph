@@ -31,7 +31,7 @@ export function handleOfferNew(event: OfferNew): void {
   const nft = ERC1155Token.load(event.params.tokenId.toString());
   if (nft) {
     transaction.operation = "Offer"
-    transaction.from = event.params.buyer.toHexString();
+    transaction.to = event.params.buyer.toHexString();
     transaction.nftId = nft.id.toString();
     transaction.amounts = event.params.quantity
     transaction.quoteToken = event.params.quoteToken.toHexString();

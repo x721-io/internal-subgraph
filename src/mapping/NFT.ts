@@ -1,8 +1,9 @@
 import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Creator, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
-import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, ERC721Proxy, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
+import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, TransferSingle, URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { BigInt, log } from "@graphprotocol/graph-ts";
-import { ensureAccount, fetchOrCreateAccount, updateBlockEntity, updateERC1155Balance } from "../utils";
+import { fetchOrCreateAccount, updateBlockEntity, updateERC1155Balance } from "../utils";
+import { ContractAddress } from "../enum";
 export function handleApproval(event: Approval): void {
   // Logic to handle the Approval event
 }
@@ -96,9 +97,12 @@ export function handleRoyaltiesSet(event: RoyaltiesSet): void {
 
 export function handleTransfer(event: Transfer): void {
   updateBlockEntity(event, 'handleTransfer')
+  if (event.params.to.toHexString() === ContractAddress.erc721marketplace) {
+    log.info('Transfer to marketplace: {} {}', [event.params.to.toHexString(), ContractAddress.erc721marketplace])
+    return;
+  }
   const tokenId = event.params.tokenId.toString();
   let token = ERC721Token.load(tokenId);
-
   // Handle the new transaction
   let transaction = Transaction.load(event.transaction.hash.toHex());
   if (transaction == null) {
@@ -163,6 +167,9 @@ export function handleTransfer(event: Transfer): void {
 
 export function handleTransferSingle(event: TransferSingle): void {
   updateBlockEntity(event, 'handleTransferSingle')
+  if (event.params.to.toHexString() === ContractAddress.erc1155marketplace) {
+    return;
+  }
   let transaction = Transaction.load(event.transaction.hash.toHex());
   if (transaction == null) {
     transaction = new Transaction(event.transaction.hash.toHex());
@@ -180,8 +187,9 @@ export function handleTransferSingle(event: TransferSingle): void {
   }
 
   // Update balances for 'from' and 'to' accounts
-  updateERC1155Balance(event.params.from, tokenId, event.params.value.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
-  const balance = updateERC1155Balance(event.params.to, tokenId, event.params.value, event.address.toHex()); // Add value
+  if (event.params.from.toHexString() !== ContractAddress.erc1155marketplace)
+    updateERC1155Balance(event.params.from, tokenId, event.params.value.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
+  updateERC1155Balance(event.params.to, tokenId, event.params.value, event.address.toHex()); // Add value
 
   // Create ERC1155Transfer entity
   let transfer = new ERC1155Transfer(event.transaction.hash.toHex() + "-" + tokenId);
@@ -201,6 +209,9 @@ export function handleTransferSingle(event: TransferSingle): void {
 
 export function handleTranferBatch(event: TransferBatch): void {
   updateBlockEntity(event, 'handleTranferBatch')
+  if (event.params.to.toHexString() === ContractAddress.erc1155marketplace) {
+    return;
+  }
   let transaction = Transaction.load(event.transaction.hash.toHex());
   if (transaction == null) {
     transaction = new Transaction(event.transaction.hash.toHex());
@@ -218,7 +229,8 @@ export function handleTranferBatch(event: TransferBatch): void {
     }
 
     // Update balances for 'from' and 'to' accounts
-    updateERC1155Balance(event.params.from, tokenId, event.params.values[i].times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
+    if (event.params.from.toHexString() !== ContractAddress.erc1155marketplace)
+      updateERC1155Balance(event.params.from, tokenId, event.params.values[i].times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
     updateERC1155Balance(event.params.to, tokenId, event.params.values[i], event.address.toHex()); // Add value
 
     // Create ERC1155Transfer entity
