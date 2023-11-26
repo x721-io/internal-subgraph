@@ -10,7 +10,7 @@ import { ERC1155Token, MarketEvent1155 } from "../../generated/schema"
 
 
 export function handleAskNew(event: AskNew): void {
-  let transaction = new MarketEvent1155(event.params.askId.toString() + 'Ask')
+  let transaction = new MarketEvent1155(event.params.askId.toString() + ' - Ask')
   const nft = ERC1155Token.load(event.params.tokenId.toString());
   if (nft) {
     transaction.operation = "Ask"
@@ -21,12 +21,13 @@ export function handleAskNew(event: AskNew): void {
     transaction.price = event.params.pricePerUnit
     transaction.event = "AskNew"
     transaction.txHash = event.transaction.hash.toHexString();
-    transaction.timestamp = event.block.timestamp
+    transaction.timestamp = event.block.timestamp;
+    transaction.operationId = event.params.askId;
     transaction.save()
   }
 }
 export function handleOfferNew(event: OfferNew): void {
-  let transaction = new MarketEvent1155(event.params.offerId.toString() + 'Offer')
+  let transaction = new MarketEvent1155(event.params.offerId.toString() + ' - Offer')
   const nft = ERC1155Token.load(event.params.tokenId.toString());
   if (nft) {
     transaction.operation = "Offer"
@@ -38,12 +39,13 @@ export function handleOfferNew(event: OfferNew): void {
     transaction.event = "Bid"
     transaction.txHash = event.transaction.hash.toHexString()
     transaction.timestamp = event.block.timestamp
+    transaction.operationId = event.params.offerId;
     transaction.save()
   }
 }
 
 export function handleAskCancel(event: AskCancel): void {
-  let transaction = MarketEvent1155.load(event.params.askId.toString() + 'Ask')
+  let transaction = MarketEvent1155.load(event.params.askId.toString() + ' - Ask')
   if (transaction) {
     transaction.event = "AskCancel"
     transaction.save()
@@ -51,7 +53,7 @@ export function handleAskCancel(event: AskCancel): void {
 }
 
 export function handleOfferCancel(event: OfferCancel): void {
-  let transaction = MarketEvent1155.load(event.params.offerId.toString() + 'Offer')
+  let transaction = MarketEvent1155.load(event.params.offerId.toString() + ' - Offer')
   if (transaction) {
     transaction.event = "CancelBid"
     transaction.save()
@@ -59,7 +61,7 @@ export function handleOfferCancel(event: OfferCancel): void {
 }
 
 export function handleBuy(event: Buy): void {
-  let transaction = MarketEvent1155.load(event.params.askId.toString() + 'Ask')
+  let transaction = MarketEvent1155.load(event.params.askId.toString() + ' - Ask')
   if (transaction) {
     transaction.to = event.params.buyer.toHexString()
     transaction.amounts = transaction.amounts.minus(event.params.quantity)
@@ -73,7 +75,7 @@ export function handleBuy(event: Buy): void {
 }
 
 export function handleAcceptOffer(event: OfferAccept): void {
-  let transaction = MarketEvent1155.load(event.params.offerId.toString() + 'Offer')
+  let transaction = MarketEvent1155.load(event.params.offerId.toString() + ' - Offer')
   if (transaction) {
     transaction.from = event.params.seller.toHexString();
     transaction.amounts = transaction.amounts.minus(event.params.quantity)

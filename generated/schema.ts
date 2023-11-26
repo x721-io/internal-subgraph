@@ -1849,6 +1849,23 @@ export class MarketEvent1155 extends Entity {
   set amounts(value: BigInt) {
     this.set("amounts", Value.fromBigInt(value));
   }
+
+  get operationId(): BigInt | null {
+    let value = this.get("operationId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set operationId(value: BigInt | null) {
+    if (!value) {
+      this.unset("operationId");
+    } else {
+      this.set("operationId", Value.fromBigInt(<BigInt>value));
+    }
+  }
 }
 
 export class Block extends Entity {
