@@ -80,9 +80,9 @@ export function handleAcceptOffer(event: OfferAccept): void {
     transaction.from = event.params.seller.toHexString();
     transaction.amounts = transaction.amounts.minus(event.params.quantity)
     if (transaction.amounts.isZero()) {
-      transaction.event = "Accepted"
-    } else {
       transaction.event = "AcceptBid"
+    } else {
+      transaction.event = "Bid"
     }
     transaction.save()
   }
