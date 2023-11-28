@@ -151,7 +151,7 @@ type MarketEvent721 @entity {
 	event: SellStatus! # action type
 	address: String!
 	nftId: ERC721Token!
-	from: String!
+	from: String
 	to: String
 	metadata: String
 	timestamp: BigInt!

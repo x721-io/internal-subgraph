@@ -15,6 +15,7 @@ export function handleAskNew(event: AskNew): void {
   if (nft) {
     transaction.operation = "Ask"
     transaction.from = event.params.seller.toHexString();
+    transaction.to = null;
     transaction.nftId = nft.id.toString();
     transaction.amounts = event.params.quantity
     transaction.quoteToken = event.params.quoteToken.toHexString();
@@ -32,6 +33,7 @@ export function handleOfferNew(event: OfferNew): void {
   if (nft) {
     transaction.operation = "Offer"
     transaction.to = event.params.buyer.toHexString();
+    transaction.from = null;
     transaction.nftId = nft.id.toString();
     transaction.amounts = event.params.quantity
     transaction.quoteToken = event.params.quoteToken.toHexString();

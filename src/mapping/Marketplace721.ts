@@ -35,6 +35,7 @@ export function handleAskNew(event: AskNew): void {
     ev.address = event.params._nft.toHexString();
     ev.txHash = event.transaction.hash.toHex();
     ev.from = event.params._seller.toHexString();
+    ev.to = null;
     ev.nftId = nft.id;
     ev.quoteToken = event.params._quoteToken. toHexString();
     ev.price = event.params._price;
@@ -101,6 +102,7 @@ export function handleBid(event: Bid): void {
     ev.address = event.params._nft.toHexString();
     ev.txHash = event.transaction.hash.toHexString();
     ev.to = event.params.bidder.toHexString();
+    ev.from = null;
     ev.nftId = nft.id;
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;

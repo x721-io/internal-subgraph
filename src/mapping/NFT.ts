@@ -97,6 +97,7 @@ export function handleRoyaltiesSet(event: RoyaltiesSet): void {
 
 export function handleTransfer(event: Transfer): void {
   updateBlockEntity(event, 'handleTransfer')
+  log.info('Transfer to marketplace xxx: {} {}', [event.params.to.toHexString(), ContractAddress.erc721marketplace])
   if (event.params.to.toHexString() === ContractAddress.erc721marketplace) {
     log.info('Transfer to marketplace: {} {}', [event.params.to.toHexString(), ContractAddress.erc721marketplace])
     return;
