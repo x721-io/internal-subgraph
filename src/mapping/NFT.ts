@@ -98,7 +98,7 @@ export function handleRoyaltiesSet(event: RoyaltiesSet): void {
 export function handleTransfer(event: Transfer): void {
   updateBlockEntity(event, 'handleTransfer')
   log.info('Transfer to marketplace xxx: {} {}', [event.params.to.toHexString(), ContractAddress.erc721marketplace])
-  if (event.params.to.toHexString() === ContractAddress.erc721marketplace) {
+  if (event.params.to.toHexString() == ContractAddress.erc721marketplace) {
     log.info('Transfer to marketplace: {} {}', [event.params.to.toHexString(), ContractAddress.erc721marketplace])
     return;
   }
@@ -168,7 +168,7 @@ export function handleTransfer(event: Transfer): void {
 
 export function handleTransferSingle(event: TransferSingle): void {
   updateBlockEntity(event, 'handleTransferSingle')
-  if (event.params.to.toHexString() === ContractAddress.erc1155marketplace) {
+  if (event.params.to.toHexString() == ContractAddress.erc1155marketplace) {
     return;
   }
   let transaction = Transaction.load(event.transaction.hash.toHex());
@@ -188,7 +188,7 @@ export function handleTransferSingle(event: TransferSingle): void {
   }
 
   // Update balances for 'from' and 'to' accounts
-  if (event.params.from.toHexString() !== ContractAddress.erc1155marketplace)
+  if (event.params.from.toHexString() != ContractAddress.erc1155marketplace)
     updateERC1155Balance(event.params.from, tokenId, event.params.value.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
   updateERC1155Balance(event.params.to, tokenId, event.params.value, event.address.toHex()); // Add value
 
@@ -210,7 +210,7 @@ export function handleTransferSingle(event: TransferSingle): void {
 
 export function handleTranferBatch(event: TransferBatch): void {
   updateBlockEntity(event, 'handleTranferBatch')
-  if (event.params.to.toHexString() === ContractAddress.erc1155marketplace) {
+  if (event.params.to.toHexString() == ContractAddress.erc1155marketplace) {
     return;
   }
   let transaction = Transaction.load(event.transaction.hash.toHex());
@@ -230,7 +230,7 @@ export function handleTranferBatch(event: TransferBatch): void {
     }
 
     // Update balances for 'from' and 'to' accounts
-    if (event.params.from.toHexString() !== ContractAddress.erc1155marketplace)
+    if (event.params.from.toHexString() != ContractAddress.erc1155marketplace)
       updateERC1155Balance(event.params.from, tokenId, event.params.values[i].times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
     updateERC1155Balance(event.params.to, tokenId, event.params.values[i], event.address.toHex()); // Add value
 
