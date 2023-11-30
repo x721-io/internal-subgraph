@@ -77,6 +77,7 @@ export function handleTrade(event: Trade): void {
 
 export function handleAcceptBid(event: AcceptBid): void {
   let ev = createEvent(event.params._nft, event.params._tokenId, event.params.bidder);
+  let evAsk = createEvent(event.params._nft, event.params._tokenId);
   const nft = ERC721Token.load(event.params._tokenId.toString());
   if (nft) {
     ev.txHash = event.transaction.hash.toHexString();
@@ -90,6 +91,12 @@ export function handleAcceptBid(event: AcceptBid): void {
     ev.price = event.params._price;
     ev.netPrice = event.params._netPrice;
     ev.save();
+  }
+  if (evAsk && evAsk.event == "AskNew") {
+    evAsk.event = "AskCancel";
+    evAsk.timestamp = event.block.timestamp;
+    evAsk.address = event.params._nft.toHexString();
+    evAsk.txHash = event.transaction.hash.toHexString();
   }
 }
 
