@@ -102,13 +102,13 @@ dataSources:
         - event: AskCancel(uint256)
           handler: handleAskCancel
         - event: Buy(uint256,address,uint256,uint256,uint256)
-          handler: handleTrade
+          handler: handleBuy
         - event: OfferAccept(uint256,address,uint256,uint256,uint256)
-          handler: handleAcceptBid
+          handler: handleAcceptOffer
         - event: OfferNew(uint256,address,address,uint256,uint256,address,uint256)
-          handler: handleBid
+          handler: handleOfferNew
         - event: OfferCancel(uint256)
-          handler: handleCancelBid
+          handler: handleOfferCancel
 templates:
   - kind: ethereum/contract
     name: ERC721Proxy

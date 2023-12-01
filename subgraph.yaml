@@ -52,7 +52,7 @@ dataSources:
     name: ERC721Marketplace
     network: testnet
     source:
-      address: '0x01F99D2713303Ed26f6ad5de64Dd5997A592669d'
+      address: '0x375336Ef53fA8Bd9F26Ff9DDd16d488D3Ce49EA5'
       abi: ERC721Marketplace
       startBlock: 10466045
     mapping:
@@ -83,7 +83,7 @@ dataSources:
     name: ERC1155Marketplace
     network: testnet
     source:
-      address: '0x80827083556A13c1F092a5c30A282C571A76DCb8'
+      address: '0x03CC9b4d1Be469a5C3a91A5bE28d5306ED2e9325'
       abi: ERC1155Marketplace
       startBlock: 10466045
     mapping:
@@ -102,13 +102,13 @@ dataSources:
         - event: AskCancel(uint256)
           handler: handleAskCancel
         - event: Buy(uint256,address,uint256,uint256,uint256)
-          handler: handleTrade
+          handler: handleBuy
         - event: OfferAccept(uint256,address,uint256,uint256,uint256)
-          handler: handleAcceptBid
+          handler: handleAcceptOffer
         - event: OfferNew(uint256,address,address,uint256,uint256,address,uint256)
-          handler: handleBid
+          handler: handleOfferNew
         - event: OfferCancel(uint256)
-          handler: handleCancelBid
+          handler: handleOfferCancel
 templates:
   - kind: ethereum/contract
     name: ERC721Proxy
