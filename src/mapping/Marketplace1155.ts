@@ -1,3 +1,4 @@
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   AskNew,
   AskCancel,
@@ -7,6 +8,7 @@ import {
   OfferCancel,
 } from "../../generated/ERC1155Marketplace/ERC1155Marketplace"
 import { ERC1155Token, MarketEvent1155 } from "../../generated/schema"
+import { updateERC1155Balance } from "../utils";
 
 
 export function handleAskNew(event: AskNew): void {
@@ -67,6 +69,9 @@ export function handleBuy(event: Buy): void {
   if (transaction) {
     transaction.to = event.params.buyer.toHexString()
     transaction.amounts = transaction.amounts.minus(event.params.quantity)
+    if (transaction.from != null && transaction.nftId != null) {
+      updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, event.params.quantity.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
+    }
     if (transaction.amounts.isZero()) {
       transaction.event = "Trade"
     } else {
@@ -81,6 +86,9 @@ export function handleAcceptOffer(event: OfferAccept): void {
   if (transaction) {
     transaction.from = event.params.seller.toHexString();
     transaction.amounts = transaction.amounts.minus(event.params.quantity)
+    if (transaction.from != null && transaction.nftId != null) {
+      updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, event.params.quantity.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
+    }
     if (transaction.amounts.isZero()) {
       transaction.event = "AcceptBid"
     } else {
