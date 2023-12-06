@@ -116,6 +116,7 @@ export function handleTransfer(event: Transfer): void {
   // If the token does not exist yet, create it - this indicates a minting event
   if (token == null) {
     token = new ERC721Token(tokenId);
+    token.tokenId = event.params.tokenId.toString()
     token.contract = event.address.toHexString();
     token.identifier = event.params.tokenId;
     token.owner = event.params.to.toHexString();
@@ -185,6 +186,7 @@ export function handleTransferSingle(event: TransferSingle): void {
   let token = ERC1155Token.load(tokenId);
   if (token == null) {
     token = new ERC1155Token(tokenId);
+    token.tokenId = event.params.id.toString();
     // Initialize other ERC1155Token properties here
     token.save();
   }
@@ -229,6 +231,7 @@ export function handleTranferBatch(event: TransferBatch): void {
     let token = ERC1155Token.load(tokenId);
     if (token == null) {
       token = new ERC1155Token(tokenId);
+      token.tokenId = event.params.ids[i].toString();
       // Initialize other ERC1155Token properties here
       token.save();
     }
@@ -259,6 +262,7 @@ export function handleSupply(event: Supply): void {
   if (token === null) {
     log.info('first token: {}', [event.params.tokenId.toString()])
     token = new ERC1155Token(tokenId);
+    token.tokenId = event.params.tokenId.toString()
     token.txCreation = event.transaction.hash.toHexString();
   }
   token.identifier = event.params.tokenId;

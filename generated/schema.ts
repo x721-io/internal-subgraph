@@ -305,6 +305,19 @@ export class ERC721Token extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get tokenId(): string {
+    let value = this.get("tokenId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenId(value: string) {
+    this.set("tokenId", Value.fromString(value));
+  }
+
   get contract(): string {
     let value = this.get("contract");
     if (!value || value.kind == ValueKind.NULL) {
@@ -920,6 +933,19 @@ export class ERC1155Token extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get tokenId(): string {
+    let value = this.get("tokenId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenId(value: string) {
+    this.set("tokenId", Value.fromString(value));
   }
 
   get contract(): string {
