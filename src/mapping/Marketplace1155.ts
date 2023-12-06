@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import {
   AskNew,
   AskCancel,
@@ -8,12 +8,14 @@ import {
   OfferCancel,
 } from "../../generated/ERC1155Marketplace/ERC1155Marketplace"
 import { ERC1155Token, MarketEvent1155 } from "../../generated/schema"
-import { updateERC1155Balance } from "../utils";
+import { fetchOrCreateERC1155Tokens, updateERC1155Balance } from "../utils";
 
 
 export function handleAskNew(event: AskNew): void {
   let transaction = new MarketEvent1155(event.params.askId.toString() + ' - Ask')
-  const nft = ERC1155Token.load(event.params.tokenId.toString());
+  // const nft = ERC1155Token.load(event.params.tokenId.toString());
+  const nft = fetchOrCreateERC1155Tokens(event.params.nft.toHexString(), event.params.tokenId.toString())
+  log.warning('nft found: {}',[nft.id])
   if (nft) {
     transaction.operation = "Ask"
     transaction.from = event.params.seller.toHexString();
@@ -31,12 +33,13 @@ export function handleAskNew(event: AskNew): void {
 }
 export function handleOfferNew(event: OfferNew): void {
   let transaction = new MarketEvent1155(event.params.offerId.toString() + ' - Offer')
-  const nft = ERC1155Token.load(event.params.tokenId.toString());
+  const nft = fetchOrCreateERC1155Tokens(event.params.nft.toHexString(), event.params.tokenId.toString())
+  log.warning('nft found: {}',[nft.id])
   if (nft) {
     transaction.operation = "Offer"
     transaction.to = event.params.buyer.toHexString();
     transaction.from = null;
-    transaction.nftId = nft.id.toString();
+    transaction.nftId = nft.id;
     transaction.amounts = event.params.quantity
     transaction.quoteToken = event.params.quoteToken.toHexString();
     transaction.price = event.params.pricePerUnit
