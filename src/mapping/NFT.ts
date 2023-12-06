@@ -2,7 +2,7 @@ import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1
 import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, TransferSingle, URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { BigInt, log } from "@graphprotocol/graph-ts";
-import { fetchOrCreateAccount, updateBlockEntity, updateERC1155Balance } from "../utils";
+import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance } from "../utils";
 import { ContractAddress } from "../enum";
 export function handleApproval(event: Approval): void {
   // Logic to handle the Approval event
@@ -102,7 +102,7 @@ export function handleTransfer(event: Transfer): void {
     log.info('Transfer to marketplace: {} {}', [event.params.to.toHexString(), ContractAddress.erc721marketplace])
     return;
   }
-  const tokenId = event.params.tokenId.toString();
+  let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
   let token = ERC721Token.load(tokenId);
   // Handle the new transaction
   let transaction = Transaction.load(event.transaction.hash.toHex());
@@ -145,7 +145,8 @@ export function handleTransfer(event: Transfer): void {
   }
 
   // Create the transfer event entity
-  let transfer = new ERC721Transfer(event.transaction.hash.toHex() + "-" + tokenId);
+  let transferId = generateCombineKey([event.transaction.hash.toHex(), event.address.toHex(), tokenId])
+  let transfer = new ERC721Transfer(transferId);
   transfer.transaction = transaction.id;
   transfer.contract = event.address.toHex();
   transfer.token = tokenId;
@@ -179,7 +180,8 @@ export function handleTransferSingle(event: TransferSingle): void {
     transaction.save();
   }
 
-  let tokenId = event.params.id.toString();
+  // let tokenId = event.params.id.toString();
+  let tokenId = generateCombineKey([event.address.toHexString(), event.params.id.toString()]);
   let token = ERC1155Token.load(tokenId);
   if (token == null) {
     token = new ERC1155Token(tokenId);
@@ -193,7 +195,8 @@ export function handleTransferSingle(event: TransferSingle): void {
   updateERC1155Balance(event.params.to, tokenId, event.params.value, event.address.toHex()); // Add value
 
   // Create ERC1155Transfer entity
-  let transfer = new ERC1155Transfer(event.transaction.hash.toHex() + "-" + tokenId);
+  let transferId = generateCombineKey([event.transaction.hash.toHex(), event.address.toHex(), tokenId])
+  let transfer = new ERC1155Transfer(transferId);
   transfer.transaction = transaction.id;
   transfer.token = token.id;
   transfer.from = fetchOrCreateAccount(event.params.from).id;
@@ -221,7 +224,8 @@ export function handleTranferBatch(event: TransferBatch): void {
     transaction.save();
   }
   for (let i = 0; i < event.params.ids.length; i++) {
-    let tokenId = event.params.ids[i].toString();
+    let tokenId = generateCombineKey([event.address.toHexString(), event.params.ids[i].toString()]);
+    // let tokenId = event.params.ids[i].toString();
     let token = ERC1155Token.load(tokenId);
     if (token == null) {
       token = new ERC1155Token(tokenId);
@@ -235,7 +239,8 @@ export function handleTranferBatch(event: TransferBatch): void {
     updateERC1155Balance(event.params.to, tokenId, event.params.values[i], event.address.toHex()); // Add value
 
     // Create ERC1155Transfer entity
-    let transfer = new ERC1155Transfer(event.transaction.hash.toHex() + "-" + tokenId);
+    let transferId = generateCombineKey([event.transaction.hash.toHex(), event.address.toHex(), tokenId])
+    let transfer = new ERC1155Transfer(transferId);
     transfer.transaction = transaction.id;
     transfer.token = token.id;
     transfer.from = fetchOrCreateAccount(event.params.from).id;
@@ -249,16 +254,18 @@ export function handleTranferBatch(event: TransferBatch): void {
 }
 export function handleSupply(event: Supply): void {
   updateBlockEntity(event, 'handleSupply')
-  let token = ERC1155Token.load(event.params.tokenId.toString());
+  let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
+  let token = ERC1155Token.load(tokenId);
   if (token === null) {
     log.info('first token: {}', [event.params.tokenId.toString()])
-    token = new ERC1155Token(event.params.tokenId.toString());
+    token = new ERC1155Token(tokenId);
     token.txCreation = event.transaction.hash.toHexString();
   }
   token.identifier = event.params.tokenId;
   token.contract = event.address.toHexString();
   // Assume we create a balance entity for totalSupply
-  let totalSupply = new ERC1155Balance(event.address.toHex() + "-" + event.params.tokenId.toString());
+  let balanceId = generateCombineKey([event.address.toHex(), event.params.tokenId.toString()])
+  let totalSupply = new ERC1155Balance(balanceId);
   totalSupply.value = event.params.value.toBigDecimal();
   totalSupply.valueExact = event.params.value;
   totalSupply.contract = event.address.toHex();
@@ -297,7 +304,8 @@ export function handle1155Creators(event: Creators): void {
       creator.save();
     }
 
-    let collectionCreatorId = collection.id + "-" + creatorId;
+    // let collectionCreatorId = collection.id + "-" + creatorId;
+    let collectionCreatorId = generateCombineKey([collection.id, creatorId]);
     let collectionCreator = new ERC1155Creator(collectionCreatorId);
     collectionCreator.collection = collection.id;
     collectionCreator.creator = creatorId;
@@ -333,7 +341,8 @@ export function handle721Creators(event: Creators): void {
       creator.save();
     }
 
-    let collectionCreatorId = collection.id + "-" + creatorId;
+    // let collectionCreatorId = collection.id + "-" + creatorId;
+    let collectionCreatorId = generateCombineKey([collection.id, creatorId]);
     let collectionCreator = new ERC721Creator(collectionCreatorId);
     collectionCreator.collection = collection.id;
     collectionCreator.creator = creatorId;
