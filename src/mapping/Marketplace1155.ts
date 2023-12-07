@@ -28,6 +28,7 @@ export function handleAskNew(event: AskNew): void {
     transaction.txHash = event.transaction.hash.toHexString();
     transaction.timestamp = event.block.timestamp;
     transaction.operationId = event.params.askId;
+    transaction.address = event.params.nft.toHexString();
     transaction.save()
   }
 }
@@ -47,6 +48,7 @@ export function handleOfferNew(event: OfferNew): void {
     transaction.txHash = event.transaction.hash.toHexString()
     transaction.timestamp = event.block.timestamp
     transaction.operationId = event.params.offerId;
+    transaction.address = event.params.nft.toHexString();
     transaction.save()
   }
 }
