@@ -18,6 +18,7 @@ export function handleBaseUriChanged(event: BaseUriChanged): void {
 
 export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
   updateBlockEntity(event, 'handleCreateERC721Rarible')
+  log.info('Creating new collection1: {}', [event.params.owner.toHexString()])
   let collection = ERC721Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
