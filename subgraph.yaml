@@ -98,8 +98,8 @@ dataSources:
       eventHandlers: 
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-        - event: CreateERC721RaribleUser(address,string,string)
-          handler: handleCreateERC721RaribleUser
+        - event: CreateERC721Rarible(address,string,string)
+          handler: handleCreateERC721Rarible
   - kind: ethereum/contract
     name: ERC1155Marketplace
     network: testnet
