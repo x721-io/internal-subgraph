@@ -35,6 +35,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
 
 export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): void {
   updateBlockEntity(event, 'handleCreateERC721RaribleUser')
+  log.info('Creating new collection: {}', [event.params.owner.toHexString()])
   let collection = ERC721Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
