@@ -29,6 +29,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
     let newCollection = new ERC721Contract(event.address.toHexString());
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
+    newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.params.owner).id;
     newCollection.save()
   }
@@ -47,6 +48,7 @@ export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): v
     let newCollection = new ERC721Contract(event.address.toHexString());
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
+    newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
     newCollection.save()
   }
