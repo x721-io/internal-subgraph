@@ -1,4 +1,4 @@
-import { Block } from "../generated/schema"
+import { Block, ERC1155Token, ERC721Token } from "../generated/schema"
 import { Account, ERC1155Balance } from "../generated/schema"
 import { Address, BigDecimal, BigInt, ethereum, log } from "@graphprotocol/graph-ts/index"
 import { Coefficient } from "./enum"
@@ -39,9 +39,33 @@ export function fetchOrCreateAccount(address: Address): Account {
     }
     return account as Account;
 }
-  
+
+export function generateCombineKey(keys: string[]): string {
+    
+    return keys.join('-');
+}
+export function fetchOrCreateERC721Tokens(contractAddress: string, tokenId: string): ERC721Token {
+    let id = generateCombineKey([contractAddress, tokenId]);
+    log.warning('generated id: {}',[id])
+    let token = ERC721Token.load(id);
+    if (token == null) {
+        token = new ERC721Token(id);
+    }
+    return token;
+}
+export function fetchOrCreateERC1155Tokens(contractAddress: string, tokenId: string): ERC1155Token {
+    let id = generateCombineKey([contractAddress, tokenId]);
+    log.warning('generated id: {}',[id])
+
+    let token = ERC1155Token.load(id);
+    if (token == null) {
+        token = new ERC1155Token(id);
+    }
+    return token;
+}
 export function updateERC1155Balance(accountAddress: Address, tokenId: string, value: BigInt, contractAddress: string): ERC1155Balance {
-    let balanceId = accountAddress.toHex() + "-" + tokenId;
+    // let balanceId = accountAddress.toHex() + "-" + tokenId;
+    let balanceId = generateCombineKey([accountAddress.toHex(), tokenId])
     let balance = ERC1155Balance.load(balanceId);
     if (balance == null) {
         balance = new ERC1155Balance(balanceId);

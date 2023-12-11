@@ -46,6 +46,7 @@ type ERC721Contract @entity(immutable: true) {
 }
 type ERC721Token @entity {
 	id: ID!
+	tokenId: String!
 	contract: ERC721Contract!
 	identifier: BigInt!
 	owner: Account!
@@ -98,6 +99,7 @@ type Creator @entity {
 
 type ERC1155Token @entity {
 	id: ID!
+	tokenId: String!
 	contract: ERC1155Contract!
 	identifier: BigInt!
 	uri: String
