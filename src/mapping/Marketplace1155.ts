@@ -91,9 +91,9 @@ export function handleAcceptOffer(event: OfferAccept): void {
   if (transaction) {
     transaction.from = event.params.seller.toHexString();
     transaction.amounts = transaction.amounts.minus(event.params.quantity)
-    if (transaction.from != null && transaction.nftId != null) {
-      updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, event.params.quantity.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
-    }
+    // if (transaction.from != null && transaction.nftId != null) {
+    //   updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, event.params.quantity.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
+    // }
     if (transaction.amounts.isZero()) {
       transaction.event = "AcceptBid"
     } else {
