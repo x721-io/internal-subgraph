@@ -1522,17 +1522,21 @@ export class MarketEvent721 extends Entity {
     this.set("address", Value.fromString(value));
   }
 
-  get nftId(): string {
+  get nftId(): string | null {
     let value = this.get("nftId");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set nftId(value: string) {
-    this.set("nftId", Value.fromString(value));
+  set nftId(value: string | null) {
+    if (!value) {
+      this.unset("nftId");
+    } else {
+      this.set("nftId", Value.fromString(<string>value));
+    }
   }
 
   get from(): string | null {
