@@ -57,6 +57,9 @@ export function handleAskCancel(event: AskCancel): void {
   let transaction = MarketEvent1155.load(event.params.askId.toString() + ' - Ask')
   if (transaction) {
     transaction.event = "AskCancel"
+    if (transaction.from != null && transaction.nftId != null) {
+      updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, transaction.amounts.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
+    }
     transaction.save()
   }
 }
