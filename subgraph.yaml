@@ -78,7 +78,28 @@ dataSources:
           handler: handleBid
         - event: CancelBid(indexed address,indexed address,uint256)
           handler: handleCancelBid
-
+  - kind: ethereum/contract
+    name: nft-test
+    network: testnet
+    source:
+      address: '0x22938070C31f9448732170d6f2F5cc79acfEDEf7'
+      startBlock: 12641461
+      abi: ERC721Proxy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFT.ts
+      entities:
+        - Item
+      abis:
+        - name: ERC721Proxy
+          file: ./abis/ERC721Proxy.json
+      eventHandlers: 
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: CreateERC721Rarible(address,string,string)
+          handler: handleCreateERC721Rarible
   - kind: ethereum/contract
     name: ERC1155Marketplace
     network: testnet
