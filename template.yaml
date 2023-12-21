@@ -109,6 +109,26 @@ dataSources:
           handler: handleOfferNew
         - event: OfferCancel(uint256)
           handler: handleOfferCancel
+  - kind: ethereum/contract
+    name: NFT
+    network: {{network}}
+    source:
+      address: '{{erc721Nonfactory.address}}'
+      abi: NFT
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+      abis:
+        - name: NFT
+          file: ./abis/ERC721Proxy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
 templates:
   - kind: ethereum/contract
     name: ERC721Proxy
