@@ -8,7 +8,7 @@ dataSources:
     name: ERC721Factory
     network: mainnet
     source:
-      address: '0x346d828a9CD9f72ed967c18538196Ca64468805d'
+      address: '0x8d73569f72e823593E7E96f2B531fE1D4E776642'
       abi: ERC721Factory
       startBlock: 5309080
     mapping:
@@ -30,7 +30,7 @@ dataSources:
     name: ERC1155Factory
     network: mainnet
     source:
-      address: '0x9e8Fd98d43c5Ef66D8e8472bbDD3CF57Eecd1A3c'
+      address: '0x6aC0b09B34e20DBC00921be259B7852138639BdD'
       abi: ERC1155Factory
       startBlock: 5309080
     mapping:
@@ -52,7 +52,7 @@ dataSources:
     name: ERC721Marketplace
     network: mainnet
     source:
-      address: '0x375336Ef53fA8Bd9F26Ff9DDd16d488D3Ce49EA5'
+      address: '0xc972cE4dD1deC21464C084436A23C09F442187A9'
       abi: ERC721Marketplace
       startBlock: 5309080
     mapping:
@@ -83,7 +83,7 @@ dataSources:
     name: ERC1155Marketplace
     network: mainnet
     source:
-      address: '0x03CC9b4d1Be469a5C3a91A5bE28d5306ED2e9325'
+      address: '0x65f5a25a3F32a0d74719b82842Fbbf9E6804F25A'
       abi: ERC1155Marketplace
       startBlock: 5309080
     mapping:
