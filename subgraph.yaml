@@ -6,7 +6,7 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ERC721Factory
-    network: testnet
+    network: mainnet
     source:
       address: '0x346d828a9CD9f72ed967c18538196Ca64468805d'
       abi: ERC721Factory
@@ -28,7 +28,7 @@ dataSources:
           handler: handle721UserProxy
   - kind: ethereum/contract
     name: ERC1155Factory
-    network: testnet
+    network: mainnet
     source:
       address: '0x9e8Fd98d43c5Ef66D8e8472bbDD3CF57Eecd1A3c'
       abi: ERC1155Factory
@@ -50,7 +50,7 @@ dataSources:
           handler: handle1155UserProxy
   - kind: ethereum/contract
     name: ERC721Marketplace
-    network: testnet
+    network: mainnet
     source:
       address: '0x375336Ef53fA8Bd9F26Ff9DDd16d488D3Ce49EA5'
       abi: ERC721Marketplace
@@ -78,31 +78,10 @@ dataSources:
           handler: handleBid
         - event: CancelBid(indexed address,indexed address,uint256)
           handler: handleCancelBid
-  - kind: ethereum/contract
-    name: nft-test
-    network: testnet
-    source:
-      address: '0x22938070C31f9448732170d6f2F5cc79acfEDEf7'
-      startBlock: 12641461
-      abi: ERC721Proxy
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./src/mapping/NFT.ts
-      entities:
-        - Item
-      abis:
-        - name: ERC721Proxy
-          file: ./abis/ERC721Proxy.json
-      eventHandlers: 
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-        - event: CreateERC721Rarible(address,string,string)
-          handler: handleCreateERC721Rarible
+
   - kind: ethereum/contract
     name: ERC1155Marketplace
-    network: testnet
+    network: mainnet
     source:
       address: '0x03CC9b4d1Be469a5C3a91A5bE28d5306ED2e9325'
       abi: ERC1155Marketplace
@@ -133,7 +112,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: ERC721Proxy
-    network: testnet
+    network: mainnet
     source: 
       abi: ERC721Proxy
     mapping:
@@ -170,7 +149,7 @@ templates:
           handler: handleTransfer
   - kind: ethereum/contract
     name: ERC1155Proxy
-    network: testnet
+    network: mainnet
     source: 
       abi: ERC1155Proxy
     mapping:
