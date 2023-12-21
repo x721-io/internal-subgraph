@@ -18,6 +18,7 @@ export function handleBaseUriChanged(event: BaseUriChanged): void {
 
 export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
   updateBlockEntity(event, 'handleCreateERC721Rarible')
+  log.info('Creating new collection1: {}', [event.params.owner.toHexString()])
   let collection = ERC721Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
@@ -28,6 +29,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
     let newCollection = new ERC721Contract(event.address.toHexString());
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
+    newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.params.owner).id;
     newCollection.save()
   }
@@ -35,6 +37,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
 
 export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): void {
   updateBlockEntity(event, 'handleCreateERC721RaribleUser')
+  log.info('Creating new collection: {}', [event.params.owner.toHexString()])
   let collection = ERC721Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
@@ -45,6 +48,7 @@ export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): v
     let newCollection = new ERC721Contract(event.address.toHexString());
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
+    newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
     newCollection.save()
   }
