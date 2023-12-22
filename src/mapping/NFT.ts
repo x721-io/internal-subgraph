@@ -65,6 +65,7 @@ export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
     let newCollection = new ERC1155Contract(event.address.toHexString());
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
+    newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
     newCollection.save()
   }
