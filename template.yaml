@@ -109,6 +109,108 @@ dataSources:
           handler: handleOfferNew
         - event: OfferCancel(uint256)
           handler: handleOfferCancel
+  - kind: ethereum/contract
+    name: NFT
+    network: {{network}}
+    source:
+      address: '{{erc721Nonfactory.address}}'
+      abi: NFT
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+      abis:
+        - name: NFT
+          file: ./abis/ERC721Proxy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: ERC721Proxy
+    network: {{network}}
+    source:
+      address: '{{erc721Base.address}}'
+      abi: ERC721Proxy
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFT.ts
+      entities:
+        - Item
+        - Deal
+      abis:
+        - name: ERC721Proxy
+          file: ./abis/ERC721Proxy.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BaseUriChanged(string)
+          handler: handleBaseUriChanged
+        - event: CreateERC721Rarible(address,string,string)
+          handler: handleCreateERC721Rarible
+        - event: CreateERC721RaribleUser(address,string,string)
+          handler: handleCreateERC721RaribleUser
+        - event: Creators(uint256,(address,uint96)[])
+          handler: handle721Creators
+        - event: DefaultApproval(indexed address,bool)
+          handler: handleDefaultApproval
+        - event: MinterStatusChanged(indexed address,indexed bool)
+          handler: handleMinterStatusChanged
+        - event: RoyaltiesSet(uint256,(address,uint96)[])
+          handler: handleRoyaltiesSet
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: ERC1155Proxy
+    network: {{network}}
+    source: 
+      address: '{{erc1155Base.address}}'
+      abi: ERC1155Proxy
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFT.ts
+      entities:
+        - Item
+        - Deal
+      abis:
+        - name: ERC1155Proxy
+          file: ./abis/ERC1155Proxy.json
+      eventHandlers:
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BaseUriChanged(string)
+          handler: handleBaseUriChanged
+        - event: CreateERC1155Rarible(address,string,string)
+          handler: handleCreateERC1155Rarible
+        - event: CreateERC1155RaribleUser(address,string,string)
+          handler: handleCreateERC1155RaribleUser
+        - event: Creators(uint256,(address,uint96)[])
+          handler: handle1155Creators
+        - event: DefaultApproval(indexed address,bool)
+          handler: handleDefaultApproval
+        - event: MinterStatusChanged(indexed address,indexed bool)
+          handler: handleMinterStatusChanged
+        - event: RoyaltiesSet(uint256,(address,uint96)[])
+          handler: handleRoyaltiesSet
+        - event: Supply(uint256,uint256)
+          handler: handleSupply
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTranferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: URI(string,indexed uint256)
+          handler: handleURI
 templates:
   - kind: ethereum/contract
     name: ERC721Proxy
@@ -168,10 +270,6 @@ templates:
           handler: handleApprovalForAll
         - event: BaseUriChanged(string)
           handler: handleBaseUriChanged
-        # - event: BurnLazy(address, address, uint256, uint256)
-        #   handler: handleBurnLazy
-        # - event: BurnLazyBatch(address,address,uint256[],uint256[])
-        #   handler: handleBurnLazyBatch
         - event: CreateERC1155Rarible(address,string,string)
           handler: handleCreateERC1155Rarible
         - event: CreateERC1155RaribleUser(address,string,string)
