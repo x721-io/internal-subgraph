@@ -1,7 +1,7 @@
 import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Creator, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
 import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, TransferSingle, URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
-import { BigInt, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance , fetchOrCreateERC721Tokens } from "../utils";
 import { ContractAddress } from "../enum";
 export function handleTransfer(event: Transfer): void {
@@ -29,7 +29,7 @@ export function handleTransfer(event: Transfer): void {
     token.owner = event.params.to.toHexString();
     token.txCreation = event.transaction.hash.toHexString()
     let zeroAccount = Account.load('0x0000000000000000000000000000000000000000');
-    updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), BigInt.fromI32(0));
+    updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
     if (zeroAccount == null) {
       zeroAccount = new Account('0x0000000000000000000000000000000000000000');
       zeroAccount.save();
@@ -42,7 +42,7 @@ export function handleTransfer(event: Transfer): void {
     // Assuming approval is cleared on transfer
     token.approval = '0x0000000000000000000000000000000000000000';
     token.owner = event.params.to.toHex(); // Update the owner
-    updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), BigInt.fromI32(0));
+    updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
     token.save();
   }
 

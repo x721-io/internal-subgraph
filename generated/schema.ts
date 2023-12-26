@@ -2073,6 +2073,23 @@ export class Block extends Entity {
       this.set("price", Value.fromBigInt(<BigInt>value));
     }
   }
+
+  get quoteToken(): string | null {
+    let value = this.get("quoteToken");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set quoteToken(value: string | null) {
+    if (!value) {
+      this.unset("quoteToken");
+    } else {
+      this.set("quoteToken", Value.fromString(<string>value));
+    }
+  }
 }
 
 export class ERC1155BalanceLoader extends Entity {

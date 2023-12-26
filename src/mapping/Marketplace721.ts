@@ -82,7 +82,7 @@ export function handleTrade(event: Trade): void {
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;
     ev.netPrice = event.params._netPrice;
-    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.buyer, 'Trade', event.params._price, BigInt.fromI32(1));
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.buyer, 'Trade', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
   }
 }
@@ -102,7 +102,7 @@ export function handleAcceptBid(event: AcceptBid): void {
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;
     ev.netPrice = event.params._netPrice;
-    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.bidder, 'AcceptBid', event.params._price, BigInt.fromI32(1));
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.bidder, 'AcceptBid', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
   }
   if (evAsk && evAsk.event == "AskNew") {

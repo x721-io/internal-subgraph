@@ -90,7 +90,7 @@ export function handleBuy(event: Buy): void {
   updateBlockEntity(
     event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
     Address.fromString(transaction.from!), event.params.buyer, 'Trade', event.params.price,
-    event.params.quantity
+    event.params.quantity, Address.fromString(transaction.quoteToken!)
   );
 
   transaction.to = event.params.buyer.toHexString();
@@ -129,7 +129,7 @@ export function handleAcceptOffer(event: OfferAccept): void {
   updateBlockEntity(
     event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
     event.params.seller, Address.fromString(transaction.from!), 'AcceptBid', event.params.price,
-    event.params.quantity
+    event.params.quantity, Address.fromString(transaction.quoteToken!)
   );
 
     transaction.from = event.params.seller.toHexString();

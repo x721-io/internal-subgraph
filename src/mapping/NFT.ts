@@ -122,7 +122,7 @@ export function handleTransfer(event: Transfer): void {
     token.owner = event.params.to.toHexString();
     token.txCreation = event.transaction.hash.toHexString()
     let zeroAccount = Account.load('0x0000000000000000000000000000000000000000');
-    updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1));
+    updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
     if (zeroAccount == null) {
       zeroAccount = new Account('0x0000000000000000000000000000000000000000');
       zeroAccount.save();
@@ -136,7 +136,7 @@ export function handleTransfer(event: Transfer): void {
     token.approval = '0x0000000000000000000000000000000000000000';
     token.owner = event.params.to.toHex(); // Update the owner
     if (event.params.from.toHexString() != ContractAddress.erc721marketplace) {
-      updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), BigInt.fromI32(1));
+      updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
     }
     token.save();
   }
@@ -214,7 +214,7 @@ export function handleTransferSingle(event: TransferSingle): void {
   // Set the emitter if available or use operator
   transfer.emitter = fetchOrCreateAccount(event.params.operator).id;
   if (event.params.from.toHexString() != ContractAddress.erc1155marketplace) {
-    updateBlockEntity(event, event.address, event.params.id, event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), event.params.value);
+    updateBlockEntity(event, event.address, event.params.id, event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), event.params.value, Address.fromString(ContractAddress.ZERO));
   }
   transfer.save();
 }
@@ -258,7 +258,7 @@ export function handleTranferBatch(event: TransferBatch): void {
     // Set the emitter if available or use operator
     transfer.emitter = fetchOrCreateAccount(event.params.operator).id;
     if (event.params.to.toHexString() != ContractAddress.erc1155marketplace) {
-      updateBlockEntity(event, event.address, event.params.ids[i], event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), event.params.values[i]);
+      updateBlockEntity(event, event.address, event.params.ids[i], event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), event.params.values[i], Address.fromString(ContractAddress.ZERO));
     }
     transfer.save();
   }
@@ -271,7 +271,7 @@ export function handleSupply(event: Supply): void {
     token = new ERC1155Token(tokenId);
     token.tokenId = event.params.tokenId.toString()
     token.txCreation = event.transaction.hash.toHexString();
-    updateBlockEntity(event, event.address, event.params.tokenId, Address.fromString(ContractAddress.ZERO), Address.fromString(ContractAddress.ZERO), 'Mint', BigInt.fromI32(0), event.params.value);
+    updateBlockEntity(event, event.address, event.params.tokenId, Address.fromString(ContractAddress.ZERO), Address.fromString(ContractAddress.ZERO), 'Mint', BigInt.fromI32(0), event.params.value, Address.fromString(ContractAddress.ZERO));
   }
   token.identifier = event.params.tokenId;
   token.contract = event.address.toHexString();
