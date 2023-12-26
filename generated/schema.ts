@@ -1941,6 +1941,19 @@ export class Block extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get tokenId(): BigInt {
+    let value = this.get("tokenId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set tokenId(value: BigInt) {
+    this.set("tokenId", Value.fromBigInt(value));
+  }
+
   get timestampt(): i32 {
     let value = this.get("timestampt");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1978,6 +1991,104 @@ export class Block extends Entity {
 
   set event(value: string) {
     this.set("event", Value.fromString(value));
+  }
+
+  get address(): string {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set address(value: string) {
+    this.set("address", Value.fromString(value));
+  }
+
+  get from(): string | null {
+    let value = this.get("from");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set from(value: string | null) {
+    if (!value) {
+      this.unset("from");
+    } else {
+      this.set("from", Value.fromString(<string>value));
+    }
+  }
+
+  get to(): string | null {
+    let value = this.get("to");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set to(value: string | null) {
+    if (!value) {
+      this.unset("to");
+    } else {
+      this.set("to", Value.fromString(<string>value));
+    }
+  }
+
+  get quantity(): BigInt | null {
+    let value = this.get("quantity");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set quantity(value: BigInt | null) {
+    if (!value) {
+      this.unset("quantity");
+    } else {
+      this.set("quantity", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get price(): BigInt | null {
+    let value = this.get("price");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set price(value: BigInt | null) {
+    if (!value) {
+      this.unset("price");
+    } else {
+      this.set("price", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get quoteToken(): string | null {
+    let value = this.get("quoteToken");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set quoteToken(value: string | null) {
+    if (!value) {
+      this.unset("quoteToken");
+    } else {
+      this.set("quoteToken", Value.fromString(<string>value));
+    }
   }
 }
 
