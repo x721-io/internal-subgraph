@@ -12,10 +12,10 @@
       "address" : "0xbB3074305ba67c2E8c9af6dE2ADCbc970C1a59Fa"
     },
     "erc721marketplace": {
-      "address": "0xc972cE4dD1deC21464C084436A23C09F442187A9"
+      "address": "0xc972ce4dd1dec21464c084436a23c09f442187a9"
     },
     "erc1155marketplace": {
-      "address": "0x65f5a25a3F32a0d74719b82842Fbbf9E6804F25A"
+      "address": "0x65f5a25a3f32a0d74719b82842fbbf9e6804f25a"
     },
     "erc721Nonfactory": {
       "address": "0xC102BfEeE0674798Df49618E12b45FcD8e7C0EC0"

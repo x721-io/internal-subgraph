@@ -52,7 +52,7 @@ dataSources:
     name: ERC721Marketplace
     network: testnet
     source:
-      address: '0x375336Ef53fA8Bd9F26Ff9DDd16d488D3Ce49EA5'
+      address: '0x375336ef53fa8bd9f26ff9ddd16d488d3ce49ea5'
       abi: ERC721Marketplace
       startBlock: 10466045
     mapping:
@@ -83,7 +83,7 @@ dataSources:
     name: ERC1155Marketplace
     network: testnet
     source:
-      address: '0x03CC9b4d1Be469a5C3a91A5bE28d5306ED2e9325'
+      address: '0x03cc9b4d1be469a5c3a91a5be28d5306ed2e9325'
       abi: ERC1155Marketplace
       startBlock: 10466045
     mapping:
