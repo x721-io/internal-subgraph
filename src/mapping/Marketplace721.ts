@@ -8,7 +8,7 @@ import {
   CancelBid
 } from "../../generated/ERC721Marketplace/ERC721Marketplace"
 import { ERC721Token, MarketEvent721 } from "../../generated/schema"
-import { fetchOrCreateERC721Tokens, generateCombineKey } from "../utils";
+import { fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity } from "../utils";
 
 function createEvent(contract: Address, tokenId: BigInt, bidderAddr: Address | null = null): MarketEvent721 {
   if (!bidderAddr) {
@@ -82,6 +82,7 @@ export function handleTrade(event: Trade): void {
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;
     ev.netPrice = event.params._netPrice;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.buyer, 'Trade', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
   }
 }
@@ -101,6 +102,7 @@ export function handleAcceptBid(event: AcceptBid): void {
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;
     ev.netPrice = event.params._netPrice;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.bidder, 'AcceptBid', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
   }
   if (evAsk && evAsk.event == "AskNew") {

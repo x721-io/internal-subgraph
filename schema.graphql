@@ -21,6 +21,13 @@ enum SellStatus {
 	CancelBid
 }
 
+enum EventType {
+	Mint
+	Transfer
+	Trade
+	AcceptBid
+}
+
 type Account @entity {
 	id: String!
 	asERC1155: ERC1155Contract
@@ -186,9 +193,16 @@ enum Operation {
 
 type Block @entity {
 	id: ID!
+	tokenId: BigInt!
 	timestampt: Int!
 	blockNumber: Int!
-	event: String!
+	event: EventType!
+	address: String!
+	from: String
+	to: String
+	quantity: BigInt
+	price: BigInt
+	quoteToken: String
 }
 
 enum ActionState {

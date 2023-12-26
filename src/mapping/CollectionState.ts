@@ -6,7 +6,6 @@ import { ERC721Proxy } from "../../generated/templates";
 import { ERC1155Proxy } from "../../generated/templates";
 import { fetchOrCreateAccount, updateBlockEntity } from "../utils";
 export function handle721Proxy(event: Create721RaribleProxy): void {
-    updateBlockEntity(event, 'handle721Proxy')
     let newToken = new ERC721Contract(event.params.proxy.toHexString());
     newToken.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newToken.txCreation = event.transaction.hash.toHexString();
@@ -15,7 +14,6 @@ export function handle721Proxy(event: Create721RaribleProxy): void {
 }
 
 export function handle721UserProxy(event: Create721RaribleUserProxy): void {
-    updateBlockEntity(event, 'handle721UserProxy')
     let newToken = new ERC721Contract(event.params.proxy.toHexString());
     newToken.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newToken.txCreation = event.transaction.hash.toHexString();
@@ -24,7 +22,6 @@ export function handle721UserProxy(event: Create721RaribleUserProxy): void {
 }
 
 export function handle1155Proxy(event: Create1155RaribleProxy): void {
-    updateBlockEntity(event, 'handle1155Proxy')
     let newToken = new ERC1155Contract(event.params.proxy.toHexString());
     newToken.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newToken.txCreation = event.transaction.hash.toHexString();
@@ -33,7 +30,6 @@ export function handle1155Proxy(event: Create1155RaribleProxy): void {
 }
 
 export function handle1155UserProxy(event: Create1155RaribleUserProxy): void {
-    updateBlockEntity(event, 'handle1155UserProxy')
     let newToken = new ERC1155Contract(event.params.proxy.toHexString());
     newToken.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newToken.txCreation = event.transaction.hash.toHexString();

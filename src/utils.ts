@@ -83,10 +83,31 @@ export function updateERC1155Balance(accountAddress: Address, tokenId: string, v
 }
 
 
-export function updateBlockEntity(event: ethereum.Event, type: string): void {
-  let block = new Block(event.block.number.toString())
-  block.timestampt = event.block.timestamp.toI32()
-  block.blockNumber = event.block.number.toI32()
-  block.event = type// You need to set this appropriately
-  block.save()
+export function updateBlockEntity(event: ethereum.Event, contract: Address, tokenId: BigInt, from: Address, to: Address, type: string, price: BigInt, quantity: BigInt, quoteToken: Address): void {
+  let block = Block.load(`${event.transaction.hash.toHexString()}-${tokenId.toString()}`)
+  if (block) {
+      block.timestampt = event.block.timestamp.toI32()
+      block.blockNumber = event.block.number.toI32()
+    //   block.event = type
+      block.from = from.toHexString();
+      block.to = to.toHexString();
+    //   block.quantity = quantity;
+    //   block.price = price;
+    //   block.address = contract.toHexString()
+    //   block.tokenId = tokenId;
+      block.save()
+  } else {
+    let block = new Block(`${event.transaction.hash.toHexString()}-${tokenId.toString()}`)
+    block.timestampt = event.block.timestamp.toI32()
+    block.blockNumber = event.block.number.toI32()
+    block.event = type
+    block.from = from.toHexString();
+    block.to = to.toHexString();
+    block.quantity = quantity;
+    block.price = price;
+    block.address = contract.toHexString()
+    block.tokenId = tokenId;
+    block.quoteToken = quoteToken.toHexString();
+    block.save()
+  }
 }
