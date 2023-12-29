@@ -1871,8 +1871,8 @@ export class MarketEvent1155 extends Entity {
     }
   }
 
-  get amounts(): BigInt {
-    let value = this.get("amounts");
+  get quantity(): BigInt {
+    let value = this.get("quantity");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1880,8 +1880,8 @@ export class MarketEvent1155 extends Entity {
     }
   }
 
-  set amounts(value: BigInt) {
-    this.set("amounts", Value.fromBigInt(value));
+  set quantity(value: BigInt) {
+    this.set("quantity", Value.fromBigInt(value));
   }
 
   get operationId(): BigInt | null {
