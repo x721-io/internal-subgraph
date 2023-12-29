@@ -26,6 +26,10 @@ enum EventType {
 	Transfer
 	Trade
 	AcceptBid
+	AskNew
+	AskCancel
+	Bid
+	CancelBid
 }
 
 type Account @entity {

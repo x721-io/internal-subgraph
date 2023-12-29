@@ -17,7 +17,6 @@ export function handleBaseUriChanged(event: BaseUriChanged): void {
 }
 
 export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
-  log.info('Creating new collection1: {}', [event.params.owner.toHexString()])
   let collection = ERC721Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
@@ -35,7 +34,6 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
 }
 
 export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): void {
-  log.info('Creating new collection: {}', [event.params.owner.toHexString()])
   let collection = ERC721Contract.load(event.address.toHexString());
   if (collection !== null) {
     collection.name = event.params.name;
@@ -97,9 +95,7 @@ export function handleRoyaltiesSet(event: RoyaltiesSet): void {
 }
 
 export function handleTransfer(event: Transfer): void {
-  log.info('Transfer to marketplace xxx: {} {}', [event.params.to.toHexString(), ContractAddress.erc721marketplace])
   if (event.params.to.toHexString() == ContractAddress.erc721marketplace) {
-    log.info('Transfer to marketplace: {} {}', [event.params.to.toHexString(), ContractAddress.erc721marketplace])
     return;
   }
   let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
@@ -267,7 +263,6 @@ export function handleSupply(event: Supply): void {
   let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
   let token = ERC1155Token.load(tokenId);
   if (token === null) {
-    log.info('first token: {}', [event.params.tokenId.toString()])
     token = new ERC1155Token(tokenId);
     token.tokenId = event.params.tokenId.toString()
     token.txCreation = event.transaction.hash.toHexString();
@@ -285,9 +280,7 @@ export function handleSupply(event: Supply): void {
   totalSupply.save();
 
   token.totalSupply = totalSupply.id;
-  log.info('supply: {}', [totalSupply.id])
   token.save();
-  log.info('token created: {}', [token.id.toString()])
 }
 
 export function handle1155Creators(event: Creators): void {
@@ -330,7 +323,6 @@ export function handle721Creators(event: Creators): void {
   let collection = ERC721Contract.load(event.address.toHexString());
 
   // Create the Collection entity if it doesn't exist
-  log.info('tokenId: {} {}', [event.transaction.from.toHexString(), event.address.toHexString()])
   if (!collection) {
     collection = new ERC721Contract(event.address.toHexString());
     // Initialize other necessary fields for Collection
