@@ -9,6 +9,7 @@ import {
 } from "../../generated/ERC721Marketplace/ERC721Marketplace"
 import { ERC721Token, MarketEvent721 } from "../../generated/schema"
 import { fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity } from "../utils";
+import { ContractAddress } from "../enum";
 
 function createEvent(contract: Address, tokenId: BigInt, bidderAddr: Address | null = null): MarketEvent721 {
   if (!bidderAddr) {
@@ -33,7 +34,6 @@ export function handleAskNew(event: AskNew): void {
   let ev = createEvent(event.params._nft, event.params._tokenId);
   // const nft = ERC721Token.load(generateCombineKey([event.params._nft.toString(), event.params._tokenId.toString()]));
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
-  log.warning('nft found: {}',[nft.id])
 
   if (nft) {
     log.info('creating new event', []);
@@ -46,6 +46,7 @@ export function handleAskNew(event: AskNew): void {
     ev.nftId = nft.id;
     ev.quoteToken = event.params._quoteToken. toHexString();
     ev.price = event.params._price;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, Address.fromString(ContractAddress.ZERO), 'AskNew', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
   }
 }
@@ -53,7 +54,6 @@ export function handleAskNew(event: AskNew): void {
 export function handleAskCancel(event: AskCancel): void {
   let ev = createEvent(event.params._nft, event.params._tokenId);
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
-  log.warning('nft found: {}',[nft.id])
 
   if (nft) {
     ev.event = "AskCancel";
@@ -62,6 +62,7 @@ export function handleAskCancel(event: AskCancel): void {
     ev.txHash = event.transaction.hash.toHexString();
     ev.from = event.params._seller.toHexString();
     ev.nftId = nft.id;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, Address.fromString(ContractAddress.ZERO), 'AskCancel', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
     ev.save();
   }
 }
@@ -69,7 +70,6 @@ export function handleAskCancel(event: AskCancel): void {
 export function handleTrade(event: Trade): void {
   let ev = createEvent(event.params._nft, event.params._tokenId);
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
-  log.warning('nft found: {}',[nft.id])
 
   if (nft) {
     ev.event = "Trade";
@@ -117,7 +117,6 @@ export function handleAcceptBid(event: AcceptBid): void {
 export function handleBid(event: Bid): void {
   let ev = createEvent(event.params._nft, event.params._tokenId, event.params.bidder);
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
-  log.warning('nft found: {}',[nft.id])
   if (nft) {
     ev.event = "Bid";
     ev.timestamp = event.block.timestamp;
@@ -128,6 +127,7 @@ export function handleBid(event: Bid): void {
     ev.nftId = nft.id;
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, Address.fromString(ContractAddress.ZERO), event.params.bidder, 'Bid', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
   }
 }
@@ -135,7 +135,6 @@ export function handleBid(event: Bid): void {
 export function handleCancelBid(event: CancelBid): void {
   let ev = createEvent(event.params._nft, event.params._tokenId, event.params.bidder);
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
-  log.warning('nft found: {}',[nft.id])
   if (nft) {
     ev.timestamp = event.block.timestamp;
     ev.txHash = event.transaction.hash.toHexString();
@@ -143,6 +142,7 @@ export function handleCancelBid(event: CancelBid): void {
     ev.event = "CancelBid";
     ev.to = event.params.bidder.toHexString();
     ev.nftId = nft.id;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, Address.fromString(ContractAddress.ZERO), event.params.bidder, 'CancelBid', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
     ev.save();
   }
 }
