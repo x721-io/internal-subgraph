@@ -29,6 +29,11 @@ export function handleAskNew(event: AskNew): void {
     transaction.timestamp = event.block.timestamp;
     transaction.operationId = event.params.askId;
     transaction.address = event.params.nft.toHexString();
+    updateBlockEntity(
+      event, event.params.nft, event.params.tokenId,
+      event.params.seller, Address.fromString(transaction.from!), 'AskNew', event.params.pricePerUnit,
+      event.params.quantity, Address.fromString(transaction.quoteToken!)
+    );
     transaction.save()
   }
 }
@@ -49,6 +54,11 @@ export function handleOfferNew(event: OfferNew): void {
     transaction.timestamp = event.block.timestamp
     transaction.operationId = event.params.offerId;
     transaction.address = event.params.nft.toHexString();
+    updateBlockEntity(
+      event, event.params.nft, event.params.tokenId,
+      Address.fromString(transaction.from!), event.params.buyer, 'AskNew', event.params.pricePerUnit,
+      event.params.quantity, Address.fromString(transaction.quoteToken!)
+    );
     transaction.save()
   }
 }
@@ -60,6 +70,19 @@ export function handleAskCancel(event: AskCancel): void {
     if (transaction.from != null && transaction.nftId != null) {
       updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, transaction.quantity.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
     }
+  if (!transaction || !transaction.nftId || !transaction.from) return;
+
+  let nft = ERC1155Token.load(transaction.nftId!);
+  if (!nft) return;
+
+  let contract = ERC1155Contract.load(nft.contract);
+  if (!contract) return;
+
+  updateBlockEntity(
+    event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
+    Address.fromString(transaction.from!), Address.fromString(transaction.to!), 'AskCancel', BigInt.fromI32(0),
+    transaction.amounts, Address.fromString(transaction.quoteToken!)
+  );
     transaction.save()
   }
 }
@@ -68,6 +91,19 @@ export function handleOfferCancel(event: OfferCancel): void {
   let transaction = MarketEvent1155.load(event.params.offerId.toString() + ' - Offer')
   if (transaction) {
     transaction.event = "CancelBid"
+    if (!transaction || !transaction.nftId || !transaction.from) return;
+
+    let nft = ERC1155Token.load(transaction.nftId!);
+    if (!nft) return;
+
+    let contract = ERC1155Contract.load(nft.contract);
+    if (!contract) return;
+
+    updateBlockEntity(
+      event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
+      Address.fromString(transaction.from!), Address.fromString(transaction.to!), 'AskCancel', BigInt.fromI32(0),
+      transaction.amounts, Address.fromString(transaction.quoteToken!)
+    );
     transaction.save()
   }
 }
@@ -76,17 +112,12 @@ export function handleBuy(event: Buy): void {
   let transaction = MarketEvent1155.load(event.params.askId.toString() + ' - Ask');
   if (!transaction || !transaction.nftId || !transaction.from) return;
 
-  log.warning('Alo here: {}', [transaction.nftId!])
-
   let nft = ERC1155Token.load(transaction.nftId!);
   if (!nft) return;
 
-  log.error('Here here1: {} {}', [nft.id, nft.contract])
   let contract = ERC1155Contract.load(nft.contract);
   if (!contract) return;
 
-  log.error('Here here2: {} {}', [nft.id, contract.id])
-  log.error('Here here3: {}', [transaction.from!])
   updateBlockEntity(
     event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
     Address.fromString(transaction.from!), event.params.buyer, 'Trade', event.params.price,

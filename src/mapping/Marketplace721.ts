@@ -9,6 +9,7 @@ import {
 } from "../../generated/ERC721Marketplace/ERC721Marketplace"
 import { ERC721Token, MarketEvent721 } from "../../generated/schema"
 import { fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity } from "../utils";
+import { ContractAddress } from "../enum";
 
 function createEvent(contract: Address, tokenId: BigInt, bidderAddr: Address | null = null): MarketEvent721 {
   if (!bidderAddr) {
@@ -46,6 +47,7 @@ export function handleAskNew(event: AskNew): void {
     ev.nftId = nft.id;
     ev.quoteToken = event.params._quoteToken. toHexString();
     ev.price = event.params._price;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, Address.fromString(ContractAddress.ZERO), 'AskNew', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
   }
 }
@@ -62,6 +64,7 @@ export function handleAskCancel(event: AskCancel): void {
     ev.txHash = event.transaction.hash.toHexString();
     ev.from = event.params._seller.toHexString();
     ev.nftId = nft.id;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, Address.fromString(ContractAddress.ZERO), 'AskCancel', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
     ev.save();
   }
 }
@@ -128,6 +131,7 @@ export function handleBid(event: Bid): void {
     ev.nftId = nft.id;
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, Address.fromString(ev.from!), event.params.bidder, 'Bid', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
   }
 }
@@ -143,6 +147,7 @@ export function handleCancelBid(event: CancelBid): void {
     ev.event = "CancelBid";
     ev.to = event.params.bidder.toHexString();
     ev.nftId = nft.id;
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, Address.fromString(ev.from!), event.params.bidder, 'Bid', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
     ev.save();
   }
 }
