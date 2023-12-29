@@ -147,7 +147,7 @@ export function handleCancelBid(event: CancelBid): void {
     ev.event = "CancelBid";
     ev.to = event.params.bidder.toHexString();
     ev.nftId = nft.id;
-    updateBlockEntity(event, event.params._nft, event.params._tokenId, Address.fromString(ev.from!), event.params.bidder, 'Bid', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
+    updateBlockEntity(event, event.params._nft, event.params._tokenId, Address.fromString(ev.from!), event.params.bidder, 'CancelBid', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
     ev.save();
   }
 }
