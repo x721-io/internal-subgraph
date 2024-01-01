@@ -8,7 +8,7 @@ dataSources:
     name: ERC721Factory
     network: testnet
     source:
-      address: '0x346d828a9CD9f72ed967c18538196Ca64468805d'
+      address: '0x2d710bce9e3e9501d69f657bfa29f2dc21cd5b14'
       abi: ERC721Factory
       startBlock: 10466045
     mapping:
@@ -30,7 +30,7 @@ dataSources:
     name: ERC1155Factory
     network: testnet
     source:
-      address: '0x9e8Fd98d43c5Ef66D8e8472bbDD3CF57Eecd1A3c'
+      address: '0x562523950cf7889d0ccb040c8143d4f1596e4b9a'
       abi: ERC1155Factory
       startBlock: 10466045
     mapping:
@@ -52,7 +52,7 @@ dataSources:
     name: ERC721Marketplace
     network: testnet
     source:
-      address: '0x375336ef53fa8bd9f26ff9ddd16d488d3ce49ea5'
+      address: '0x842052c6ce40095a9bce9a4df970bcdb82705f34'
       abi: ERC721Marketplace
       startBlock: 10466045
     mapping:
@@ -83,7 +83,7 @@ dataSources:
     name: ERC1155Marketplace
     network: testnet
     source:
-      address: '0x03cc9b4d1be469a5c3a91a5be28d5306ed2e9325'
+      address: '0x2a35acd9ab36c22bfbf4ddafdbef6fd1ef850fc5'
       abi: ERC1155Marketplace
       startBlock: 10466045
     mapping:
@@ -133,7 +133,7 @@ dataSources:
     name: ERC721Proxy
     network: testnet
     source:
-      address: '0x4382F37Ff3412e598f571B5B7e4405442A6E7dAe'
+      address: '0x863EC6ae0dEA0cF60b2Cc9A987EA1649974f1C21'
       abi: ERC721Proxy
       startBlock: 10466045
     mapping:
@@ -172,7 +172,7 @@ dataSources:
     name: ERC1155Proxy
     network: testnet
     source: 
-      address: '0x67AB361633Ba986d50Eee1D11c15D21365225E25'
+      address: '0x2d710Bce9e3e9501d69f657bfA29F2Dc21CD5B14'
       abi: ERC1155Proxy
       startBlock: 10466045
     mapping:
