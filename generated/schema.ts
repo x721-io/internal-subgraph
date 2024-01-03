@@ -2092,6 +2092,102 @@ export class Block extends Entity {
   }
 }
 
+export class RoyaltiesRegistry extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save RoyaltiesRegistry entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type RoyaltiesRegistry must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("RoyaltiesRegistry", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): RoyaltiesRegistry | null {
+    return changetype<RoyaltiesRegistry | null>(
+      store.get_in_block("RoyaltiesRegistry", id)
+    );
+  }
+
+  static load(id: string): RoyaltiesRegistry | null {
+    return changetype<RoyaltiesRegistry | null>(
+      store.get("RoyaltiesRegistry", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get tokenId(): string {
+    let value = this.get("tokenId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenId(value: string) {
+    this.set("tokenId", Value.fromString(value));
+  }
+
+  get account(): string {
+    let value = this.get("account");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set account(value: string) {
+    this.set("account", Value.fromString(value));
+  }
+
+  get value(): i32 {
+    let value = this.get("value");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set value(value: i32) {
+    this.set("value", Value.fromI32(value));
+  }
+
+  get collectionId(): string {
+    let value = this.get("collectionId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set collectionId(value: string) {
+    this.set("collectionId", Value.fromString(value));
+  }
+}
+
 export class ERC1155BalanceLoader extends Entity {
   _entity: string;
   _field: string;

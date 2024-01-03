@@ -25,6 +25,10 @@
     },
     "erc1155Base": {
       "address": "0x9e87754dab31dad057dcdf233000f71ff55fa37f"
+    },
+    "royaltiesRegistry": {
+      "address": "0x6DA88C2e364AF1112e62872b5b69A16daeb38446",
+      "startBlock" : "14330094"
     }
   }
     
