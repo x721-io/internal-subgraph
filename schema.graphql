@@ -209,6 +209,16 @@ type Block @entity {
 	quoteToken: String
 }
 
+
+type RoyaltiesRegistry @entity(immutable: true){
+	id: ID!
+	tokenId: String!
+	account: String!,
+	value: Int!
+	collectionId: String!
+	# royalties: [RoyaltyItem!]!
+}
+
 enum ActionState {
   PENDING
   EXECUTED
