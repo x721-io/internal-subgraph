@@ -52,6 +52,7 @@ type ERC721Contract @entity(immutable: true) {
 	symbol: String
 	tokens: [ERC721Token!]! @derivedFrom(field: "contract")
 	transfers: [ERC721Transfer!]! @derivedFrom(field: "contract")
+	states: [ERC721ContractState!]! @derivedFrom(field: "contract")
 	txCreation: String!
 
 }
@@ -86,6 +87,7 @@ type ERC1155Contract @entity(immutable: true) {
 	tokens: [ERC1155Token!]! @derivedFrom(field: "contract")
 	balances: [ERC1155Balance!]! @derivedFrom(field: "contract")
 	transfers: [ERC1155Transfer!]! @derivedFrom(field: "contract")
+	states: [ERC1155ContractState!]! @derivedFrom(field: "contract")
 	txCreation: String!
 }
 
@@ -217,6 +219,18 @@ type RoyaltiesRegistry @entity(immutable: true){
 	value: Int!
 	collectionId: String!
 	# royalties: [RoyaltyItem!]!
+}
+
+type ERC721ContractState @entity {
+  id: String!
+  contract: ERC721Contract!
+  countItem: BigInt!
+}
+
+type ERC1155ContractState @entity {
+  id: String!
+  contract: ERC1155Contract!
+  countItem: BigInt!
 }
 
 enum ActionState {

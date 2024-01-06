@@ -1,8 +1,8 @@
-import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Creator, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
+import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Creator, ERC721Token, ERC721Transfer, Transaction  } from "../../generated/schema";
 import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, TransferSingle, URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance } from "../utils";
+import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance , updateERC721ContractState, updateERC1155ContractState } from "../utils";
 import { ContractAddress } from "../enum";
 export function handleApproval(event: Approval): void {
   // Logic to handle the Approval event
@@ -21,6 +21,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
   if (collection !== null) {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
+    updateERC721ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     collection.save();
   }
   else {
@@ -29,6 +30,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
     newCollection.symbol = event.params.symbol;
     newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.params.owner).id;
+    updateERC721ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     newCollection.save()
   }
 }
@@ -38,6 +40,7 @@ export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): v
   if (collection !== null) {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
+    updateERC721ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     collection.save();
   }
   else {
@@ -46,6 +49,7 @@ export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): v
     newCollection.symbol = event.params.symbol;
     newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
+    updateERC721ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     newCollection.save()
   }
 }
@@ -54,6 +58,7 @@ export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
   if (collection !== null) {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
+    updateERC1155ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     collection.save();
   }
   else {
@@ -61,7 +66,8 @@ export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
     newCollection.txCreation = event.transaction.hash.toHexString();
-    newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
+    newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
+    updateERC1155ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     newCollection.save()
   }
 }
@@ -71,6 +77,7 @@ export function handleCreateERC1155RaribleUser(event: CreateERC1155RaribleUser):
   if (collection !== null) {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
+    updateERC1155ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     collection.save();
   }
   else {
@@ -78,6 +85,7 @@ export function handleCreateERC1155RaribleUser(event: CreateERC1155RaribleUser):
     newCollection.name = event.params.name;
     newCollection.symbol = event.params.symbol;
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
+    updateERC1155ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     newCollection.save()
   }
 }
@@ -119,6 +127,7 @@ export function handleTransfer(event: Transfer): void {
     token.txCreation = event.transaction.hash.toHexString()
     let zeroAccount = Account.load('0x0000000000000000000000000000000000000000');
     updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
+    updateERC721ContractState(event, event.address.toHexString() , BigInt.fromI32(1) , BigInt.fromI32(0));
     if (zeroAccount == null) {
       zeroAccount = new Account('0x0000000000000000000000000000000000000000');
       zeroAccount.save();
@@ -194,6 +203,10 @@ export function handleTransferSingle(event: TransferSingle): void {
   if (event.params.from.toHexString() != ContractAddress.erc1155marketplace)
     updateERC1155Balance(event.params.from, tokenId, event.params.value.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
   updateERC1155Balance(event.params.to, tokenId, event.params.value, event.address.toHex()); // Add value
+
+  if(event.params.from.toHexString() == ContractAddress.ZERO){
+    updateERC1155ContractState(event, event.address.toHexString() , BigInt.fromI32(1) , BigInt.fromI32(0));
+  }
 
   // Create ERC1155Transfer entity
   let transferId = generateCombineKey([event.transaction.hash.toHex(), event.address.toHex(), tokenId])
@@ -290,6 +303,7 @@ export function handle1155Creators(event: Creators): void {
   // Create the Collection entity if it doesn't exist
   if (!collection) {
     collection = new ERC1155Contract(event.address.toHexString());
+    updateERC1155ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     // Initialize other necessary fields for Collection
     collection.txCreation = event.transaction.hash.toHexString();
     collection.save();
@@ -327,6 +341,7 @@ export function handle721Creators(event: Creators): void {
     collection = new ERC721Contract(event.address.toHexString());
     // Initialize other necessary fields for Collection
     collection.txCreation = event.transaction.hash.toHexString();
+    updateERC721ContractState(event, event.address.toHexString() , BigInt.fromI32(0) , BigInt.fromI32(0));
     collection.save();
   }
 

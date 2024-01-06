@@ -250,6 +250,14 @@ export class ERC721Contract extends Entity {
     );
   }
 
+  get states(): ERC721ContractStateLoader {
+    return new ERC721ContractStateLoader(
+      "ERC721Contract",
+      this.get("id")!.toString(),
+      "states"
+    );
+  }
+
   get txCreation(): string {
     let value = this.get("txCreation");
     if (!value || value.kind == ValueKind.NULL) {
@@ -659,6 +667,14 @@ export class ERC1155Contract extends Entity {
       "ERC1155Contract",
       this.get("id")!.toString(),
       "transfers"
+    );
+  }
+
+  get states(): ERC1155ContractStateLoader {
+    return new ERC1155ContractStateLoader(
+      "ERC1155Contract",
+      this.get("id")!.toString(),
+      "states"
     );
   }
 
@@ -2188,6 +2204,146 @@ export class RoyaltiesRegistry extends Entity {
   }
 }
 
+export class ERC721ContractState extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ERC721ContractState entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ERC721ContractState must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ERC721ContractState", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): ERC721ContractState | null {
+    return changetype<ERC721ContractState | null>(
+      store.get_in_block("ERC721ContractState", id)
+    );
+  }
+
+  static load(id: string): ERC721ContractState | null {
+    return changetype<ERC721ContractState | null>(
+      store.get("ERC721ContractState", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get contract(): string {
+    let value = this.get("contract");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set contract(value: string) {
+    this.set("contract", Value.fromString(value));
+  }
+
+  get countItem(): BigInt {
+    let value = this.get("countItem");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set countItem(value: BigInt) {
+    this.set("countItem", Value.fromBigInt(value));
+  }
+}
+
+export class ERC1155ContractState extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ERC1155ContractState entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ERC1155ContractState must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ERC1155ContractState", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): ERC1155ContractState | null {
+    return changetype<ERC1155ContractState | null>(
+      store.get_in_block("ERC1155ContractState", id)
+    );
+  }
+
+  static load(id: string): ERC1155ContractState | null {
+    return changetype<ERC1155ContractState | null>(
+      store.get("ERC1155ContractState", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get contract(): string {
+    let value = this.get("contract");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set contract(value: string) {
+    this.set("contract", Value.fromString(value));
+  }
+
+  get countItem(): BigInt {
+    let value = this.get("countItem");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set countItem(value: BigInt) {
+    this.set("countItem", Value.fromBigInt(value));
+  }
+}
+
 export class ERC1155BalanceLoader extends Entity {
   _entity: string;
   _field: string;
@@ -2260,6 +2416,24 @@ export class ERC721TransferLoader extends Entity {
   }
 }
 
+export class ERC721ContractStateLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ERC721ContractState[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ERC721ContractState[]>(value);
+  }
+}
+
 export class ERC721CreatorLoader extends Entity {
   _entity: string;
   _field: string;
@@ -2293,6 +2467,24 @@ export class ERC1155TokenLoader extends Entity {
   load(): ERC1155Token[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<ERC1155Token[]>(value);
+  }
+}
+
+export class ERC1155ContractStateLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ERC1155ContractState[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ERC1155ContractState[]>(value);
   }
 }
 

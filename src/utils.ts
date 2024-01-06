@@ -1,5 +1,5 @@
 import { Block, ERC1155Token, ERC721Token } from "../generated/schema"
-import { Account, ERC1155Balance } from "../generated/schema"
+import { Account, ERC1155Balance, ERC721ContractState, ERC1155ContractState } from "../generated/schema"
 import { Address, BigDecimal, BigInt, ethereum, log } from "@graphprotocol/graph-ts/index"
 import { Coefficient } from "./enum"
 
@@ -111,4 +111,32 @@ export function updateBlockEntity(event: ethereum.Event, contract: Address, toke
     block.quoteToken = quoteToken.toHexString();
     block.save()
   }
+}
+
+export function updateERC721ContractState(event: ethereum.Event , contractAddress: string, countItem: BigInt , countOwner:  BigInt) : ERC721ContractState{
+    let stateId = generateCombineKey([contractAddress, '- State']);
+    let state = ERC721ContractState.load(stateId);
+    if(state == null){
+        state = new ERC721ContractState(stateId);
+        state.contract = contractAddress
+        state.countItem = countItem
+    }else{
+       state.countItem = state.countItem.plus(countItem)
+    }
+    state.save();
+    return state
+}
+
+export function updateERC1155ContractState(event: ethereum.Event , contractAddress: string, countItem: BigInt , countOwner:  BigInt) : ERC1155ContractState{
+    let stateId = generateCombineKey([contractAddress, '- State']);
+    let state = ERC1155ContractState.load(stateId);
+    if(state == null){
+        state = new ERC1155ContractState(stateId);
+        state.contract = contractAddress
+        state.countItem = countItem
+    }else{
+       state.countItem = state.countItem.plus(countItem)
+    }
+    state.save();
+    return state
 }
