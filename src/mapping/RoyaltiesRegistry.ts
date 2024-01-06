@@ -8,9 +8,9 @@ import {
   export function handleRoyaltiesRegistry(event: RoyaltiesSetForContract): void {
     const listroyalties = event.params.royalties;
     for(let i =0 ; i < listroyalties.length ; i++){
-      let registry = RoyaltiesRegistry.load(event.address.toHexString()+ '-' + listroyalties[i].account.toHexString());
+      let registry = RoyaltiesRegistry.load(event.params.token.toHexString()+ '-' + listroyalties[i].account.toHexString());
       if (!registry) {
-        registry = new RoyaltiesRegistry(event.address.toHexString()+ '-' + listroyalties[i].account.toHexString());
+        registry = new RoyaltiesRegistry(event.params.token.toHexString()+ '-' + listroyalties[i].account.toHexString());
         registry.tokenId = event.params.token.toHexString();
         registry.account = listroyalties[i].account.toHexString();
         registry.value = listroyalties[i].value.toI32();
