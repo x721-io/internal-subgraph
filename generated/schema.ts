@@ -262,6 +262,19 @@ export class ERC721Contract extends Entity {
   set txCreation(value: string) {
     this.set("txCreation", Value.fromString(value));
   }
+
+  get count(): BigInt {
+    let value = this.get("count");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set count(value: BigInt) {
+    this.set("count", Value.fromBigInt(value));
+  }
 }
 
 export class ERC721Token extends Entity {
@@ -673,6 +686,19 @@ export class ERC1155Contract extends Entity {
 
   set txCreation(value: string) {
     this.set("txCreation", Value.fromString(value));
+  }
+
+  get count(): BigInt {
+    let value = this.get("count");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set count(value: BigInt) {
+    this.set("count", Value.fromBigInt(value));
   }
 }
 

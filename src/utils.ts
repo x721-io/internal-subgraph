@@ -1,4 +1,4 @@
-import { Block, ERC1155Token, ERC721Token } from "../generated/schema"
+import { Block, ERC1155Contract, ERC1155Token, ERC721Contract, ERC721Token } from "../generated/schema"
 import { Account, ERC1155Balance } from "../generated/schema"
 import { Address, BigDecimal, BigInt, ethereum, log } from "@graphprotocol/graph-ts/index"
 import { Coefficient } from "./enum"
@@ -80,6 +80,22 @@ export function updateERC1155Balance(accountAddress: Address, tokenId: string, v
     }
     balance.save();
     return balance
+}
+
+export function updateContractCount(id: string, quantity: BigInt, type: string): void {
+    if (type === 'ERC721') {
+        let contract = ERC721Contract.load(id);
+        if (contract) {
+            contract.count = contract.count.plus(quantity);
+            contract.save()
+        }
+    } else {
+        let contract = ERC1155Contract.load(id);
+        if (contract) {
+            contract.count = contract.count.plus(quantity);
+            contract.save();
+        }
+    }
 }
 
 

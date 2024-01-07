@@ -2,7 +2,7 @@ import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1
 import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, TransferSingle, URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance , fetchOrCreateERC721Tokens, fetchOrCreateERC1155Tokens } from "../utils";
+import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance , fetchOrCreateERC721Tokens, fetchOrCreateERC1155Tokens, updateContractCount } from "../utils";
 import { ContractAddress } from "../enum";
 export function handleTransfer(event: Transfer): void {
   if (event.params.to.toHexString() == ContractAddress.erc721marketplace) {
@@ -30,6 +30,7 @@ export function handleTransfer(event: Transfer): void {
     token.txCreation = event.transaction.hash.toHexString()
     let zeroAccount = Account.load('0x0000000000000000000000000000000000000000');
     updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
+    updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC721');
     if (zeroAccount == null) {
       zeroAccount = new Account('0x0000000000000000000000000000000000000000');
       zeroAccount.save();
@@ -87,6 +88,7 @@ export function handleTransfer(event: Transfer): void {
     contract.name = null;
     contract.symbol = null;
     contract.txCreation = "";
+    contract.count = BigInt.fromI32(0);
     contract.asAccount = fetchOrCreateAccount(event.params.to).id;
     contract.save()
     }
@@ -114,6 +116,7 @@ export function handleTransfer(event: Transfer): void {
       contract.name = null;
       contract.symbol = null;
       contract.txCreation = "";
+      contract.count = BigInt.fromI32(0);
       contract.asAccount = fetchOrCreateAccount(event.params.to).id;
       contract.save()
     }
@@ -138,6 +141,8 @@ export function handleTransfer(event: Transfer): void {
       // token.totalSupply = "";  // Replace with actual data if available
       token.txCreation = event.transaction.hash.toHexString()
       let totalSupply = updateERC1155Balance(event.params.to, tokenId, event.params.value, event.address.toHex());
+      updateBlockEntity(event, event.address, event.params.id, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), event.params.value, Address.fromString(ContractAddress.ZERO));
+      updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC1155');
       if(totalSupply){
         token.totalSupply = totalSupply.id;
       }

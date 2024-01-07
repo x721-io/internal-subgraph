@@ -44,7 +44,7 @@ type Account @entity {
 	ERC721transferFromEvent: [ERC721Transfer!]! @derivedFrom(field: "from")
 	ERC721transferToEvent: [ERC721Transfer!]! @derivedFrom(field: "to")
 }
-type ERC721Contract @entity(immutable: true) {
+type ERC721Contract @entity {
 	id: String!
 	asAccount: Account!
 	supportsMetadata: Boolean
@@ -53,7 +53,7 @@ type ERC721Contract @entity(immutable: true) {
 	tokens: [ERC721Token!]! @derivedFrom(field: "contract")
 	transfers: [ERC721Transfer!]! @derivedFrom(field: "contract")
 	txCreation: String!
-
+	count: BigInt!
 }
 type ERC721Token @entity {
 	id: ID!
@@ -78,7 +78,7 @@ type ERC721Transfer implements Event @entity(immutable: true) {
 	to: Account!
 }
 
-type ERC1155Contract @entity(immutable: true) {
+type ERC1155Contract @entity {
 	id: String!
 	asAccount: Account!
 	name: String
@@ -87,6 +87,7 @@ type ERC1155Contract @entity(immutable: true) {
 	balances: [ERC1155Balance!]! @derivedFrom(field: "contract")
 	transfers: [ERC1155Transfer!]! @derivedFrom(field: "contract")
 	txCreation: String!
+	count: BigInt!
 }
 
 type ERC1155Creator @entity {
