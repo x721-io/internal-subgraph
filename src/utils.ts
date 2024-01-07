@@ -103,7 +103,6 @@ export function updateContractCount(id: string, quantity: BigInt, type: string):
 export function updateOwnedTokenCount(accountId: string, contractAddress: string, increment: boolean, timestamp: BigInt): void {
     let ownedTokenCountId = accountId + '-' + contractAddress;
     let ownedTokenCount = OwnedTokenCount.load(ownedTokenCountId);
-    log.info('Alo: {}', [accountId])
 
     if (ownedTokenCount == null) {
         ownedTokenCount = new OwnedTokenCount(ownedTokenCountId);

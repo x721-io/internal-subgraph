@@ -109,7 +109,7 @@ export function handleTransfer(event: Transfer): void {
   if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
     updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
   }
-  if (event.params.to != Address.fromString(ContractAddress.ZERO)) {
+  if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc721marketplace)) {
     updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
   }
   let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
@@ -190,7 +190,7 @@ export function handleTransferSingle(event: TransferSingle): void {
   if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
     updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
   }
-  if (event.params.to != Address.fromString(ContractAddress.ZERO)) {
+  if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
     updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
   }
   let transaction = Transaction.load(event.transaction.hash.toHex());
@@ -251,7 +251,7 @@ export function handleTranferBatch(event: TransferBatch): void {
     if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
       updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
     }
-    if (event.params.to != Address.fromString(ContractAddress.ZERO)) {
+    if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
       updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
     }
     let tokenId = generateCombineKey([event.address.toHexString(), event.params.ids[i].toString()]);
