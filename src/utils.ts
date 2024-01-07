@@ -1,7 +1,9 @@
-import { Block, ERC1155Contract, ERC1155Token, ERC721Contract, ERC721Token } from "../generated/schema"
+import { Block, ERC1155Contract, ERC1155Token, ERC721Contract, ERC721Token, OwnedTokenCount } from "../generated/schema"
 import { Account, ERC1155Balance } from "../generated/schema"
-import { Address, BigDecimal, BigInt, ethereum, log } from "@graphprotocol/graph-ts/index"
-import { Coefficient } from "./enum"
+import { Address, BigDecimal, BigInt, ethereum, log, store } from "@graphprotocol/graph-ts/index"
+import { Coefficient, ContractAddress } from "./enum"
+import { Transfer } from "../generated/templates/ERC721Proxy/ERC721Proxy"
+import { TransferSingle } from "../generated/templates/ERC1155Proxy/ERC1155Proxy"
 
 // export function calculatePriceAndFee(deal: Deal): void {
 //     deal.price = calculatePrice(deal.buyAmount, deal.sellAmount)
@@ -97,6 +99,28 @@ export function updateContractCount(id: string, quantity: BigInt, type: string):
         }
     }
 }
+
+export function updateOwnedTokenCount(accountId: string, contractAddress: string, increment: boolean, timestamp: BigInt): void {
+    let ownedTokenCountId = accountId + '-' + contractAddress;
+    let ownedTokenCount = OwnedTokenCount.load(ownedTokenCountId);
+    log.info('Alo: {}', [accountId])
+
+    if (ownedTokenCount == null) {
+        ownedTokenCount = new OwnedTokenCount(ownedTokenCountId);
+        ownedTokenCount.owner = accountId;
+        ownedTokenCount.contract = contractAddress;
+        ownedTokenCount.count = BigInt.fromI32(0);
+    }
+
+    if (increment) {
+        ownedTokenCount.count = ownedTokenCount.count.plus(BigInt.fromI32(1));
+    } else {
+        ownedTokenCount.count = ownedTokenCount.count.minus(BigInt.fromI32(1));
+    }
+    ownedTokenCount.timestamp = timestamp
+    ownedTokenCount.save();
+}
+
 
 
 export function updateBlockEntity(event: ethereum.Event, contract: Address, tokenId: BigInt, from: Address, to: Address, type: string, price: BigInt, quantity: BigInt, quoteToken: Address): void {
