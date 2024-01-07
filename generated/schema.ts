@@ -131,6 +131,108 @@ export class Account extends Entity {
       "ERC721transferToEvent"
     );
   }
+
+  get OwnedTokens(): OwnedTokenCountLoader {
+    return new OwnedTokenCountLoader(
+      "Account",
+      this.get("id")!.toString(),
+      "OwnedTokens"
+    );
+  }
+}
+
+export class OwnedTokenCount extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save OwnedTokenCount entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type OwnedTokenCount must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("OwnedTokenCount", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): OwnedTokenCount | null {
+    return changetype<OwnedTokenCount | null>(
+      store.get_in_block("OwnedTokenCount", id)
+    );
+  }
+
+  static load(id: string): OwnedTokenCount | null {
+    return changetype<OwnedTokenCount | null>(store.get("OwnedTokenCount", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get contract(): string {
+    let value = this.get("contract");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set contract(value: string) {
+    this.set("contract", Value.fromString(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
+  get count(): BigInt {
+    let value = this.get("count");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set count(value: BigInt) {
+    this.set("count", Value.fromBigInt(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class ERC721Contract extends Entity {
@@ -2283,6 +2385,24 @@ export class ERC721TransferLoader extends Entity {
   load(): ERC721Transfer[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<ERC721Transfer[]>(value);
+  }
+}
+
+export class OwnedTokenCountLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): OwnedTokenCount[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<OwnedTokenCount[]>(value);
   }
 }
 

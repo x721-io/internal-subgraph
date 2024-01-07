@@ -43,7 +43,18 @@ type Account @entity {
 	ERC721tokens: [ERC721Token!]! @derivedFrom(field: "owner")
 	ERC721transferFromEvent: [ERC721Transfer!]! @derivedFrom(field: "from")
 	ERC721transferToEvent: [ERC721Transfer!]! @derivedFrom(field: "to")
+	OwnedTokens: [OwnedTokenCount!] @derivedFrom(field: "owner")
+
 }
+
+type OwnedTokenCount @entity {
+    id: ID!
+    contract: String!
+    owner: Account!
+	count: BigInt!
+	timestamp: BigInt!
+}
+
 type ERC721Contract @entity {
 	id: String!
 	asAccount: Account!

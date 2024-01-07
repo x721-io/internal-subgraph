@@ -2,12 +2,18 @@ import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1
 import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, TransferSingle, URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance , fetchOrCreateERC721Tokens, fetchOrCreateERC1155Tokens, updateContractCount } from "../utils";
+import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance , fetchOrCreateERC721Tokens, fetchOrCreateERC1155Tokens, updateContractCount, updateOwnedTokenCount } from "../utils";
 import { ContractAddress } from "../enum";
 export function handleTransfer(event: Transfer): void {
   if (event.params.to.toHexString() == ContractAddress.erc721marketplace) {
     log.info('Transfer to marketplace: {} {}', [event.params.to.toHexString(), ContractAddress.erc721marketplace])
     return;
+  }
+  if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
+    updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
+  }
+  if (event.params.to != Address.fromString(ContractAddress.ZERO)) {
+    updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
   }
   let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
   let token = ERC721Token.load(tokenId);
@@ -96,6 +102,12 @@ export function handleTransfer(event: Transfer): void {
   export function handleTransferSingleNoFactory(event: TransferSingle): void {
     if (event.params.to.toHexString() == ContractAddress.erc1155marketplace) {
       return;
+    }
+    if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
+      updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
+    }
+    if (event.params.to != Address.fromString(ContractAddress.ZERO)) {
+      updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
     }
     let transaction = Transaction.load(event.transaction.hash.toHex());
     if (transaction == null) {
