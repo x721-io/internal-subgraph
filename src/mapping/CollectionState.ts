@@ -12,6 +12,7 @@ export function handle721Proxy(event: Create721RaribleProxy): void {
     newToken.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newToken.txCreation = event.transaction.hash.toHexString();
     newToken.count = BigInt.fromI32(0);
+    newToken.holderCount = BigInt.fromI32(0);
     ERC721Proxy.create(event.params.proxy);
     newToken.save();
 }
@@ -21,6 +22,7 @@ export function handle721UserProxy(event: Create721RaribleUserProxy): void {
     newToken.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newToken.txCreation = event.transaction.hash.toHexString();
     newToken.count = BigInt.fromI32(0);
+    newToken.holderCount = BigInt.fromI32(0);
     ERC721Proxy.create(event.params.proxy);
     newToken.save();
 }
@@ -30,6 +32,7 @@ export function handle1155Proxy(event: Create1155RaribleProxy): void {
     newToken.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newToken.txCreation = event.transaction.hash.toHexString();
     newToken.count = BigInt.fromI32(0);
+    newToken.holderCount = BigInt.fromI32(0);
     ERC1155Proxy.create(event.params.proxy);
     newToken.save();
 }
@@ -39,6 +42,7 @@ export function handle1155UserProxy(event: Create1155RaribleUserProxy): void {
     newToken.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newToken.txCreation = event.transaction.hash.toHexString();
     newToken.count = BigInt.fromI32(0);
+    newToken.holderCount = BigInt.fromI32(0);
     ERC1155Proxy.create(event.params.proxy);
     newToken.save();
 }

@@ -22,6 +22,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
     collection.count = BigInt.fromI32(0);
+    collection.holderCount = BigInt.fromI32(0);
     collection.save();
   }
   else {
@@ -30,6 +31,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
     newCollection.symbol = event.params.symbol;
     newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.params.owner).id;
+    newCollection.holderCount = BigInt.fromI32(0);
     newCollection.count = BigInt.fromI32(0);
     newCollection.save()
   }
@@ -41,6 +43,7 @@ export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): v
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
     collection.count = BigInt.fromI32(0);
+    collection.holderCount = BigInt.fromI32(0);
     collection.save();
   }
   else {
@@ -50,6 +53,7 @@ export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): v
     newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
     newCollection.count = BigInt.fromI32(0);
+    newCollection.holderCount = BigInt.fromI32(0);
     newCollection.save()
   }
 }
@@ -59,6 +63,7 @@ export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
     collection.count = BigInt.fromI32(0);
+    collection.holderCount = BigInt.fromI32(0);
     collection.save();
   }
   else {
@@ -68,6 +73,7 @@ export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
     newCollection.txCreation = event.transaction.hash.toHexString();
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newCollection.count = BigInt.fromI32(0);
+    newCollection.holderCount = BigInt.fromI32(0);
     newCollection.save()
   }
 }
@@ -78,6 +84,7 @@ export function handleCreateERC1155RaribleUser(event: CreateERC1155RaribleUser):
     collection.name = event.params.name;
     collection.symbol = event.params.symbol;
     collection.count = BigInt.fromI32(0);
+    collection.holderCount = BigInt.fromI32(0);
     collection.save();
   }
   else {
@@ -86,6 +93,7 @@ export function handleCreateERC1155RaribleUser(event: CreateERC1155RaribleUser):
     newCollection.symbol = event.params.symbol;
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newCollection.count = BigInt.fromI32(0);
+    newCollection.holderCount = BigInt.fromI32(0);
     newCollection.save()
   }
 }
@@ -106,7 +114,7 @@ export function handleTransfer(event: Transfer): void {
   if (event.params.to.toHexString() == ContractAddress.erc721marketplace) {
     return;
   }
-  if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
+  if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc721marketplace)) {
     updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
   }
   if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc721marketplace)) {
@@ -187,12 +195,6 @@ export function handleTransferSingle(event: TransferSingle): void {
   if (event.params.to.toHexString() == ContractAddress.erc1155marketplace) {
     return;
   }
-  if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
-    updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
-  }
-  if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
-    updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
-  }
   let transaction = Transaction.load(event.transaction.hash.toHex());
   if (transaction == null) {
     transaction = new Transaction(event.transaction.hash.toHex());
@@ -233,6 +235,12 @@ export function handleTransferSingle(event: TransferSingle): void {
   if (event.params.from.toHexString() != ContractAddress.erc1155marketplace) {
     updateBlockEntity(event, event.address, event.params.id, event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), event.params.value, Address.fromString(ContractAddress.ZERO));
   }
+  // if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
+  //   updateOwnedTokenCountERC1155(event.params.from.toHexString(), event.address.toHexString(), false, event.params.value, event.block.timestamp)
+  // }
+  // if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
+  //   updateOwnedTokenCountERC1155(event.params.to.toHexString(), event.address.toHexString(), true, event.params.value, event.block.timestamp)
+  // }
   transfer.save();
 }
 
@@ -248,12 +256,12 @@ export function handleTranferBatch(event: TransferBatch): void {
     transaction.save();
   }
   for (let i = 0; i < event.params.ids.length; i++) {
-    if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
-      updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
-    }
-    if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
-      updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
-    }
+    // if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
+    //   updateOwnedTokenCountERC1155(event.params.from.toHexString(), event.address.toHexString(), false, event.params.values[i],event.block.timestamp)
+    // }
+    // if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
+    //   updateOwnedTokenCountERC1155(event.params.to.toHexString(), event.address.toHexString(), true, event.params.values[i],event.block.timestamp)
+    // }
     let tokenId = generateCombineKey([event.address.toHexString(), event.params.ids[i].toString()]);
     // let tokenId = event.params.ids[i].toString();
     let token = ERC1155Token.load(tokenId);
