@@ -235,6 +235,92 @@ export class OwnedTokenCount extends Entity {
   }
 }
 
+export class AccountCollectionOwnership extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save AccountCollectionOwnership entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type AccountCollectionOwnership must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("AccountCollectionOwnership", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): AccountCollectionOwnership | null {
+    return changetype<AccountCollectionOwnership | null>(
+      store.get_in_block("AccountCollectionOwnership", id)
+    );
+  }
+
+  static load(id: string): AccountCollectionOwnership | null {
+    return changetype<AccountCollectionOwnership | null>(
+      store.get("AccountCollectionOwnership", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get account(): string {
+    let value = this.get("account");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set account(value: string) {
+    this.set("account", Value.fromString(value));
+  }
+
+  get contract(): string {
+    let value = this.get("contract");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set contract(value: string) {
+    this.set("contract", Value.fromString(value));
+  }
+
+  get ownsTokens(): boolean {
+    let value = this.get("ownsTokens");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set ownsTokens(value: boolean) {
+    this.set("ownsTokens", Value.fromBoolean(value));
+  }
+}
+
 export class ERC721Contract extends Entity {
   constructor(id: string) {
     super();
@@ -376,6 +462,19 @@ export class ERC721Contract extends Entity {
 
   set count(value: BigInt) {
     this.set("count", Value.fromBigInt(value));
+  }
+
+  get holderCount(): BigInt {
+    let value = this.get("holderCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set holderCount(value: BigInt) {
+    this.set("holderCount", Value.fromBigInt(value));
   }
 }
 
@@ -801,6 +900,19 @@ export class ERC1155Contract extends Entity {
 
   set count(value: BigInt) {
     this.set("count", Value.fromBigInt(value));
+  }
+
+  get holderCount(): BigInt {
+    let value = this.get("holderCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set holderCount(value: BigInt) {
+    this.set("holderCount", Value.fromBigInt(value));
   }
 }
 

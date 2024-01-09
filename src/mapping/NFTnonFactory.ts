@@ -1,12 +1,28 @@
-import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Creator, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
-import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
-import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, TransferSingle, URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
-import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance , fetchOrCreateERC721Tokens, fetchOrCreateERC1155Tokens, updateContractCount, updateOwnedTokenCount } from "../utils";
+import { Account, ERC1155Contract, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
+import { Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
+import { TransferSingle } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance, updateContractCount, updateOwnedTokenCount } from "../utils";
 import { ContractAddress } from "../enum";
 export function handleTransfer(event: Transfer): void {
   if (event.params.to.toHexString() == ContractAddress.erc721marketplace) {
     return;
+  }
+  let contract = ERC721Contract.load(event.address.toHex());
+  if (contract !== null) {
+    contract.name = null;
+    contract.symbol = null;
+    contract.save();
+  }
+  else {
+    let contract = new ERC721Contract(event.address.toHex());
+    contract.name = null;
+    contract.symbol = null;
+    contract.txCreation = "";
+    contract.count = BigInt.fromI32(0);
+    contract.asAccount = fetchOrCreateAccount(event.params.to).id;
+    contract.holderCount = BigInt.fromI32(0);
+    contract.save()
   }
   if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
     updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
@@ -81,41 +97,11 @@ export function handleTransfer(event: Transfer): void {
       accountFrom.save();
     }
   }
-
-  let contract = ERC721Contract.load(event.address.toHex());
-  if (contract !== null) {
-    contract.name = null;
-    contract.symbol = null;
-    contract.save();
-  }
-  else {
-    let contract = new ERC721Contract(event.address.toHex());
-    contract.name = null;
-    contract.symbol = null;
-    contract.txCreation = "";
-    contract.count = BigInt.fromI32(0);
-    contract.asAccount = fetchOrCreateAccount(event.params.to).id;
-    contract.save()
-    }
-  }
+}
   export function handleTransferSingleNoFactory(event: TransferSingle): void {
     if (event.params.to.toHexString() == ContractAddress.erc1155marketplace) {
       return;
     }
-    if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
-      updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
-    }
-    if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
-      updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
-    }
-    let transaction = Transaction.load(event.transaction.hash.toHex());
-    if (transaction == null) {
-      transaction = new Transaction(event.transaction.hash.toHex());
-      transaction.timestamp = event.block.timestamp;
-      transaction.blockNumber = event.block.number;
-      transaction.save();
-    }
-  
     let contract = ERC1155Contract.load(event.address.toHex());
     if (contract !== null) {
       contract.name = null;
@@ -129,7 +115,21 @@ export function handleTransfer(event: Transfer): void {
       contract.txCreation = "";
       contract.count = BigInt.fromI32(0);
       contract.asAccount = fetchOrCreateAccount(event.params.to).id;
+      contract.holderCount = BigInt.fromI32(0);
       contract.save()
+    }
+    // if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
+    //   updateOwnedTokenCountERC1155(event.params.from.toHexString(), event.address.toHexString(), false, event.params.value, event.block.timestamp)
+    // }
+    // if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
+    //   updateOwnedTokenCountERC1155(event.params.to.toHexString(), event.address.toHexString(), true, event.params.value, event.block.timestamp)
+    // }
+    let transaction = Transaction.load(event.transaction.hash.toHex());
+    if (transaction == null) {
+      transaction = new Transaction(event.transaction.hash.toHex());
+      transaction.timestamp = event.block.timestamp;
+      transaction.blockNumber = event.block.number;
+      transaction.save();
     }
 
     let tokenId = generateCombineKey([event.address.toHexString(), event.params.id.toString()]);
