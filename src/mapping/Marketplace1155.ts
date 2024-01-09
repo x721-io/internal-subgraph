@@ -67,7 +67,7 @@ export function handleAskCancel(event: AskCancel): void {
   if (transaction) {
     transaction.event = "AskCancel"
     if (transaction.from != null && transaction.nftId != null) {
-      updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, transaction.quantity.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
+      updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, transaction.quantity.times(BigInt.fromI32(-1)), transaction.address!); // Subtract value
     }
   if (!transaction || !transaction.nftId || !transaction.from) return;
 
@@ -124,7 +124,7 @@ export function handleBuy(event: Buy): void {
   if (transaction.from) {
     updateERC1155Balance(
       Address.fromString(transaction.from!), transaction.nftId!, 
-      event.params.quantity.times(BigInt.fromI32(-1)), event.address.toHex()
+      event.params.quantity.times(BigInt.fromI32(-1)), transaction.address!
     );
   }
 
