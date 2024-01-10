@@ -90,7 +90,7 @@ export function handleOfferCancel(event: OfferCancel): void {
   let transaction = MarketEvent1155.load(event.params.offerId.toString() + ' - Offer')
   if (transaction) {
     transaction.event = "CancelBid"
-    if (!transaction || !transaction.nftId || !transaction.from) return;
+    if (!transaction || !transaction.nftId || !transaction.to) return;
 
     let nft = ERC1155Token.load(transaction.nftId!);
     if (!nft) return;
