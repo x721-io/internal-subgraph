@@ -114,6 +114,7 @@ export function handleBuy(event: Buy): void {
 
   transaction.to = event.params.buyer.toHexString();
   transaction.quantity = transaction.quantity.minus(event.params.quantity);
+  transaction.netPrice = event.params.netPrice;
 
   if (transaction.quantity && transaction.quantity.isZero()) {
     transaction.event = "Trade";
@@ -149,6 +150,7 @@ export function handleAcceptOffer(event: OfferAccept): void {
 
     transaction.from = event.params.seller.toHexString();
     transaction.quantity = transaction.quantity.minus(event.params.quantity)
+    transaction.netPrice = event.params.netPrice;
     // if (transaction.from != null && transaction.nftId != null) {
     //   updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, event.params.quantity.times(BigInt.fromI32(-1)), event.address.toHex()); // Subtract value
     // }
