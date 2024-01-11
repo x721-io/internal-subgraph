@@ -257,7 +257,7 @@ export function updateBlockEntity(event: ethereum.Event, contract: Address, toke
       block.blockNumber = event.block.number.toI32()
       if (type === 'AcceptBid') {
         block.event = type
-        block.price
+        block.price = price
         block.quoteToken = quoteToken.toHexString()
       }
       block.from = from.toHexString();
