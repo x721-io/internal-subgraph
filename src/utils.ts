@@ -4,12 +4,8 @@ import { Address, BigDecimal, BigInt, ethereum, log, store } from "@graphprotoco
 import { Coefficient, ContractAddress } from "./enum"
 import { Transfer } from "../generated/templates/ERC721Proxy/ERC721Proxy"
 import { TransferSingle } from "../generated/templates/ERC1155Proxy/ERC1155Proxy"
-
-// export function calculatePriceAndFee(deal: Deal): void {
-//     deal.price = calculatePrice(deal.buyAmount, deal.sellAmount)
-//     deal.fee = calculateFee(deal.buyAmount)
-// }
-
+import { NFT as erc721Contract} from '../generated/NFT/NFT'
+import {ERC721LegacyFactory as factoryContract } from "../generated/ERC721FactoryLegacy/ERC721LegacyFactory"
 function calculatePrice(buyAmount: BigInt, sellAmount: BigInt): BigInt {
     if (buyAmount == BigInt.fromI32(0) || sellAmount == BigInt.fromI32(0)){
         return BigInt.fromI32(0)
@@ -95,24 +91,7 @@ export function updateERC1155Balance(accountAddress: Address, tokenId: string, v
 
     let nowOwned = balance.valueExact.gt(BigInt.fromI32(0));
 
-    // Update holderCount if necessary
-    // let contract = ERC1155Contract.load(contractAddress);
-    // if (contract != null) {
-    //     let nowOwned = balance.valueExact.gt(BigInt.fromI32(0));
-    //     log.warning('is now owned: {} {}', [nowOwned.toString(), balance.valueExact.toString()])
-    //     let test = balance.valueExact.plus(value);
-    //     log.warning('test owned: {}', [test.toString()])
-    //     if (!previouslyOwned && nowOwned && accountAddress != Address.fromString(ContractAddress.ZERO)) {
-    //         contract.holderCount = contract.holderCount.plus(BigInt.fromI32(1));
-    //     } else if (previouslyOwned && !nowOwned) {
-    //         contract.holderCount = contract.holderCount.minus(BigInt.fromI32(1));
-    //         log.warning('alo', [])
-    //     }
-    //     contract.save();
-    // }
     log.warning('value1: {}', [balance.valueExact.toString()])
-    // let accountCollectionOwnershipId = accountAddress.toHex() + '-' + contractAddress;
-    // let accountCollectionOwnership = AccountCollectionOwnership.load(accountCollectionOwnershipId);
     if (accountCollectionOwnership == null) {
         accountCollectionOwnership = new AccountCollectionOwnership(ownershipId);
         accountCollectionOwnership.account = accountAddress.toHexString();
@@ -189,65 +168,6 @@ export function updateOwnedTokenCount(accountId: string, contractAddress: string
     ownedTokenCount.save();
 }
 
-// export function updateOwnedTokenCountERC1155(accountId: string, contractAddress: string, increment: boolean, value: BigInt, timestamp: BigInt): void {
-//     let ownedTokenCountId = accountId + '-' + contractAddress;
-//     let ownedTokenCount = OwnedTokenCount.load(ownedTokenCountId);
-
-//     if (ownedTokenCount == null) {
-//         ownedTokenCount = new OwnedTokenCount(ownedTokenCountId);
-//         ownedTokenCount.owner = accountId;
-//         ownedTokenCount.contract = contractAddress;
-//         ownedTokenCount.count = BigInt.fromI32(0);
-//     }
-
-//     let contract = ERC1155Contract.load(contractAddress);
-//     if (contract == null) return;
-
-//     let wasOwner = ownedTokenCount.count > BigInt.fromI32(0);
-
-//     if (increment) {
-//         ownedTokenCount.count = ownedTokenCount.count.plus(value);
-//     } else if (ownedTokenCount.count > value) {
-//         ownedTokenCount.count = ownedTokenCount.count.minus(value);
-//     } else {
-//         ownedTokenCount.count = BigInt.fromI32(0);
-//     }
-
-//     let isOwner = ownedTokenCount.count > BigInt.fromI32(0);
-
-//     if (!wasOwner && isOwner) {
-//         contract.holderCount = contract.holderCount.plus(BigInt.fromI32(1));
-//     } else if (wasOwner && !isOwner) {
-//         contract.holderCount = contract.holderCount.minus(BigInt.fromI32(1));
-//     }
-
-//     ownedTokenCount.timestamp = timestamp;
-//     ownedTokenCount.save();
-//     contract.save();
-// }
-
-// function updateOwnedTokenCountERC1155(accountId: string, contractAddress: string, tokenId: string, value: BigInt, isIncrement: boolean): void {
-//     let contract = ERC1155Contract.load(contractAddress);
-//     if (contract == null) return;
-
-//     let balanceId = accountId + '-' + contractAddress + '-' + tokenId;
-//     let balance = ERC1155Balance.load(balanceId);
-
-//     let previousBalance = balance ? balance.valueExact : BigInt.fromI32(0);
-//     let newBalance = isIncrement ? previousBalance.plus(value) : previousBalance.minus(value);
-
-//     // Check if the account starts or stops owning tokens
-//     let didStartOwning = previousBalance.equals(BigInt.fromI32(0)) && newBalance.gt(BigInt.fromI32(0));
-//     let didStopOwning = previousBalance.gt(BigInt.fromI32(0)) && newBalance.equals(BigInt.fromI32(0));
-
-//     if (didStartOwning) {
-//         contract.holderCount = contract.holderCount.plus(BigInt.fromI32(1));
-//     } else if (didStopOwning) {
-//         contract.holderCount = contract.holderCount.minus(BigInt.fromI32(1));
-//     }
-
-//     contract.save();
-// }
 
 
 export function updateBlockEntity(event: ethereum.Event, contract: Address, tokenId: BigInt, from: Address, to: Address, type: string, price: BigInt, quantity: BigInt, quoteToken: Address): void {
@@ -262,10 +182,6 @@ export function updateBlockEntity(event: ethereum.Event, contract: Address, toke
       }
       block.from = from.toHexString();
       block.to = to.toHexString();
-    //   block.quantity = quantity;
-    //   block.price = price;
-    //   block.address = contract.toHexString()
-    //   block.tokenId = tokenId;
       block.save()
   } else {
     let block = new Block(`${event.transaction.hash.toHexString()}-${tokenId.toString()}`)
@@ -281,4 +197,33 @@ export function updateBlockEntity(event: ethereum.Event, contract: Address, toke
     block.quoteToken = quoteToken.toHexString();
     block.save()
   }
+}
+
+export function initializeNFTCollectionState(proxyAddress: Address, limit: BigInt): void {
+    log.warning('limit: {} {}', [limit.toString(), proxyAddress.toHexString()])
+    const contract = erc721Contract.bind(proxyAddress)
+    for (let i = 1; i <= limit.toI32(); i++) {
+        const owner = contract.ownerOf(BigInt.fromI32(i));
+        let tokenId = generateCombineKey([proxyAddress.toHexString(), i.toString()]);
+        let token = ERC721Token.load(tokenId);
+        if (token == null) {
+            token = new ERC721Token(tokenId);
+            token.tokenId = i.toString();
+            token.contract = proxyAddress.toHexString();
+            token.identifier = BigInt.fromI32(i);
+            token.owner = owner.toHexString();
+            token.txCreation = ContractAddress.ZERO
+            let zeroAccount = Account.load('0x0000000000000000000000000000000000000000');
+            // updateBlockEntity(event, event.address, BigInt.fromI32(i), Address.fromString(ContractAddress.ZERO), owner, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
+            // updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC721');    
+            if (zeroAccount == null) {
+              zeroAccount = new Account('0x0000000000000000000000000000000000000000');
+              zeroAccount.save();
+            }
+            // Set the approval to the zero address when the token is minted
+            token.approval = zeroAccount.id;
+            token.uri = ""; // Set the URI based on your logic
+            token.save();
+          }
+    }
 }

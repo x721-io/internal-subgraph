@@ -16,34 +16,6 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
     newToken.holderCount = BigInt.fromI32(0);
     ERC721Proxy.create(event.params.proxy);
     newToken.save();
-    const contractFactory = factoryContract.bind(event.address)
-    let limit = contractFactory.maxTokenIds(event.params.proxy);
-    log.warning('limit: {} {}', [limit.toString(), event.params.proxy.toHexString()])
-    const contract = erc721Contract.bind(event.params.proxy)
-    for (let i = 1; i <= limit.toI32(); i++) {
-        const owner = contract.ownerOf(BigInt.fromI32(i));
-        let tokenId = generateCombineKey([event.address.toHexString(), i.toString()]);
-        let token = ERC721Token.load(tokenId);
-        if (token == null) {
-            token = new ERC721Token(tokenId);
-            token.tokenId = i.toString();
-            token.contract = event.address.toHexString();
-            token.identifier = BigInt.fromI32(i);
-            token.owner = owner.toHexString();
-            token.txCreation = event.transaction.hash.toHexString()
-            let zeroAccount = Account.load('0x0000000000000000000000000000000000000000');
-            updateBlockEntity(event, event.address, BigInt.fromI32(i), Address.fromString(ContractAddress.ZERO), owner, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
-            updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC721');    
-            if (zeroAccount == null) {
-              zeroAccount = new Account('0x0000000000000000000000000000000000000000');
-              zeroAccount.save();
-            }
-            // Set the approval to the zero address when the token is minted
-            token.approval = zeroAccount.id;
-            token.uri = ""; // Set the URI based on your logic
-            token.save();
-          }
-    }
 }
 
 export function handle721UserRaribleLegacy(event: CreateERC721RaribleUser): void {
