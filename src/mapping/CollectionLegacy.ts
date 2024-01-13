@@ -16,8 +16,8 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
     newToken.holderCount = BigInt.fromI32(0);
     ERC721Proxy.create(event.params.proxy);
     newToken.save();
-    const contract = erc721Contract.bind(event.params.proxy)
     const contractFactory = factoryContract.bind(event.address)
+    const contract = erc721Contract.bind(event.params.proxy)
     let limit = contractFactory.maxTokenIds(event.params.proxy);
     for (let i = 1; i <= limit.toI32(); i++) {
         const owner = contract.ownerOf(BigInt.fromI32(i));
