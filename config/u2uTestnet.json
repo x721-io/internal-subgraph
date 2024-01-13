@@ -16,9 +16,6 @@
     "erc1155marketplace": {
       "address": "0x46948c71e0b09ddddc8e7feed92332dd5b19b5fa"
     },
-    "erc721Nonfactory": {
-      "address": "0x34adacbbb61ab0345094ffdfe2a6a737530bf155"
-    },
     "erc721Base": {
       "address": "0x7e1ae9399cda4cfa62714c0c1445bf75c39201bc"
     },
