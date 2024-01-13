@@ -2,7 +2,7 @@
 import { Create721RaribleUserProxy as Create721Legacy, CreateERC721RaribleUser } from "../../generated/ERC721FactoryLegacy/ERC721LegacyFactory";
 import { Account, ERC721Contract, ERC721Token } from "../../generated/schema";
 import { ERC721Proxy } from "../../generated/templates";
-import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateContractCount } from "../utils";
+import { fetchOrCreateAccount, generateCombineKey, initializeNFTCollectionState, updateBlockEntity, updateContractCount } from "../utils";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { NFT as erc721Contract} from '../../generated/NFT/NFT'
 import {ERC721LegacyFactory as factoryContract } from "../../generated/ERC721FactoryLegacy/ERC721LegacyFactory"
@@ -16,6 +16,9 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
     newToken.holderCount = BigInt.fromI32(0);
     ERC721Proxy.create(event.params.proxy);
     newToken.save();
+    const contractFactory = factoryContract.bind(event.address)
+    let limit = contractFactory.maxTokenIds(event.params.proxy);
+    initializeNFTCollectionState(event.params.proxy, limit)
 }
 
 export function handle721UserRaribleLegacy(event: CreateERC721RaribleUser): void {
