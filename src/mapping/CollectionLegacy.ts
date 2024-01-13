@@ -4,7 +4,7 @@ import { Account, ERC721Contract, ERC721Token } from "../../generated/schema";
 import { ERC721Proxy } from "../../generated/templates";
 import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateContractCount } from "../utils";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import {ERC721Proxy as erc721Contract} from "../../generated/ERC721Proxy/ERC721Proxy"
+import { NFT as erc721Contract} from '../../generated/NFT/NFT'
 import {ERC721LegacyFactory as factoryContract } from "../../generated/ERC721FactoryLegacy/ERC721LegacyFactory"
 import { ContractAddress } from "../enum";
 
