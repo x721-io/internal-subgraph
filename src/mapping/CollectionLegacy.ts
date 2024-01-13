@@ -18,6 +18,7 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
     newToken.save();
     const contractFactory = factoryContract.bind(event.address)
     let limit = contractFactory.maxTokenIds(event.params.proxy);
+    log.warning('limit: {} {}', [limit.toString(), event.params.proxy.toHexString()])
     initializeNFTCollectionState(event.params.proxy, limit)
 }
 
