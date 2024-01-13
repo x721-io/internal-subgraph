@@ -5,6 +5,28 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
+    name: ERC721FactoryLegacy
+    network: testnet
+    source:
+      address: '0xb840c3dE304d8D2726EA973f9A944923cA86E111'
+      abi: ERC721LegacyFactory
+      startBlock: 15098490
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/CollectionLegacy.ts
+      entities:
+        - Collection
+      abis:
+        - name: ERC721LegacyFactory
+          file: ./abis/ERC721LegacyFactory.json
+      eventHandlers:
+        - event: Create721RaribleUserProxy(address)
+          handler: handle721UserProxyLegacy
+        # - event: CreateERC721RaribleUser(address,string,string)
+        #   handler: handle721UserRaribleLegacy
+  - kind: ethereum/contract
     name: ERC721Factory
     network: testnet
     source:
@@ -52,7 +74,7 @@ dataSources:
     name: ERC721Marketplace
     network: testnet
     source:
-      address: '0x842052c6ce40095a9bce9a4df970bcdb82705f34'
+      address: '0x77700afc1183e520f6ce28e5ee95411cc88cf36b'
       abi: ERC721Marketplace
       startBlock: 10466045
     mapping:
@@ -83,7 +105,7 @@ dataSources:
     name: ERC1155Marketplace
     network: testnet
     source:
-      address: '0x2a35acd9ab36c22bfbf4ddafdbef6fd1ef850fc5'
+      address: '0x46948c71e0b09ddddc8e7feed92332dd5b19b5fa'
       abi: ERC1155Marketplace
       startBlock: 10466045
     mapping:
@@ -215,7 +237,7 @@ dataSources:
     name: RoyaltiesRegistry
     network: testnet
     source:
-      address: '0x6DA88C2e364AF1112e62872b5b69A16daeb38446'
+      address: '0xda14d191fbd1b962cbf58e09d4078071b9fda079'
       abi: RoyaltiesRegistry
       startBlock: 14330094
     mapping:
@@ -254,6 +276,24 @@ dataSources:
   #       - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
   #         handler: handleTransferSingleNoFactory
 templates:
+  - kind: ethereum/contract
+    name: NFTLegacy
+    network: testnet
+    source:
+      abi: NFTLegacy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - ERC721Token
+      abis:
+        - name: NFTLegacy
+          file: ./abis/ERC721Legacy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
   - kind: ethereum/contract
     name: ERC721Proxy
     network: testnet
