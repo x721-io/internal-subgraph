@@ -3,7 +3,7 @@ import { Create721RaribleUserProxy as Create721Legacy, CreateERC721RaribleUser }
 import { Account, ERC721Contract, ERC721Token } from "../../generated/schema";
 import { ERC721Proxy } from "../../generated/templates";
 import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateContractCount } from "../utils";
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import {ERC721Proxy as erc721Contract} from "../../generated/ERC721Proxy/ERC721Proxy"
 import {ERC721LegacyFactory as factoryContract } from "../../generated/ERC721FactoryLegacy/ERC721LegacyFactory"
 import { ContractAddress } from "../enum";
@@ -17,8 +17,9 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
     ERC721Proxy.create(event.params.proxy);
     newToken.save();
     const contractFactory = factoryContract.bind(event.address)
-    const contract = erc721Contract.bind(event.params.proxy)
     let limit = contractFactory.maxTokenIds(event.params.proxy);
+    log.warning('limit: {}', [limit.toString()])
+    const contract = erc721Contract.bind(event.params.proxy)
     for (let i = 1; i <= limit.toI32(); i++) {
         const owner = contract.ownerOf(BigInt.fromI32(i));
         let tokenId = generateCombineKey([event.address.toHexString(), i.toString()]);
