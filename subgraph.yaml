@@ -132,10 +132,10 @@ dataSources:
         - event: OfferCancel(uint256)
           handler: handleOfferCancel
   - kind: ethereum/contract
-    name: NFT
+    name: NFTLegacy
     network: testnet
     source:
-      abi: NFT
+      abi: NFTLegacy
       startBlock: 15098580
     mapping:
       kind: ethereum/events
@@ -145,7 +145,7 @@ dataSources:
       entities:
         - ERC721Token
       abis:
-        - name: NFT
+        - name: NFTLegacy
           file: ./abis/ERC721Proxy.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)

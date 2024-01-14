@@ -4,9 +4,7 @@ import { Account, ERC721Contract, ERC721Token } from "../../generated/schema";
 import { ERC721Proxy } from "../../generated/templates";
 import { fetchOrCreateAccount, generateCombineKey, initializeNFTCollectionState, updateBlockEntity, updateContractCount } from "../utils";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { NFT as erc721Contract} from '../../generated/NFT/NFT'
 import {ERC721LegacyFactory as factoryContract } from "../../generated/ERC721FactoryLegacy/ERC721LegacyFactory"
-import { ContractAddress } from "../enum";
 
 export function handle721UserProxyLegacy(event: Create721Legacy): void {
     let newToken = new ERC721Contract(event.params.proxy.toHexString());

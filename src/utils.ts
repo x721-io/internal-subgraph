@@ -4,8 +4,7 @@ import { Address, BigDecimal, BigInt, ethereum, log, store } from "@graphprotoco
 import { Coefficient, ContractAddress } from "./enum"
 import { Transfer } from "../generated/templates/ERC721Proxy/ERC721Proxy"
 import { TransferSingle } from "../generated/templates/ERC1155Proxy/ERC1155Proxy"
-import { NFT as erc721Contract} from '../generated/NFT/NFT'
-import {ERC721LegacyFactory as factoryContract } from "../generated/ERC721FactoryLegacy/ERC721LegacyFactory"
+import { NFTLegacy as erc721Contract} from '../generated/NFTLegacy/NFTLegacy'
 function calculatePrice(buyAmount: BigInt, sellAmount: BigInt): BigInt {
     if (buyAmount == BigInt.fromI32(0) || sellAmount == BigInt.fromI32(0)){
         return BigInt.fromI32(0)
