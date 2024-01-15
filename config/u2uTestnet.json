@@ -12,10 +12,10 @@
       "address" : "0xd8c5F75Aa01dC3db284F9F3C697C76C0D9DeB3A3"
     },
     "erc721marketplace": {
-      "address": "0x842052c6ce40095a9bce9a4df970bcdb82705f34"
+      "address": "0x77700afc1183e520f6ce28e5ee95411cc88cf36b"
     },
     "erc1155marketplace": {
-      "address": "0x2a35acd9ab36c22bfbf4ddafdbef6fd1ef850fc5"
+      "address": "0x46948c71e0b09ddddc8e7feed92332dd5b19b5fa"
     },
     "erc721Nonfactory": {
       "address": "0x34adacbbb61ab0345094ffdfe2a6a737530bf155"
@@ -27,7 +27,7 @@
       "address": "0x9e87754dab31dad057dcdf233000f71ff55fa37f"
     },
     "royaltiesRegistry": {
-      "address": "0x6DA88C2e364AF1112e62872b5b69A16daeb38446",
+      "address": "0xda14d191fbd1b962cbf58e09d4078071b9fda079",
       "startBlock" : "14330094"
     }
   }
