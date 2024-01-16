@@ -1,7 +1,7 @@
 import { Account, ERC1155Contract, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
 import { Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { TransferSingle } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance, updateContractCount, updateOwnedTokenCount } from "../utils";
 import { ContractAddress } from "../enum";
 export function handleTransfer(event: Transfer): void {
@@ -30,6 +30,7 @@ export function handleTransfer(event: Transfer): void {
   if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc721marketplace)) {
     updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
   }
+  log.warning('transfer nè: {} {} {}', [event.address.toHexString(), event.params.from.toHexString(), event.params.to.toHexString()])
   let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
   let token = ERC721Token.load(tokenId);
   // // Handle the new transaction

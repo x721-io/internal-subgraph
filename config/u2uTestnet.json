@@ -1,5 +1,4 @@
 {
-
     "network": "testnet",
     "startBlock": "10466045",
     "erc721factory": {
@@ -29,6 +28,9 @@
     "royaltiesRegistry": {
       "address": "0xda14d191fbd1b962cbf58e09d4078071b9fda079",
       "startBlock" : "14330094"
+    },
+    "erc721LegacyFactory": {
+      "address": "0xb840c3dE304d8D2726EA973f9A944923cA86E111",
+      "startBlock": "15098490"
     }
-  }
-    
+}

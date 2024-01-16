@@ -5,6 +5,28 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
+    name: ERC721FactoryLegacy
+    network: {{network}}
+    source:
+      address: '{{erc721LegacyFactory.address}}'
+      abi: ERC721LegacyFactory
+      startBlock: {{erc721LegacyFactory.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/CollectionLegacy.ts
+      entities:
+        - Collection
+      abis:
+        - name: ERC721LegacyFactory
+          file: ./abis/ERC721LegacyFactory.json
+      eventHandlers:
+        - event: Create721RaribleUserProxy(address)
+          handler: handle721UserProxyLegacy
+        # - event: CreateERC721RaribleUser(address,string,string)
+        #   handler: handle721UserRaribleLegacy
+  - kind: ethereum/contract
     name: ERC721Factory
     network: {{network}}
     source:
@@ -254,6 +276,24 @@ dataSources:
   #       - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
   #         handler: handleTransferSingleNoFactory
 templates:
+  - kind: ethereum/contract
+    name: NFTLegacy
+    network: testnet
+    source:
+      abi: NFTLegacy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - ERC721Token
+      abis:
+        - name: NFTLegacy
+          file: ./abis/ERC721Legacy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
   - kind: ethereum/contract
     name: ERC721Proxy
     network: {{network}}
