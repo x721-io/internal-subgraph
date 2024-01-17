@@ -240,6 +240,15 @@ type RoyaltiesRegistry @entity(immutable: true){
 	# royalties: [RoyaltyItem!]!
 }
 
+# type Statistic @entity {
+# 	id: ID!
+# 	totalNftListed: BigInt!
+# 	totalVolume: BigInt!
+# 	totalTransaction: BigInt!
+# 	totalCollection: BigInt!
+# 	totalProtocolFee: BigInt!
+# }
+
 enum ActionState {
   PENDING
   EXECUTED
