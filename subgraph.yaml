@@ -275,6 +275,8 @@ dataSources:
   #     eventHandlers:
   #       - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
   #         handler: handleTransferSingleNoFactory
+  #       - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+  #         handler: handleTranferBatch
 templates:
   - kind: ethereum/contract
     name: NFTLegacy
