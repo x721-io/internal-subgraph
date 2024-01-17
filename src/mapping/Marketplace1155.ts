@@ -138,7 +138,7 @@ export function handleBuy(event: Buy): void {
 
   updateBlockEntity(
     event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
-    Address.fromString(transaction.from!), event.params.buyer, 'Trade', event.params.netPrice,
+    Address.fromString(transaction.from!), event.params.buyer, 'Trade', event.params.price,
     event.params.quantity, Address.fromString(transaction.quoteToken!)
   );
 }
@@ -168,7 +168,7 @@ export function handleAcceptOffer(event: OfferAccept): void {
     if (!transaction.address) return;
     updateBlockEntity( 
       event, Address.fromString(transaction.address!), BigInt.fromString(nft.tokenId),
-      event.params.seller, Address.fromString(transaction.to!), 'AcceptBid', event.params.netPrice,
+      event.params.seller, Address.fromString(transaction.to!), 'AcceptBid', event.params.price,
       event.params.quantity, Address.fromString(transaction.quoteToken!)
     );
   }
