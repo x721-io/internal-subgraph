@@ -24,7 +24,7 @@ export function handleTransfer(event: Transfer): void {
     contract.holderCount = BigInt.fromI32(0);
     contract.save()
   }
-  if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
+  if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc721marketplace)) {
     updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
   }
   if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc721marketplace)) {
@@ -65,7 +65,9 @@ export function handleTransfer(event: Transfer): void {
     // Assuming approval is cleared on transfer
     token.approval = '0x0000000000000000000000000000000000000000';
     token.owner = event.params.to.toHex(); // Update the owner
-    updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
+    if (event.params.from.toHexString() != ContractAddress.erc721marketplace) {
+      updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
+    }
     token.save();
   }
 
