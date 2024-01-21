@@ -265,7 +265,7 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
-      file: ./src/mapping/NFT.ts
+      file: ./src/mapping/NFTnonFactory.ts
       entities:
         - Item
         - Deal
@@ -294,7 +294,7 @@ dataSources:
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTranferBatch
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-          handler: handleTransferSingle
+          handler: handleTransferSingleNoFactory
         - event: URI(string,indexed uint256)
           handler: handleURI
   # - kind: ethereum/contract
