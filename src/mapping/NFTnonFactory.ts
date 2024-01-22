@@ -1,4 +1,4 @@
-import { Account, ERC1155Contract, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
+import { Account, ERC1155Balance, ERC1155Contract, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
 import { Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { TransferSingle, TransferBatch } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
@@ -144,6 +144,15 @@ export function handleTransfer(event: Transfer): void {
       let totalSupply = updateERC1155Balance(event.params.to, tokenId, event.params.value, event.address.toHex());
       token.uri = null;  // Replace with actual data if available
       token.totalSupply = totalSupply.id;  // Replace with actual data if available
+      if (event.params.from == Address.fromString(ContractAddress.ZERO)) {
+        let balanceId = generateCombineKey([event.address.toHex(), event.params.id.toString()])
+        let totalSupply = ERC1155Balance.load(balanceId);
+        if (totalSupply) {
+          totalSupply.value = totalSupply.value.plus(event.params.value.toBigDecimal());
+          totalSupply.valueExact = totalSupply.valueExact.plus(event.params.value);
+          totalSupply.save();
+        }
+      }
       token.save();
     } else {
       // Create a new ERC1155Token entity
@@ -152,14 +161,18 @@ export function handleTransfer(event: Transfer): void {
       token.contract = event.address.toHex();
       token.identifier = event.params.id; // Replace with actual data if available
       token.uri = null;  // Replace with actual data if available
-      // token.totalSupply = "";  // Replace with actual data if available
       token.txCreation = event.transaction.hash.toHexString()
-      let totalSupply = updateERC1155Balance(event.params.to, tokenId, event.params.value, event.address.toHex());
       updateBlockEntity(event, event.address, event.params.id, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), event.params.value, Address.fromString(ContractAddress.ZERO));
       updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC1155');
-      if(totalSupply){
-        token.totalSupply = totalSupply.id;
-      }
+      let balanceId = generateCombineKey([event.address.toHex(), event.params.id.toString()])
+      let totalSupply = new ERC1155Balance(balanceId);
+      totalSupply.value = event.params.value.toBigDecimal();
+      totalSupply.valueExact = event.params.value;
+      totalSupply.contract = event.address.toHex();
+      totalSupply.token = token.id;
+      totalSupply.save();
+
+      token.totalSupply = totalSupply.id;
       token.save();
     }
     let transferId = generateCombineKey([event.transaction.hash.toHex(), event.address.toHex(), tokenId])
@@ -222,11 +235,20 @@ export function handleTransfer(event: Transfer): void {
         token.contract = event.address.toHex();
         token.identifier = event.params.ids[i] // Replace with actual data if available
         token.uri = null;  // Replace with actual data if available
-        let totalSupply = updateERC1155Balance(event.params.to, tokenId, event.params.values[i], event.address.toHex());
         token.txCreation = event.transaction.hash.toHexString()
-        if(totalSupply){
-          token.totalSupply = totalSupply.id;
-        }
+        // let totalSupply = updateERC1155Balance(event.params.to, tokenId, event.params.values[i], event.address.toHex());
+        // if(totalSupply){
+        //   token.totalSupply = totalSupply.id;
+        // }
+        let balanceId = generateCombineKey([event.address.toHex(), event.params.ids[i].toString()])
+        let totalSupply = new ERC1155Balance(balanceId);
+        totalSupply.value = event.params.values[i].toBigDecimal();
+        totalSupply.valueExact = event.params.values[i];
+        totalSupply.contract = event.address.toHex();
+        totalSupply.token = token.id;
+        totalSupply.save();
+
+      token.totalSupply = totalSupply.id;
         token.save();
       }
   
