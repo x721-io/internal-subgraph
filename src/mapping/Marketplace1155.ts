@@ -79,7 +79,7 @@ export function handleAskCancel(event: AskCancel): void {
   if (!contract) return;
 
   transaction.save()
-  updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(nft.tokenId!), true);
+  updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(nft.tokenId!), false);
   updateBlockEntity(
     event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
     Address.fromString(transaction.from!), Address.fromString(ContractAddress.ZERO), 'AskCancel', BigInt.fromI32(0),
@@ -126,7 +126,7 @@ export function handleBuy(event: Buy): void {
 
   if (transaction.quantity && transaction.quantity.isZero()) {
     transaction.event = "Trade";
-    updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(nft.tokenId!), true);
+    updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(nft.tokenId!), false);
   } else {
     transaction.event = "AskNew";
   }

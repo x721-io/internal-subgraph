@@ -93,7 +93,7 @@ export function handleTrade(event: Trade): void {
     updateOwnedTokenCount(event.params._seller.toHexString(), event.params._nft.toHexString(), false, event.block.timestamp)
     ev.save();
     let account = fetchOrCreateAccount(event.params._seller);
-    account.onSaleCount = account.onSaleCount.plus(BigInt.fromI32(1));
+    account.onSaleCount = account.onSaleCount.minus(BigInt.fromI32(1));
     account.save();
   }
 }
