@@ -151,6 +151,49 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+
+  - kind: ethereum/contract
+    name: {{MVTLAND.name}}
+    network: {{network}}
+    source:
+      address: '{{MVTLAND.address}}'
+      abi: NFT
+      startBlock: {{MVTLAND.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+      abis:
+        - name: NFT
+          file: ./abis/ERC721Proxy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+
+  - kind: ethereum/contract
+    name: {{MTV-ESTATE.name}}
+    network: {{network}}
+    source:
+      address: '{{MTV-ESTATE.address}}'
+      abi: NFT
+      startBlock: {{MTV-ESTATE.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+      abis:
+        - name: NFT
+          file: ./abis/ERC721Proxy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+
   - kind: ethereum/contract
     name: ERC721Proxy
     network: {{network}}
