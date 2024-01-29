@@ -79,7 +79,7 @@ export function handleAskCancel(event: AskCancel): void {
   if (!contract) return;
 
   transaction.save()
-  updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(transaction.nftId!), true);
+  updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(nft.tokenId!), true);
   updateBlockEntity(
     event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
     Address.fromString(transaction.from!), Address.fromString(ContractAddress.ZERO), 'AskCancel', BigInt.fromI32(0),
