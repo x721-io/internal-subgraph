@@ -8,7 +8,7 @@ import {
   OfferCancel,
 } from "../../generated/ERC1155Marketplace/ERC1155Marketplace"
 import { ERC1155Contract, ERC1155Token, MarketEvent1155 } from "../../generated/schema"
-import { fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance } from "../utils";
+import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155 } from "../utils";
 import { ContractAddress } from "../enum";
 
 
@@ -30,6 +30,7 @@ export function handleAskNew(event: AskNew): void {
     transaction.operationId = event.params.askId;
     transaction.address = event.params.nft.toHexString();
     transaction.save()
+    updateOnSaleCount1155(event.params.seller, event.params.nft, event.params.tokenId, true);
     updateBlockEntity(
       event, event.params.nft, event.params.tokenId,
       event.params.seller, Address.fromString(transaction.from!), 'AskNew', event.params.pricePerUnit,
@@ -78,6 +79,7 @@ export function handleAskCancel(event: AskCancel): void {
   if (!contract) return;
 
   transaction.save()
+  updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(transaction.nftId!), true);
   updateBlockEntity(
     event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
     Address.fromString(transaction.from!), Address.fromString(ContractAddress.ZERO), 'AskCancel', BigInt.fromI32(0),
@@ -118,6 +120,7 @@ export function handleBuy(event: Buy): void {
 
   if (transaction.quantity && transaction.quantity.isZero()) {
     transaction.event = "Trade";
+    updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(transaction.nftId!), true);
   } else {
     transaction.event = "AskNew";
   }

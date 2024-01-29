@@ -139,13 +139,14 @@ export function handleTransfer(event: Transfer): void {
     token.identifier = event.params.tokenId;
     token.owner = event.params.to.toHexString();
     token.txCreation = event.transaction.hash.toHexString()
-    let zeroAccount = Account.load('0x0000000000000000000000000000000000000000');
+    let zeroAccount = fetchOrCreateAccount(Address.fromString(ContractAddress.ZERO));
     updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
     updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC721');    
-    if (zeroAccount == null) {
-      zeroAccount = new Account('0x0000000000000000000000000000000000000000');
-      zeroAccount.save();
-    }
+    // if (zeroAccount == null) {
+    //   zeroAccount = new Account('0x0000000000000000000000000000000000000000');
+    //   zeroAccount.onSaleCount = BigInt.fromI32(0);
+    //   zeroAccount.save();
+    // }
     // Set the approval to the zero address when the token is minted
     token.approval = zeroAccount.id;
     token.uri = ""; // Set the URI based on your logic
@@ -161,13 +162,13 @@ export function handleTransfer(event: Transfer): void {
   }
 
   // Ensure 'to' account is created
-  let accountToId = event.params.to.toHex();
-  let accountTo = Account.load(accountToId);
-  if (accountTo == null) {
-    accountTo = new Account(accountToId);
-    accountTo.save();
-  }
-
+  // let accountToId = event.params.to.toHex();
+  // let accountTo = Account.load(accountToId);
+  // if (accountTo == null) {
+  //   accountTo = new Account(accountToId);
+  //   accountTo.save();
+  // }
+  let accountTo = fetchOrCreateAccount(event.params.to);
   // Create the transfer event entity
   let transferId = generateCombineKey([event.transaction.hash.toHex(), event.address.toHex(), tokenId])
   let transfer = new ERC721Transfer(transferId);
@@ -182,12 +183,13 @@ export function handleTransfer(event: Transfer): void {
 
   // Ensure 'from' account is created
   if (event.params.from.toHex() != "0x0000000000000000000000000000000000000000") {
-    let accountFromId = event.params.from.toHex();
-    let accountFrom = Account.load(accountFromId);
-    if (accountFrom == null) {
-      accountFrom = new Account(accountFromId);
-      accountFrom.save();
-    }
+    // let accountFromId = event.params.from.toHex();
+    // let accountFrom = Account.load(accountFromId);
+    // if (accountFrom == null) {
+    //   accountFrom = new Account(accountFromId);
+    //   accountFrom.save();
+    // }
+    fetchOrCreateAccount(event.params.from);
   }
 }
 
