@@ -44,6 +44,8 @@ type Account @entity {
 	ERC721transferFromEvent: [ERC721Transfer!]! @derivedFrom(field: "from")
 	ERC721transferToEvent: [ERC721Transfer!]! @derivedFrom(field: "to")
 	OwnedTokens: [OwnedTokenCount!] @derivedFrom(field: "owner")
+	OnSaleStatus1155: [OnSaleStatus1155!] @derivedFrom(field: "owner")
+	onSaleCount: BigInt!
 
 }
 
@@ -60,6 +62,14 @@ type AccountCollectionOwnership @entity {
     account: Account!
     contract: String!
     ownsTokens: Boolean!
+}
+
+type  OnSaleStatus1155 @entity {
+	id: ID!
+	contract: String!
+	tokenId: BigInt!
+	owner: Account!
+	isOnSale: Boolean!
 }
 
 type ERC721Contract @entity {
