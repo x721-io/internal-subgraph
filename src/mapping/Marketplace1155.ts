@@ -118,9 +118,15 @@ export function handleBuy(event: Buy): void {
   transaction.quantity = transaction.quantity.minus(event.params.quantity);
   transaction.netPrice = event.params.netPrice;
 
+  let nft = ERC1155Token.load(transaction.nftId!);
+  if (!nft) return;
+
+  let contract = ERC1155Contract.load(nft.contract);
+  if (!contract) return;
+
   if (transaction.quantity && transaction.quantity.isZero()) {
     transaction.event = "Trade";
-    updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(transaction.nftId!), true);
+    updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(nft.tokenId!), true);
   } else {
     transaction.event = "AskNew";
   }
@@ -133,11 +139,6 @@ export function handleBuy(event: Buy): void {
   }
 
   transaction.save();
-  let nft = ERC1155Token.load(transaction.nftId!);
-  if (!nft) return;
-
-  let contract = ERC1155Contract.load(nft.contract);
-  if (!contract) return;
 
   updateBlockEntity(
     event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
