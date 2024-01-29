@@ -40,5 +40,15 @@
     "u2unft_odyssean_voyage_test": {
       "address": "0x83160a1e0310E6701ddb28b30dA1D8E653bd8134",
       "name" : "U2NFT_ODYSSEAN_VOYAGE_TEST"
+    },
+    "MVTLAND": {
+      "address": "0xceA129368E02f8d7d917A0154Ee7B49B47619c7E",
+      "name": "MVTLAND",
+      "startBlock": "5513300"
+    },
+    "MTV-ESTATE": {
+      "address": "0x4Bb2ecddE22d1279270049bE8416B2212CE6DA91",
+      "name": "MTV-ESTATE",
+      "startBlock": "5611120"
     }
 }

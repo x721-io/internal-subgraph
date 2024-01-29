@@ -131,26 +131,69 @@ dataSources:
           handler: handleOfferNew
         - event: OfferCancel(uint256)
           handler: handleOfferCancel
-  # - kind: ethereum/contract
-  #   name: NFT
-  #   network: testnet
-  #   source:
-  #     address: '0x34adacbbb61ab0345094ffdfe2a6a737530bf155'
-  #     abi: NFT
-  #     startBlock: 10466045
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.6
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/NFTnonFactory.ts
-  #     entities:
-  #       - Item
-  #     abis:
-  #       - name: NFT
-  #         file: ./abis/ERC721Proxy.json
-  #     eventHandlers:
-  #       - event: Transfer(indexed address,indexed address,indexed uint256)
-  #         handler: handleTransfer
+  - kind: ethereum/contract
+    name: NFT
+    network: testnet
+    source:
+      address: '0x34adacbbb61ab0345094ffdfe2a6a737530bf155'
+      abi: NFT
+      startBlock: 10466045
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+      abis:
+        - name: NFT
+          file: ./abis/ERC721Proxy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+
+  - kind: ethereum/contract
+    name: MVTLAND
+    network: testnet
+    source:
+      address: '0xceA129368E02f8d7d917A0154Ee7B49B47619c7E'
+      abi: NFT
+      startBlock: 5513300
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+      abis:
+        - name: NFT
+          file: ./abis/ERC721Proxy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+
+  - kind: ethereum/contract
+    name: MTV-ESTATE
+    network: testnet
+    source:
+      address: '0x4Bb2ecddE22d1279270049bE8416B2212CE6DA91'
+      abi: NFT
+      startBlock: 5611120
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+      abis:
+        - name: NFT
+          file: ./abis/ERC721Proxy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+
   - kind: ethereum/contract
     name: ERC721Proxy
     network: testnet
@@ -254,92 +297,92 @@ dataSources:
       eventHandlers:
         - event: RoyaltiesSetForContract(indexed address,(address,uint96)[])
           handler: handleRoyaltiesRegistry
-  # - kind: ethereum/contract
-  #   name: U2NFT_ODYSSEAN_VOYAGE
-  #   network: testnet
-  #   source: 
-  #     address: '0x9397153A85A1f67e1edb21F4cD53c3C1C8c04Ee4'
-  #     abi: ERC1155Proxy
-  #     startBlock: 10466045
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.6
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/NFTnonFactory.ts
-  #     entities:
-  #       - Item
-  #       - Deal
-  #     abis:
-  #       - name: ERC1155Proxy
-  #         file: ./abis/ERC1155Proxy.json
-  #     eventHandlers:
-  #       - event: ApprovalForAll(indexed address,indexed address,bool)
-  #         handler: handleApprovalForAll
-  #       - event: BaseUriChanged(string)
-  #         handler: handleBaseUriChanged
-  #       - event: CreateERC1155Rarible(address,string,string)
-  #         handler: handleCreateERC1155Rarible
-  #       - event: CreateERC1155RaribleUser(address,string,string)
-  #         handler: handleCreateERC1155RaribleUser
-  #       - event: Creators(uint256,(address,uint96)[])
-  #         handler: handle1155Creators
-  #       - event: DefaultApproval(indexed address,bool)
-  #         handler: handleDefaultApproval
-  #       - event: MinterStatusChanged(indexed address,indexed bool)
-  #         handler: handleMinterStatusChanged
-  #       - event: RoyaltiesSet(uint256,(address,uint96)[])
-  #         handler: handleRoyaltiesSet
-  #       - event: Supply(uint256,uint256)
-  #         handler: handleSupply
-  #       - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
-  #         handler: handleTranferBatch
-  #       - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-  #         handler: handleTransferSingleNoFactory
-  #       - event: URI(string,indexed uint256)
-  #         handler: handleURI
-  # - kind: ethereum/contract
-  #   name: U2NFT_ODYSSEAN_VOYAGE_TEST
-  #   network: testnet
-  #   source: 
-  #     address: '0x83160a1e0310E6701ddb28b30dA1D8E653bd8134'
-  #     abi: ERC1155Proxy
-  #     startBlock: 10466045
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.6
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/NFTnonFactory.ts
-  #     entities:
-  #       - Item
-  #       - Deal
-  #     abis:
-  #       - name: ERC1155Proxy
-  #         file: ./abis/ERC1155Proxy.json
-  #     eventHandlers:
-  #       - event: ApprovalForAll(indexed address,indexed address,bool)
-  #         handler: handleApprovalForAll
-  #       - event: BaseUriChanged(string)
-  #         handler: handleBaseUriChanged
-  #       - event: CreateERC1155Rarible(address,string,string)
-  #         handler: handleCreateERC1155Rarible
-  #       - event: CreateERC1155RaribleUser(address,string,string)
-  #         handler: handleCreateERC1155RaribleUser
-  #       - event: Creators(uint256,(address,uint96)[])
-  #         handler: handle1155Creators
-  #       - event: DefaultApproval(indexed address,bool)
-  #         handler: handleDefaultApproval
-  #       - event: MinterStatusChanged(indexed address,indexed bool)
-  #         handler: handleMinterStatusChanged
-  #       - event: RoyaltiesSet(uint256,(address,uint96)[])
-  #         handler: handleRoyaltiesSet
-  #       - event: Supply(uint256,uint256)
-  #         handler: handleSupply
-  #       - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
-  #         handler: handleTranferBatch
-  #       - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-  #         handler: handleTransferSingleNoFactory
-  #       - event: URI(string,indexed uint256)
-  #         handler: handleURI
+  - kind: ethereum/contract
+    name: U2NFT_ODYSSEAN_VOYAGE
+    network: testnet
+    source: 
+      address: '0x9397153A85A1f67e1edb21F4cD53c3C1C8c04Ee4'
+      abi: ERC1155Proxy
+      startBlock: 10466045
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+        - Deal
+      abis:
+        - name: ERC1155Proxy
+          file: ./abis/ERC1155Proxy.json
+      eventHandlers:
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BaseUriChanged(string)
+          handler: handleBaseUriChanged
+        - event: CreateERC1155Rarible(address,string,string)
+          handler: handleCreateERC1155Rarible
+        - event: CreateERC1155RaribleUser(address,string,string)
+          handler: handleCreateERC1155RaribleUser
+        - event: Creators(uint256,(address,uint96)[])
+          handler: handle1155Creators
+        - event: DefaultApproval(indexed address,bool)
+          handler: handleDefaultApproval
+        - event: MinterStatusChanged(indexed address,indexed bool)
+          handler: handleMinterStatusChanged
+        - event: RoyaltiesSet(uint256,(address,uint96)[])
+          handler: handleRoyaltiesSet
+        - event: Supply(uint256,uint256)
+          handler: handleSupply
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTranferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingleNoFactory
+        - event: URI(string,indexed uint256)
+          handler: handleURI
+  - kind: ethereum/contract
+    name: U2NFT_ODYSSEAN_VOYAGE_TEST
+    network: testnet
+    source: 
+      address: '0x83160a1e0310E6701ddb28b30dA1D8E653bd8134'
+      abi: ERC1155Proxy
+      startBlock: 10466045
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+        - Deal
+      abis:
+        - name: ERC1155Proxy
+          file: ./abis/ERC1155Proxy.json
+      eventHandlers:
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BaseUriChanged(string)
+          handler: handleBaseUriChanged
+        - event: CreateERC1155Rarible(address,string,string)
+          handler: handleCreateERC1155Rarible
+        - event: CreateERC1155RaribleUser(address,string,string)
+          handler: handleCreateERC1155RaribleUser
+        - event: Creators(uint256,(address,uint96)[])
+          handler: handle1155Creators
+        - event: DefaultApproval(indexed address,bool)
+          handler: handleDefaultApproval
+        - event: MinterStatusChanged(indexed address,indexed bool)
+          handler: handleMinterStatusChanged
+        - event: RoyaltiesSet(uint256,(address,uint96)[])
+          handler: handleRoyaltiesSet
+        - event: Supply(uint256,uint256)
+          handler: handleSupply
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTranferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingleNoFactory
+        - event: URI(string,indexed uint256)
+          handler: handleURI
   # - kind: ethereum/contract
   #   name: ERC1155NonFactory
   #   network: testnet
