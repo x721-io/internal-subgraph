@@ -273,8 +273,8 @@ dataSources:
         - name: ERC1155Proxy
           file: ./abis/ERC1155Proxy.json
       eventHandlers:
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
+        # - event: ApprovalForAll(indexed address,indexed address,bool)
+        #   handler: handleApprovalForAll
         - event: BaseUriChanged(string)
           handler: handleBaseUriChanged
         - event: CreateERC1155Rarible(address,string,string)
@@ -316,8 +316,8 @@ dataSources:
         - name: ERC1155Proxy
           file: ./abis/ERC1155Proxy.json
       eventHandlers:
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
+        # - event: ApprovalForAll(indexed address,indexed address,bool)
+        #   handler: handleApprovalForAll
         - event: BaseUriChanged(string)
           handler: handleBaseUriChanged
         - event: CreateERC1155Rarible(address,string,string)
