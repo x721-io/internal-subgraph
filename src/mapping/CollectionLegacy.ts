@@ -15,6 +15,7 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
     newToken.txCreation = event.transaction.hash.toHexString();
     newToken.count = BigInt.fromI32(0);
     newToken.holderCount = BigInt.fromI32(0);
+    newToken.createAt = event.block.timestamp;
     NFTLegacy.create(event.params.proxy);
     newToken.save();
     const contractFactory = factoryContract.bind(event.address)
@@ -38,6 +39,7 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
             token.identifier = BigInt.fromI32(i);
             token.owner = fetchOrCreateAccount(owner).id
             token.txCreation = event.transaction.hash.toHexString()
+            token.createAt = event.block.timestamp;
             let zeroAccount = Account.load('0x0000000000000000000000000000000000000000');
             updateBlockEntity(event, event.params.proxy, BigInt.fromI32(i), Address.fromString(ContractAddress.ZERO), owner, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
             updateContractCount(event.params.proxy.toHexString(), BigInt.fromI32(1), 'ERC721');    

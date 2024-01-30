@@ -83,6 +83,7 @@ type ERC721Contract @entity {
 	txCreation: String!
 	count: BigInt!
 	holderCount: BigInt!
+	createAt: BigInt
 }
 type ERC721Token @entity {
 	id: ID!
@@ -95,6 +96,7 @@ type ERC721Token @entity {
 	transfers: [ERC721Transfer!]! @derivedFrom(field: "token")
   	creators: [ERC721Creator!]! @derivedFrom(field: "collection")
 	txCreation: String!
+	createAt: BigInt
 }
 type ERC721Transfer implements Event @entity(immutable: true) {
 	id: ID!
@@ -118,6 +120,7 @@ type ERC1155Contract @entity {
 	txCreation: String!
 	count: BigInt!
 	holderCount: BigInt!
+	createAt: BigInt
 }
 
 type ERC1155Creator @entity {
@@ -150,6 +153,7 @@ type ERC1155Token @entity {
 	transfers: [ERC1155Transfer!]! @derivedFrom(field: "token")
   	creators: [ERC1155Creator!]! @derivedFrom(field: "collection")
 	txCreation: String!
+	createAt: BigInt
 }
 type ERC1155Balance @entity {
 	id: ID!

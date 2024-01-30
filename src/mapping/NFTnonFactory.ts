@@ -22,6 +22,7 @@ export function handleTransfer(event: Transfer): void {
     contract.count = BigInt.fromI32(0);
     contract.asAccount = fetchOrCreateAccount(event.params.to).id;
     contract.holderCount = BigInt.fromI32(0);
+    contract.createAt = event.block.timestamp;
     contract.save()
   }
   if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc721marketplace)) {
@@ -51,6 +52,7 @@ export function handleTransfer(event: Transfer): void {
     token.owner = event.params.to.toHexString();
     token.txCreation = event.transaction.hash.toHexString()
     let zeroAccount = fetchOrCreateAccount(Address.fromString(ContractAddress.ZERO));
+    token.createAt = event.block.timestamp;
     updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
     updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC721');
     // Set the approval to the zero address when the token is minted
@@ -102,6 +104,7 @@ export function handleTransfer(event: Transfer): void {
       contract.name = null;
       contract.symbol = null;
       contract.txCreation = "";
+      contract.createAt = event.block.timestamp;
       contract.count = BigInt.fromI32(0);
       contract.asAccount = fetchOrCreateAccount(event.params.to).id;
       contract.holderCount = BigInt.fromI32(0);
@@ -148,6 +151,7 @@ export function handleTransfer(event: Transfer): void {
       token.identifier = event.params.id; // Replace with actual data if available
       token.uri = null;  // Replace with actual data if available
       token.txCreation = event.transaction.hash.toHexString()
+      token.createAt = event.block.timestamp;
       updateBlockEntity(event, event.address, event.params.id, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), event.params.value, Address.fromString(ContractAddress.ZERO));
       updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC1155');
       let balanceId = generateCombineKey([event.address.toHex(), event.params.id.toString()])
@@ -195,6 +199,7 @@ export function handleTransfer(event: Transfer): void {
       contract.symbol = null;
       contract.txCreation = "";
       contract.count = BigInt.fromI32(0);
+      contract.createAt = event.block.timestamp;
       contract.asAccount = fetchOrCreateAccount(event.params.to).id;
       contract.holderCount = BigInt.fromI32(0);
       contract.save()
@@ -207,12 +212,6 @@ export function handleTransfer(event: Transfer): void {
       transaction.save();
     }
     for (let i = 0; i < event.params.ids.length; i++) {
-      // if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
-      //   updateOwnedTokenCountERC1155(event.params.from.toHexString(), event.address.toHexString(), false, event.params.values[i],event.block.timestamp)
-      // }
-      // if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
-      //   updateOwnedTokenCountERC1155(event.params.to.toHexString(), event.address.toHexString(), true, event.params.values[i],event.block.timestamp)
-      // }
       let tokenId = generateCombineKey([event.address.toHexString(), event.params.ids[i].toString()]);
       let token = ERC1155Token.load(tokenId);
       if (token == null) {
@@ -222,10 +221,7 @@ export function handleTransfer(event: Transfer): void {
         token.identifier = event.params.ids[i] // Replace with actual data if available
         token.uri = null;  // Replace with actual data if available
         token.txCreation = event.transaction.hash.toHexString()
-        // let totalSupply = updateERC1155Balance(event.params.to, tokenId, event.params.values[i], event.address.toHex());
-        // if(totalSupply){
-        //   token.totalSupply = totalSupply.id;
-        // }
+        token.createAt = event.block.timestamp;
         let balanceId = generateCombineKey([event.address.toHex(), event.params.ids[i].toString()])
         let totalSupply = new ERC1155Balance(balanceId);
         totalSupply.value = event.params.values[i].toBigDecimal();
