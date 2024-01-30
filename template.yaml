@@ -24,8 +24,6 @@ dataSources:
       eventHandlers:
         - event: Create721RaribleUserProxy(address)
           handler: handle721UserProxyLegacy
-        # - event: CreateERC721RaribleUser(address,string,string)
-        #   handler: handle721UserRaribleLegacy
   - kind: ethereum/contract
     name: ERC721Factory
     network: {{network}}
@@ -316,94 +314,10 @@ dataSources:
         - name: ERC1155Proxy
           file: ./abis/ERC1155Proxy.json
       eventHandlers:
-        # - event: ApprovalForAll(indexed address,indexed address,bool)
-        #   handler: handleApprovalForAll
-        - event: BaseUriChanged(string)
-          handler: handleBaseUriChanged
-        - event: CreateERC1155Rarible(address,string,string)
-          handler: handleCreateERC1155Rarible
-        - event: CreateERC1155RaribleUser(address,string,string)
-          handler: handleCreateERC1155RaribleUser
-        - event: Creators(uint256,(address,uint96)[])
-          handler: handle1155Creators
-        - event: DefaultApproval(indexed address,bool)
-          handler: handleDefaultApproval
-        - event: MinterStatusChanged(indexed address,indexed bool)
-          handler: handleMinterStatusChanged
-        - event: RoyaltiesSet(uint256,(address,uint96)[])
-          handler: handleRoyaltiesSet
-        - event: Supply(uint256,uint256)
-          handler: handleSupply
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTranferBatch
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingleNoFactory
-        - event: URI(string,indexed uint256)
-          handler: handleURI
-  - kind: ethereum/contract
-    name: {{u2unft_odyssean_voyage_test.name}}
-    network: {{network}}
-    source: 
-      address: '{{u2unft_odyssean_voyage_test.address}}'
-      abi: ERC1155Proxy
-      startBlock: {{startBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./src/mapping/NFTnonFactory.ts
-      entities:
-        - Item
-        - Deal
-      abis:
-        - name: ERC1155Proxy
-          file: ./abis/ERC1155Proxy.json
-      eventHandlers:
-        # - event: ApprovalForAll(indexed address,indexed address,bool)
-        #   handler: handleApprovalForAll
-        - event: BaseUriChanged(string)
-          handler: handleBaseUriChanged
-        - event: CreateERC1155Rarible(address,string,string)
-          handler: handleCreateERC1155Rarible
-        - event: CreateERC1155RaribleUser(address,string,string)
-          handler: handleCreateERC1155RaribleUser
-        - event: Creators(uint256,(address,uint96)[])
-          handler: handle1155Creators
-        - event: DefaultApproval(indexed address,bool)
-          handler: handleDefaultApproval
-        - event: MinterStatusChanged(indexed address,indexed bool)
-          handler: handleMinterStatusChanged
-        - event: RoyaltiesSet(uint256,(address,uint96)[])
-          handler: handleRoyaltiesSet
-        - event: Supply(uint256,uint256)
-          handler: handleSupply
-        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
-          handler: handleTranferBatch
-        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-          handler: handleTransferSingleNoFactory
-        - event: URI(string,indexed uint256)
-          handler: handleURI
-  # - kind: ethereum/contract
-  #   name: ERC1155NonFactory
-  #   network: testnet
-  #   source: 
-  #     address: '{{erc1155Base.address}}'
-  #     abi: ERC1155Proxy
-  #     startBlock: {{startBlock}}
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.6
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/NFTnonFactory.ts
-  #     entities:
-  #       - Item
-  #       - Deal
-  #     abis:
-  #       - name: ERC1155Proxy
-  #         file: ./abis/ERC1155Proxy.json
-  #     eventHandlers:
-  #       - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-  #         handler: handleTransferSingleNoFactory
 templates:
   - kind: ethereum/contract
     name: NFTLegacy

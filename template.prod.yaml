@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ERC721FactoryLegacy
-    network: testnet
+    network: {{network}}
     source:
-      address: '0xb840c3dE304d8D2726EA973f9A944923cA86E111'
+      address: '{{erc721LegacyFactory.address}}'
       abi: ERC721LegacyFactory
-      startBlock: 15098490
+      startBlock: {{erc721LegacyFactory.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -24,15 +24,13 @@ dataSources:
       eventHandlers:
         - event: Create721RaribleUserProxy(address)
           handler: handle721UserProxyLegacy
-        # - event: CreateERC721RaribleUser(address,string,string)
-        #   handler: handle721UserRaribleLegacy
   - kind: ethereum/contract
     name: ERC721Factory
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x2d710bce9e3e9501d69f657bfa29f2dc21cd5b14'
+      address: '{{erc721factory.address}}'
       abi: ERC721Factory
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -50,11 +48,11 @@ dataSources:
           handler: handle721UserProxy
   - kind: ethereum/contract
     name: ERC1155Factory
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x562523950cf7889d0ccb040c8143d4f1596e4b9a'
+      address: '{{erc1155factory.address}}'
       abi: ERC1155Factory
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -72,11 +70,11 @@ dataSources:
           handler: handle1155UserProxy
   - kind: ethereum/contract
     name: ERC721Marketplace
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x77700afc1183e520f6ce28e5ee95411cc88cf36b'
+      address: '{{erc721marketplace.address}}'
       abi: ERC721Marketplace
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -103,11 +101,11 @@ dataSources:
 
   - kind: ethereum/contract
     name: ERC1155Marketplace
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x46948c71e0b09ddddc8e7feed92332dd5b19b5fa'
+      address: '{{erc1155marketplace.address}}'
       abi: ERC1155Marketplace
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -133,11 +131,11 @@ dataSources:
           handler: handleOfferCancel
   - kind: ethereum/contract
     name: NFT
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x34adacbbb61ab0345094ffdfe2a6a737530bf155'
+      address: '{{erc721Nonfactory.address}}'
       abi: NFT
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -153,12 +151,12 @@ dataSources:
           handler: handleTransfer
 
   - kind: ethereum/contract
-    name: MVTLAND
-    network: testnet
+    name: {{MVTLAND.name}}
+    network: {{network}}
     source:
-      address: '0xceA129368E02f8d7d917A0154Ee7B49B47619c7E'
+      address: '{{MVTLAND.address}}'
       abi: NFT
-      startBlock: 5513300
+      startBlock: {{MVTLAND.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -174,12 +172,12 @@ dataSources:
           handler: handleTransfer
 
   - kind: ethereum/contract
-    name: MTV-ESTATE
-    network: testnet
+    name: {{MTV-ESTATE.name}}
+    network: {{network}}
     source:
-      address: '0x4Bb2ecddE22d1279270049bE8416B2212CE6DA91'
+      address: '{{MTV-ESTATE.address}}'
       abi: NFT
-      startBlock: 5611120
+      startBlock: {{MTV-ESTATE.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -196,11 +194,11 @@ dataSources:
 
   - kind: ethereum/contract
     name: ERC721Proxy
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x7e1ae9399cda4cfa62714c0c1445bf75c39201bc'
+      address: '{{erc721Base.address}}'
       abi: ERC721Proxy
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -235,11 +233,11 @@ dataSources:
           handler: handleTransfer
   - kind: ethereum/contract
     name: ERC1155Proxy
-    network: testnet
+    network: {{network}}
     source: 
-      address: '0x9e87754dab31dad057dcdf233000f71ff55fa37f'
+      address: '{{erc1155Base.address}}'
       abi: ERC1155Proxy
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -278,11 +276,11 @@ dataSources:
           handler: handleURI
   - kind: ethereum/contract
     name: RoyaltiesRegistry
-    network: testnet
+    network: {{network}}
     source:
-      address: '0xda14d191fbd1b962cbf58e09d4078071b9fda079'
+      address: '{{royaltiesRegistry.address}}'
       abi: RoyaltiesRegistry
-      startBlock: 14330094
+      startBlock: {{royaltiesRegistry.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -298,12 +296,12 @@ dataSources:
         - event: RoyaltiesSetForContract(indexed address,(address,uint96)[])
           handler: handleRoyaltiesRegistry
   - kind: ethereum/contract
-    name: U2NFT_ODYSSEAN_VOYAGE
-    network: testnet
+    name: {{u2unft_odyssean_voyage.name}}
+    network: {{network}}
     source: 
-      address: '0x9397153A85A1f67e1edb21F4cD53c3C1C8c04Ee4'
+      address: '{{u2unft_odyssean_voyage.address}}'
       abi: ERC1155Proxy
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -316,94 +314,10 @@ dataSources:
         - name: ERC1155Proxy
           file: ./abis/ERC1155Proxy.json
       eventHandlers:
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: BaseUriChanged(string)
-          handler: handleBaseUriChanged
-        - event: CreateERC1155Rarible(address,string,string)
-          handler: handleCreateERC1155Rarible
-        - event: CreateERC1155RaribleUser(address,string,string)
-          handler: handleCreateERC1155RaribleUser
-        - event: Creators(uint256,(address,uint96)[])
-          handler: handle1155Creators
-        - event: DefaultApproval(indexed address,bool)
-          handler: handleDefaultApproval
-        - event: MinterStatusChanged(indexed address,indexed bool)
-          handler: handleMinterStatusChanged
-        - event: RoyaltiesSet(uint256,(address,uint96)[])
-          handler: handleRoyaltiesSet
-        - event: Supply(uint256,uint256)
-          handler: handleSupply
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTranferBatch
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingleNoFactory
-        - event: URI(string,indexed uint256)
-          handler: handleURI
-  - kind: ethereum/contract
-    name: U2NFT_ODYSSEAN_VOYAGE_TEST
-    network: testnet
-    source: 
-      address: '0x83160a1e0310E6701ddb28b30dA1D8E653bd8134'
-      abi: ERC1155Proxy
-      startBlock: 10466045
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./src/mapping/NFTnonFactory.ts
-      entities:
-        - Item
-        - Deal
-      abis:
-        - name: ERC1155Proxy
-          file: ./abis/ERC1155Proxy.json
-      eventHandlers:
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: BaseUriChanged(string)
-          handler: handleBaseUriChanged
-        - event: CreateERC1155Rarible(address,string,string)
-          handler: handleCreateERC1155Rarible
-        - event: CreateERC1155RaribleUser(address,string,string)
-          handler: handleCreateERC1155RaribleUser
-        - event: Creators(uint256,(address,uint96)[])
-          handler: handle1155Creators
-        - event: DefaultApproval(indexed address,bool)
-          handler: handleDefaultApproval
-        - event: MinterStatusChanged(indexed address,indexed bool)
-          handler: handleMinterStatusChanged
-        - event: RoyaltiesSet(uint256,(address,uint96)[])
-          handler: handleRoyaltiesSet
-        - event: Supply(uint256,uint256)
-          handler: handleSupply
-        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
-          handler: handleTranferBatch
-        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-          handler: handleTransferSingleNoFactory
-        - event: URI(string,indexed uint256)
-          handler: handleURI
-  # - kind: ethereum/contract
-  #   name: ERC1155NonFactory
-  #   network: testnet
-  #   source: 
-  #     address: '0x9e87754dab31dad057dcdf233000f71ff55fa37f'
-  #     abi: ERC1155Proxy
-  #     startBlock: 10466045
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.6
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/NFTnonFactory.ts
-  #     entities:
-  #       - Item
-  #       - Deal
-  #     abis:
-  #       - name: ERC1155Proxy
-  #         file: ./abis/ERC1155Proxy.json
-  #     eventHandlers:
-  #       - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-  #         handler: handleTransferSingleNoFactory
 templates:
   - kind: ethereum/contract
     name: NFTLegacy
@@ -425,7 +339,7 @@ templates:
           handler: handleTransfer
   - kind: ethereum/contract
     name: ERC721Proxy
-    network: testnet
+    network: {{network}}
     source: 
       abi: ERC721Proxy
     mapping:
@@ -462,7 +376,7 @@ templates:
           handler: handleTransfer
   - kind: ethereum/contract
     name: ERC1155Proxy
-    network: testnet
+    network: {{network}}
     source: 
       abi: ERC1155Proxy
     mapping:

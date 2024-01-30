@@ -19,12 +19,10 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
     newToken.save();
     const contractFactory = factoryContract.bind(event.address)
     let limit = contractFactory.maxTokenIds(event.params.proxy);
-    log.warning('limit: {} {}', [limit.toString(), event.params.proxy.toHexString()])
     const contract = factoryContract.bind(event.params.proxy)
     let owner = Address.fromString(ContractAddress.ZERO);
     for (let i = 1; i <= limit.toI32(); i++) {
         const ownerResult = contract.try_ownerOf(BigInt.fromI32(i));
-        log.warning('is revert: {}', [ownerResult.reverted.toString()]);
         if (ownerResult.reverted) {
             log.warning("revert reason:", []);
         }
