@@ -1,6 +1,6 @@
 import { ERC1155Balance, ERC1155Contract, ERC1155Token, ERC1155Transfer, ERC721Contract, ERC721Token, ERC721Transfer, Transaction } from "../../generated/schema";
 import { Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
-import { TransferSingle, TransferBatch , ApprovalForAll , BaseUriChanged , CreateERC1155Rarible , CreateERC1155RaribleUser , Creators , DefaultApproval , MinterStatusChanged , RoyaltiesSet , Supply , URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
+import { TransferSingle, TransferBatch } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance, updateContractCount, updateOwnedTokenCount } from "../utils";
 import { ContractAddress } from "../enum";
@@ -212,12 +212,6 @@ export function handleTransfer(event: Transfer): void {
       transaction.save();
     }
     for (let i = 0; i < event.params.ids.length; i++) {
-      // if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
-      //   updateOwnedTokenCountERC1155(event.params.from.toHexString(), event.address.toHexString(), false, event.params.values[i],event.block.timestamp)
-      // }
-      // if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
-      //   updateOwnedTokenCountERC1155(event.params.to.toHexString(), event.address.toHexString(), true, event.params.values[i],event.block.timestamp)
-      // }
       let tokenId = generateCombineKey([event.address.toHexString(), event.params.ids[i].toString()]);
       let token = ERC1155Token.load(tokenId);
       if (token == null) {
@@ -228,10 +222,6 @@ export function handleTransfer(event: Transfer): void {
         token.uri = null;  // Replace with actual data if available
         token.txCreation = event.transaction.hash.toHexString()
         token.createAt = event.block.timestamp;
-        // let totalSupply = updateERC1155Balance(event.params.to, tokenId, event.params.values[i], event.address.toHex());
-        // if(totalSupply){
-        //   token.totalSupply = totalSupply.id;
-        // }
         let balanceId = generateCombineKey([event.address.toHex(), event.params.ids[i].toString()])
         let totalSupply = new ERC1155Balance(balanceId);
         totalSupply.value = event.params.values[i].toBigDecimal();
@@ -267,132 +257,4 @@ export function handleTransfer(event: Transfer): void {
       }
       transfer.save();
     }
-  }
-  export function handleApprovalForAll(event: ApprovalForAll): void {
-    // Logic to handle the ApprovalForAll event
-  }
-
-  export function handleBaseUriChanged(event: BaseUriChanged): void {
-    // Logic to handle the BaseUriChanged event
-  }
-
-  export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
-    // let collection = ERC1155Contract.load(event.address.toHexString());
-    // if (collection !== null) {
-    //   collection.name = event.params.name;
-    //   collection.symbol = event.params.symbol;
-    //   collection.count = BigInt.fromI32(0);
-    //   collection.holderCount = BigInt.fromI32(0);
-    //   collection.save();
-    // }
-    // else {
-    //   let newCollection = new ERC1155Contract(event.address.toHexString());
-    //   newCollection.name = event.params.name;
-    //   newCollection.symbol = event.params.symbol;
-    //   newCollection.txCreation = event.transaction.hash.toHexString();
-    //   newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
-    //   newCollection.count = BigInt.fromI32(0);
-    //   newCollection.holderCount = BigInt.fromI32(0);
-    //   newCollection.save()
-    // }
-  }
-
-  export function handleCreateERC1155RaribleUser(event: CreateERC1155RaribleUser): void {
-    // let collection = ERC1155Contract.load(event.address.toHexString());
-    // if (collection !== null) {
-    //   collection.name = event.params.name;
-    //   collection.symbol = event.params.symbol;
-    //   collection.count = BigInt.fromI32(0);
-    //   collection.holderCount = BigInt.fromI32(0);
-    //   collection.save();
-    // }
-    // else {
-    //   let newCollection = new ERC1155Contract(event.address.toHexString());
-    //   newCollection.name = event.params.name;
-    //   newCollection.symbol = event.params.symbol;
-    //   newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
-    //   newCollection.count = BigInt.fromI32(0);
-    //   newCollection.holderCount = BigInt.fromI32(0);
-    //   newCollection.save()
-    // }
-  }
-
-  export function handle1155Creators(event: Creators): void {
-    // // let tokenId = event.params.tokenId.toString();
-    // let collection = ERC1155Contract.load(event.address.toHexString());
-
-    // // Create the Collection entity if it doesn't exist
-    // if (!collection) {
-    //   collection = new ERC1155Contract(event.address.toHexString());
-    //   // Initialize other necessary fields for Collection
-    //   collection.txCreation = event.transaction.hash.toHexString();
-    //   collection.save();
-    // }
-
-    // let creatorsArray = event.params.creators;
-    // for (let i = 0; i < creatorsArray.length; i++) {
-    //   let creatorAddress = creatorsArray[i].account;
-    //   let share = creatorsArray[i].value;
-    //   let creatorId = creatorAddress.toHex();
-
-    //   let creator = creator.load(creatorId);
-    //   if (!creator) {
-    //     creator = new creator(creatorId);
-    //     // Initialize other necessary fields for Creator
-    //     creator.save();
-    //   }
-
-    //   // let collectionCreatorId = collection.id + "-" + creatorId;
-    //   let collectionCreatorId = generateCombineKey([collection.id, creatorId]);
-    //   let collectionCreator = new ERC1155Creator(collectionCreatorId);
-    //   collectionCreator.collection = collection.id;
-    //   collectionCreator.creator = creatorId;
-    //   collectionCreator.share = share; // Assuming share can be represented as BigInt
-    //   collectionCreator.save();
-    // }
-  }
-
-  export function handleDefaultApproval(event: DefaultApproval): void {
-    // Logic to handle the DefaultApproval event
-  }
-
-  export function handleMinterStatusChanged(event: MinterStatusChanged): void {
-    // Logic to handle the MinterStatusChanged event
-  }
-
-  export function handleRoyaltiesSet(event: RoyaltiesSet): void {
-    // Logic to handle the RoyaltiesSet event
-  }
-
-  export function handleSupply(event: Supply): void {
-    // let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
-    // let token = ERC1155Token.load(tokenId);
-    // if (token === null) {
-    //   token = new ERC1155Token(tokenId);
-    //   token.tokenId = event.params.tokenId.toString()
-    //   token.txCreation = event.transaction.hash.toHexString();
-    //   updateBlockEntity(event, event.address, event.params.tokenId, Address.fromString(ContractAddress.ZERO), Address.fromString(ContractAddress.ZERO), 'Mint', BigInt.fromI32(0), event.params.value, Address.fromString(ContractAddress.ZERO));
-    //   updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC1155');
-    // }
-    // token.identifier = event.params.tokenId;
-    // token.contract = event.address.toHexString();
-    // // Assume we create a balance entity for totalSupply
-    // let balanceId = generateCombineKey([event.address.toHex(), event.params.tokenId.toString()])
-    // let totalSupply = new ERC1155Balance(balanceId);
-    // totalSupply.value = event.params.value.toBigDecimal();
-    // totalSupply.valueExact = event.params.value;
-    // totalSupply.contract = event.address.toHex();
-    // totalSupply.token = token.id;
-    // totalSupply.save();
-
-    // token.totalSupply = totalSupply.id;
-    // token.save();
-  }
-
-  export function handleURI(event: URI): void {
-    // let token = ERC1155Token.load(event.params.id.toString());
-    // if (token) {
-    //   token.uri = event.params.value.toString();
-    //   token.save();
-    // }
   }
