@@ -5,26 +5,6 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: ERC721FactoryLegacy
-    network: {{network}}
-    source:
-      address: '{{erc721LegacyFactory.address}}'
-      abi: ERC721LegacyFactory
-      startBlock: {{erc721LegacyFactory.startBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./src/mapping/CollectionLegacy.ts
-      entities:
-        - Collection
-      abis:
-        - name: ERC721LegacyFactory
-          file: ./abis/ERC721LegacyFactory.json
-      eventHandlers:
-        - event: Create721RaribleUserProxy(address)
-          handler: handle721UserProxyLegacy
-  - kind: ethereum/contract
     name: ERC721Factory
     network: {{network}}
     source:
@@ -151,48 +131,6 @@ dataSources:
           handler: handleTransfer
 
   - kind: ethereum/contract
-    name: {{MVTLAND.name}}
-    network: {{network}}
-    source:
-      address: '{{MVTLAND.address}}'
-      abi: NFT
-      startBlock: {{MVTLAND.startBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./src/mapping/NFTnonFactory.ts
-      entities:
-        - Item
-      abis:
-        - name: NFT
-          file: ./abis/ERC721Proxy.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-
-  - kind: ethereum/contract
-    name: {{MTV-ESTATE.name}}
-    network: {{network}}
-    source:
-      address: '{{MTV-ESTATE.address}}'
-      abi: NFT
-      startBlock: {{MTV-ESTATE.startBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./src/mapping/NFTnonFactory.ts
-      entities:
-        - Item
-      abis:
-        - name: NFT
-          file: ./abis/ERC721Proxy.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-
-  - kind: ethereum/contract
     name: ERC721Proxy
     network: {{network}}
     source:
@@ -296,10 +234,10 @@ dataSources:
         - event: RoyaltiesSetForContract(indexed address,(address,uint96)[])
           handler: handleRoyaltiesRegistry
   - kind: ethereum/contract
-    name: {{u2unft_odyssean_voyage.name}}
+    name: {{u2unft_amber.name}}
     network: {{network}}
     source: 
-      address: '{{u2unft_odyssean_voyage.address}}'
+      address: '{{u2unft_amber.address}}'
       abi: ERC1155Proxy
       startBlock: {{startBlock}}
     mapping:
