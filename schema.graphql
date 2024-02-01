@@ -44,6 +44,8 @@ type Account @entity {
 	ERC721transferFromEvent: [ERC721Transfer!]! @derivedFrom(field: "from")
 	ERC721transferToEvent: [ERC721Transfer!]! @derivedFrom(field: "to")
 	OwnedTokens: [OwnedTokenCount!] @derivedFrom(field: "owner")
+	OnSaleStatus1155: [OnSaleStatus1155!] @derivedFrom(field: "owner")
+	onSaleCount: BigInt!
 
 }
 
@@ -62,6 +64,14 @@ type AccountCollectionOwnership @entity {
     ownsTokens: Boolean!
 }
 
+type  OnSaleStatus1155 @entity {
+	id: ID!
+	contract: String!
+	tokenId: BigInt!
+	owner: Account!
+	isOnSale: Boolean!
+}
+
 type ERC721Contract @entity {
 	id: String!
 	asAccount: Account!
@@ -73,6 +83,7 @@ type ERC721Contract @entity {
 	txCreation: String!
 	count: BigInt!
 	holderCount: BigInt!
+	createAt: BigInt
 }
 type ERC721Token @entity {
 	id: ID!
@@ -85,6 +96,7 @@ type ERC721Token @entity {
 	transfers: [ERC721Transfer!]! @derivedFrom(field: "token")
   	creators: [ERC721Creator!]! @derivedFrom(field: "collection")
 	txCreation: String!
+	createAt: BigInt
 }
 type ERC721Transfer implements Event @entity(immutable: true) {
 	id: ID!
@@ -108,6 +120,7 @@ type ERC1155Contract @entity {
 	txCreation: String!
 	count: BigInt!
 	holderCount: BigInt!
+	createAt: BigInt
 }
 
 type ERC1155Creator @entity {
@@ -125,8 +138,8 @@ type ERC721Creator @entity {
 
 type Creator @entity {
   id: ID!
-  token1155: [ERC1155Creator!]! @derivedFrom(field: "creator")
-  token721: [ERC721Creator!]! @derivedFrom(field: "creator")
+  token1155: [ERC1155Creator!] @derivedFrom(field: "creator")
+  token721: [ERC721Creator!] @derivedFrom(field: "creator")
 }
 
 type ERC1155Token @entity {
@@ -140,6 +153,7 @@ type ERC1155Token @entity {
 	transfers: [ERC1155Transfer!]! @derivedFrom(field: "token")
   	creators: [ERC1155Creator!]! @derivedFrom(field: "collection")
 	txCreation: String!
+	createAt: BigInt
 }
 type ERC1155Balance @entity {
 	id: ID!
@@ -239,6 +253,15 @@ type RoyaltiesRegistry @entity(immutable: true){
 	collectionId: String!
 	# royalties: [RoyaltyItem!]!
 }
+
+# type Statistic @entity {
+# 	id: ID!
+# 	totalNftListed: BigInt!
+# 	totalVolume: BigInt!
+# 	totalTransaction: BigInt!
+# 	totalCollection: BigInt!
+# 	totalProtocolFee: BigInt!
+# }
 
 enum ActionState {
   PENDING

@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ERC721Factory
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x2d710bce9e3e9501d69f657bfa29f2dc21cd5b14'
+      address: '{{erc721factory.address}}'
       abi: ERC721Factory
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -28,11 +28,11 @@ dataSources:
           handler: handle721UserProxy
   - kind: ethereum/contract
     name: ERC1155Factory
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x562523950cf7889d0ccb040c8143d4f1596e4b9a'
+      address: '{{erc1155factory.address}}'
       abi: ERC1155Factory
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -50,11 +50,11 @@ dataSources:
           handler: handle1155UserProxy
   - kind: ethereum/contract
     name: ERC721Marketplace
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x842052c6ce40095a9bce9a4df970bcdb82705f34'
+      address: '{{erc721marketplace.address}}'
       abi: ERC721Marketplace
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -81,11 +81,11 @@ dataSources:
 
   - kind: ethereum/contract
     name: ERC1155Marketplace
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x2a35acd9ab36c22bfbf4ddafdbef6fd1ef850fc5'
+      address: '{{erc1155marketplace.address}}'
       abi: ERC1155Marketplace
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -111,11 +111,11 @@ dataSources:
           handler: handleOfferCancel
   - kind: ethereum/contract
     name: NFT
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x34adacbbb61ab0345094ffdfe2a6a737530bf155'
+      address: '{{erc721Nonfactory.address}}'
       abi: NFT
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -129,13 +129,14 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+
   - kind: ethereum/contract
     name: ERC721Proxy
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x7e1ae9399cda4cfa62714c0c1445bf75c39201bc'
+      address: '{{erc721Base.address}}'
       abi: ERC721Proxy
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -170,11 +171,11 @@ dataSources:
           handler: handleTransfer
   - kind: ethereum/contract
     name: ERC1155Proxy
-    network: testnet
+    network: {{network}}
     source: 
-      address: '0x9e87754dab31dad057dcdf233000f71ff55fa37f'
+      address: '{{erc1155Base.address}}'
       abi: ERC1155Proxy
-      startBlock: 10466045
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -213,11 +214,11 @@ dataSources:
           handler: handleURI
   - kind: ethereum/contract
     name: RoyaltiesRegistry
-    network: testnet
+    network: {{network}}
     source:
-      address: '0x6DA88C2e364AF1112e62872b5b69A16daeb38446'
+      address: '{{royaltiesRegistry.address}}'
       abi: RoyaltiesRegistry
-      startBlock: 14330094
+      startBlock: {{royaltiesRegistry.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -232,31 +233,51 @@ dataSources:
       eventHandlers:
         - event: RoyaltiesSetForContract(indexed address,(address,uint96)[])
           handler: handleRoyaltiesRegistry
-  # - kind: ethereum/contract
-  #   name: ERC1155NonFactory
-  #   network: testnet
-  #   source: 
-  #     address: '0x9e87754dab31dad057dcdf233000f71ff55fa37f'
-  #     abi: ERC1155Proxy
-  #     startBlock: 10466045
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.6
-  #     language: wasm/assemblyscript
-  #     file: ./src/mapping/NFTnonFactory.ts
-  #     entities:
-  #       - Item
-  #       - Deal
-  #     abis:
-  #       - name: ERC1155Proxy
-  #         file: ./abis/ERC1155Proxy.json
-  #     eventHandlers:
-  #       - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-  #         handler: handleTransferSingleNoFactory
+  - kind: ethereum/contract
+    name: {{u2unft_amber.name}}
+    network: {{network}}
+    source: 
+      address: '{{u2unft_amber.address}}'
+      abi: ERC1155Proxy
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+        - Deal
+      abis:
+        - name: ERC1155Proxy
+          file: ./abis/ERC1155Proxy.json
+      eventHandlers:
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTranferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingleNoFactory
 templates:
   - kind: ethereum/contract
-    name: ERC721Proxy
+    name: NFTLegacy
     network: testnet
+    source:
+      abi: NFTLegacy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - ERC721Token
+      abis:
+        - name: NFTLegacy
+          file: ./abis/ERC721Legacy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+  - kind: ethereum/contract
+    name: ERC721Proxy
+    network: {{network}}
     source: 
       abi: ERC721Proxy
     mapping:
@@ -293,7 +314,7 @@ templates:
           handler: handleTransfer
   - kind: ethereum/contract
     name: ERC1155Proxy
-    network: testnet
+    network: {{network}}
     source: 
       abi: ERC1155Proxy
     mapping:

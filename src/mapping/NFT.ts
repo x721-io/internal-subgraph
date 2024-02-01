@@ -33,6 +33,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
     newCollection.asAccount = fetchOrCreateAccount(event.params.owner).id;
     newCollection.holderCount = BigInt.fromI32(0);
     newCollection.count = BigInt.fromI32(0);
+    newCollection.createAt = event.block.timestamp;
     newCollection.save()
   }
 }
@@ -54,6 +55,7 @@ export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): v
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
     newCollection.count = BigInt.fromI32(0);
     newCollection.holderCount = BigInt.fromI32(0);
+    newCollection.createAt = event.block.timestamp;
     newCollection.save()
   }
 }
@@ -74,6 +76,7 @@ export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newCollection.count = BigInt.fromI32(0);
     newCollection.holderCount = BigInt.fromI32(0);
+    newCollection.createAt = event.block.timestamp;
     newCollection.save()
   }
 }
@@ -94,6 +97,7 @@ export function handleCreateERC1155RaribleUser(event: CreateERC1155RaribleUser):
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newCollection.count = BigInt.fromI32(0);
     newCollection.holderCount = BigInt.fromI32(0);
+    newCollection.createAt = event.block.timestamp;
     newCollection.save()
   }
 }
@@ -139,13 +143,15 @@ export function handleTransfer(event: Transfer): void {
     token.identifier = event.params.tokenId;
     token.owner = event.params.to.toHexString();
     token.txCreation = event.transaction.hash.toHexString()
-    let zeroAccount = Account.load('0x0000000000000000000000000000000000000000');
+    let zeroAccount = fetchOrCreateAccount(Address.fromString(ContractAddress.ZERO));
+    token.createAt = event.block.timestamp;
     updateBlockEntity(event, event.address, event.params.tokenId, event.params.from, event.params.to, 'Mint', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ContractAddress.ZERO));
     updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC721');    
-    if (zeroAccount == null) {
-      zeroAccount = new Account('0x0000000000000000000000000000000000000000');
-      zeroAccount.save();
-    }
+    // if (zeroAccount == null) {
+    //   zeroAccount = new Account('0x0000000000000000000000000000000000000000');
+    //   zeroAccount.onSaleCount = BigInt.fromI32(0);
+    //   zeroAccount.save();
+    // }
     // Set the approval to the zero address when the token is minted
     token.approval = zeroAccount.id;
     token.uri = ""; // Set the URI based on your logic
@@ -161,13 +167,13 @@ export function handleTransfer(event: Transfer): void {
   }
 
   // Ensure 'to' account is created
-  let accountToId = event.params.to.toHex();
-  let accountTo = Account.load(accountToId);
-  if (accountTo == null) {
-    accountTo = new Account(accountToId);
-    accountTo.save();
-  }
-
+  // let accountToId = event.params.to.toHex();
+  // let accountTo = Account.load(accountToId);
+  // if (accountTo == null) {
+  //   accountTo = new Account(accountToId);
+  //   accountTo.save();
+  // }
+  let accountTo = fetchOrCreateAccount(event.params.to);
   // Create the transfer event entity
   let transferId = generateCombineKey([event.transaction.hash.toHex(), event.address.toHex(), tokenId])
   let transfer = new ERC721Transfer(transferId);
@@ -182,12 +188,13 @@ export function handleTransfer(event: Transfer): void {
 
   // Ensure 'from' account is created
   if (event.params.from.toHex() != "0x0000000000000000000000000000000000000000") {
-    let accountFromId = event.params.from.toHex();
-    let accountFrom = Account.load(accountFromId);
-    if (accountFrom == null) {
-      accountFrom = new Account(accountFromId);
-      accountFrom.save();
-    }
+    // let accountFromId = event.params.from.toHex();
+    // let accountFrom = Account.load(accountFromId);
+    // if (accountFrom == null) {
+    //   accountFrom = new Account(accountFromId);
+    //   accountFrom.save();
+    // }
+    fetchOrCreateAccount(event.params.from);
   }
 }
 
@@ -209,6 +216,7 @@ export function handleTransferSingle(event: TransferSingle): void {
   if (token == null) {
     token = new ERC1155Token(tokenId);
     token.tokenId = event.params.id.toString();
+    token.createAt = event.block.timestamp;
     // Initialize other ERC1155Token properties here
     token.save();
   }
@@ -268,6 +276,7 @@ export function handleTranferBatch(event: TransferBatch): void {
     if (token == null) {
       token = new ERC1155Token(tokenId);
       token.tokenId = event.params.ids[i].toString();
+      token.createAt = event.block.timestamp;
       // Initialize other ERC1155Token properties here
       token.save();
     }
@@ -301,6 +310,7 @@ export function handleSupply(event: Supply): void {
     token = new ERC1155Token(tokenId);
     token.tokenId = event.params.tokenId.toString()
     token.txCreation = event.transaction.hash.toHexString();
+    token.createAt = event.block.timestamp;
     updateBlockEntity(event, event.address, event.params.tokenId, Address.fromString(ContractAddress.ZERO), Address.fromString(ContractAddress.ZERO), 'Mint', BigInt.fromI32(0), event.params.value, Address.fromString(ContractAddress.ZERO));
     updateContractCount(event.address.toHexString(), BigInt.fromI32(1), 'ERC1155');
   }
@@ -328,6 +338,7 @@ export function handle1155Creators(event: Creators): void {
     collection = new ERC1155Contract(event.address.toHexString());
     // Initialize other necessary fields for Collection
     collection.txCreation = event.transaction.hash.toHexString();
+    collection.createAt = event.block.timestamp;
     collection.save();
   }
 
@@ -363,6 +374,7 @@ export function handle721Creators(event: Creators): void {
     collection = new ERC721Contract(event.address.toHexString());
     // Initialize other necessary fields for Collection
     collection.txCreation = event.transaction.hash.toHexString();
+    collection.createAt = event.block.timestamp;
     collection.save();
   }
 
