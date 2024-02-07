@@ -46,7 +46,7 @@ type Account @entity {
 	OwnedTokens: [OwnedTokenCount!] @derivedFrom(field: "owner")
 	OnSaleStatus1155: [OnSaleStatus1155!] @derivedFrom(field: "owner")
 	onSaleCount: BigInt!
-
+	holdingCount: BigInt!
 }
 
 type OwnedTokenCount @entity {
