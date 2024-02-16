@@ -8,8 +8,8 @@ import {
   OfferCancel,
 } from "../../generated/ERC1155Marketplace/ERC1155Marketplace"
 import { ERC1155Contract, ERC1155Token, MarketEvent1155 } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155 } from "../utils";
-import { ContractAddress } from "../enum";
+import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155, updateTotalVolume } from "../utils";
+import { ContractAddress, ContractName } from "../enum";
 
 
 export function handleAskNew(event: AskNew): void {
@@ -137,7 +137,7 @@ export function handleBuy(event: Buy): void {
       event.params.quantity.times(BigInt.fromI32(-1)), transaction.address!
     );
   }
-
+  updateTotalVolume(Address.fromString(transaction.address!), ContractName.ERC_1155, event.params.price)
   transaction.save();
 
   updateBlockEntity(
@@ -163,6 +163,7 @@ export function handleAcceptOffer(event: OfferAccept): void {
     } else {
       transaction.event = "Bid"
     }
+    updateTotalVolume(Address.fromString(transaction.address!), ContractName.ERC_1155, event.params.price)
     transaction.save()
 
     let nft = ERC1155Token.load(transaction.nftId!);
