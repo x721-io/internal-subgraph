@@ -8,6 +8,7 @@ export function fetchOrCreateAccount(address: Address): Account {
     if (account == null) {
         account = new Account(accountId);
         account.onSaleCount = BigInt.fromI32(0);
+        account.holdingCount = BigInt.fromI32(0);
         account.save();
     }
     return account as Account;
@@ -86,7 +87,7 @@ export function updateERC1155Balance(accountAddress: Address, tokenId: string, v
     let accountCollectionOwnership = AccountCollectionOwnership.load(ownershipId);
     let previouslyOwned = accountCollectionOwnership != null && accountCollectionOwnership.ownsTokens;
 
-
+    let owner = fetchOrCreateAccount(accountAddress);
     // Check for previous 
     if (balance == null) {
         balance = new ERC1155Balance(balanceId);
@@ -121,8 +122,10 @@ export function updateERC1155Balance(accountAddress: Address, tokenId: string, v
         log.warning('alo: {} {}', [accountCollectionOwnership.ownsTokens.toString(), nowOwned.toString()]);
         if (!previouslyOwned && nowOwned) {
             contract.holderCount = contract.holderCount.plus(BigInt.fromI32(1));
+            owner.holdingCount = owner.holdingCount.plus(BigInt.fromI32(1));
         } else if (previouslyOwned && !nowOwned) {
             contract.holderCount = contract.holderCount.minus(BigInt.fromI32(1));
+            owner.holdingCount = owner.holdingCount.minus(BigInt.fromI32(1));
         }
         contract.save();
     }
@@ -158,13 +161,15 @@ export function updateOwnedTokenCount(accountId: string, contractAddress: string
     }
 
     let wasOwner = ownedTokenCount.count.gt(BigInt.fromI32(0));
-
+    let owner = fetchOrCreateAccount(Address.fromString(accountId));
     if (increment) {
         ownedTokenCount.count = ownedTokenCount.count.plus(BigInt.fromI32(1));
+        owner.holdingCount = owner.holdingCount.plus(BigInt.fromI32(1));
     } else {
         ownedTokenCount.count = ownedTokenCount.count.minus(BigInt.fromI32(1));
+        owner.holdingCount = owner.holdingCount.minus(BigInt.fromI32(1));
     }
-
+    owner.save();
     let isOwner = ownedTokenCount.count.gt(BigInt.fromI32(0));
 
     // if (isERC721) {
