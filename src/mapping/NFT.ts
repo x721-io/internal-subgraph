@@ -23,6 +23,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
     collection.symbol = event.params.symbol;
     collection.count = BigInt.fromI32(0);
     collection.holderCount = BigInt.fromI32(0);
+    collection.volume = BigInt.fromI32(0);
     collection.save();
   }
   else {
@@ -33,6 +34,7 @@ export function handleCreateERC721Rarible(event: CreateERC721Rarible): void {
     newCollection.asAccount = fetchOrCreateAccount(event.params.owner).id;
     newCollection.holderCount = BigInt.fromI32(0);
     newCollection.count = BigInt.fromI32(0);
+    newCollection.volume = BigInt.fromI32(0);
     newCollection.createAt = event.block.timestamp;
     newCollection.save()
   }
@@ -45,6 +47,7 @@ export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): v
     collection.symbol = event.params.symbol;
     collection.count = BigInt.fromI32(0);
     collection.holderCount = BigInt.fromI32(0);
+    collection.volume = BigInt.fromI32(0);
     collection.save();
   }
   else {
@@ -55,6 +58,7 @@ export function handleCreateERC721RaribleUser(event: CreateERC721RaribleUser): v
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;;
     newCollection.count = BigInt.fromI32(0);
     newCollection.holderCount = BigInt.fromI32(0);
+    newCollection.volume = BigInt.fromI32(0);
     newCollection.createAt = event.block.timestamp;
     newCollection.save()
   }
@@ -66,6 +70,7 @@ export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
     collection.symbol = event.params.symbol;
     collection.count = BigInt.fromI32(0);
     collection.holderCount = BigInt.fromI32(0);
+    collection.volume = BigInt.fromI32(0);
     collection.save();
   }
   else {
@@ -76,6 +81,7 @@ export function handleCreateERC1155Rarible(event: CreateERC1155Rarible): void {
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newCollection.count = BigInt.fromI32(0);
     newCollection.holderCount = BigInt.fromI32(0);
+    newCollection.volume = BigInt.fromI32(0);
     newCollection.createAt = event.block.timestamp;
     newCollection.save()
   }
@@ -88,6 +94,7 @@ export function handleCreateERC1155RaribleUser(event: CreateERC1155RaribleUser):
     collection.symbol = event.params.symbol;
     collection.count = BigInt.fromI32(0);
     collection.holderCount = BigInt.fromI32(0);
+    collection.volume = BigInt.fromI32(0);
     collection.save();
   }
   else {
@@ -97,6 +104,7 @@ export function handleCreateERC1155RaribleUser(event: CreateERC1155RaribleUser):
     newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
     newCollection.count = BigInt.fromI32(0);
     newCollection.holderCount = BigInt.fromI32(0);
+    newCollection.volume = BigInt.fromI32(0);
     newCollection.createAt = event.block.timestamp;
     newCollection.save()
   }

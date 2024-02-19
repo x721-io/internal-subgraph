@@ -2,31 +2,35 @@
   "network": "mainnet",
   "startBlock": "5310000",
   "erc721factory": {
-    "address": "0x8d73569f72e823593E7E96f2B531fE1D4E776642"
+    "address": "0xbffb662ea0cc38a47379d458b35d1becd6da9115"
   },
   "erc1155factory": {
-    "address": "0x6aC0b09B34e20DBC00921be259B7852138639BdD"
+    "address": "0xc8f6adc33a1b4010cabbbacbbdf79aaaee33fcd5"
   },
   "exchangev2": {
     "address" : "0xbB3074305ba67c2E8c9af6dE2ADCbc970C1a59Fa"
   },
   "erc721marketplace": {
-    "address": "0xc972ce4dd1dec21464c084436a23c09f442187a9"
+    "address": "0xb6d89ffb7b6d00db395cc4b7b8e9b9fd4774184d"
   },
   "erc1155marketplace": {
-    "address": "0x65f5a25a3f32a0d74719b82842fbbf9e6804f25a"
+    "address": "0x9a36f21be9d9895f1cb5a58895f5ff92c016b985"
   },
   "erc721Nonfactory": {
     "address": "0xC102BfEeE0674798Df49618E12b45FcD8e7C0EC0"
   },
   "erc721Base": {
-    "address": "0xC0AeaCf02b4E1A8d0D3E90066D7299C78689868e"
+    "address": "0x7ddb1accb3160cf6ba4fee23e26b6d9ad45bc824"
   },
   "erc1155Base": {
-    "address": "0x26eB881fA2DFb1307434168E19b3292230E77da7"
+    "address": "0xDa4a022bBC044B8097159C8f4527FE7c6111a70C"
   },
   "u2unft_amber": {
-    "address": "0xda125aec64761868e38a1FE228cf3c4263218c39",
+    "address": "0xda125aec64761868e38a1fe228cf3c4263218c39",
     "name" : "unicerans"
+  },
+"royaltiesRegistry": {
+    "address": "0x2Ed0dA2fE3703081BdeE5aa69D7a5623be0B5CA0",
+    "startBlock" : "5310000"
   }
 }

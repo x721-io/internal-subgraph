@@ -1,6 +1,7 @@
 import { AccountCollectionOwnership, Block, ERC1155Contract, ERC1155Token, ERC721Contract, ERC721Token, OnSaleStatus1155, OwnedTokenCount } from "../generated/schema"
 import { Account, ERC1155Balance } from "../generated/schema"
 import { Address, BigInt, ethereum, log, store } from "@graphprotocol/graph-ts/index"
+import { ContractName } from './enum'
 
 export function fetchOrCreateAccount(address: Address): Account {
     let accountId = address.toHex();
@@ -184,6 +185,21 @@ export function updateOwnedTokenCount(accountId: string, contractAddress: string
     ownedTokenCount.save();
 }
 
+export function updateTotalVolume(collectionAddress: Address, type: string, quantity: BigInt): void {
+    if (type === 'ERC721') {
+        let contract = ERC721Contract.load(collectionAddress.toHexString());
+        if (contract) {
+            contract.volume = contract.volume.plus(quantity);
+            contract.save()
+        }
+    } else {
+        let contract = ERC1155Contract.load(collectionAddress.toHexString());
+        if (contract) {
+            contract.volume = contract.volume.plus(quantity);
+            contract.save();
+        }
+    }
+}
 export function updateBlockEntity(event: ethereum.Event, contract: Address, tokenId: BigInt, from: Address, to: Address, type: string, price: BigInt, quantity: BigInt, quoteToken: Address): void {
   let block = Block.load(`${event.transaction.hash.toHexString()}-${tokenId.toString()}`)
   if (block) {

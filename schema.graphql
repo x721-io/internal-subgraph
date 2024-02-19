@@ -84,6 +84,7 @@ type ERC721Contract @entity {
 	count: BigInt!
 	holderCount: BigInt!
 	createAt: BigInt
+	volume: BigInt!
 }
 type ERC721Token @entity {
 	id: ID!
@@ -121,6 +122,7 @@ type ERC1155Contract @entity {
 	count: BigInt!
 	holderCount: BigInt!
 	createAt: BigInt
+	volume: BigInt!
 }
 
 type ERC1155Creator @entity {
