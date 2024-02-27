@@ -46,7 +46,7 @@ type Account @entity {
 	OwnedTokens: [OwnedTokenCount!] @derivedFrom(field: "owner")
 	OnSaleStatus1155: [OnSaleStatus1155!] @derivedFrom(field: "owner")
 	onSaleCount: BigInt!
-
+	holdingCount: BigInt!
 }
 
 type OwnedTokenCount @entity {
@@ -84,6 +84,7 @@ type ERC721Contract @entity {
 	count: BigInt!
 	holderCount: BigInt!
 	createAt: BigInt
+	volume: BigInt!
 }
 type ERC721Token @entity {
 	id: ID!
@@ -121,6 +122,7 @@ type ERC1155Contract @entity {
 	count: BigInt!
 	holderCount: BigInt!
 	createAt: BigInt
+	volume: BigInt!
 }
 
 type ERC1155Creator @entity {

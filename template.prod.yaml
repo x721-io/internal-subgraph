@@ -131,6 +131,27 @@ dataSources:
           handler: handleTransfer
 
   - kind: ethereum/contract
+    name: {{u2uni.name}}
+    network: {{network}}
+    source:
+      address: '{{u2uni.address}}'
+      abi: NFT
+      startBlock: {{u2uni.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/NFTnonFactory.ts
+      entities:
+        - Item
+      abis:
+        - name: NFT
+          file: ./abis/ERC721Proxy.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+
+  - kind: ethereum/contract
     name: ERC721Proxy
     network: {{network}}
     source:

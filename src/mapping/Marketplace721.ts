@@ -8,8 +8,8 @@ import {
   CancelBid
 } from "../../generated/ERC721Marketplace/ERC721Marketplace"
 import { ERC721Token, MarketEvent721 } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount } from "../utils";
-import { ContractAddress } from "../enum";
+import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateTotalVolume } from "../utils";
+import { ContractAddress, ContractName } from "../enum";
 
 function createEvent(contract: Address, tokenId: BigInt, bidderAddr: Address | null = null): MarketEvent721 {
   if (!bidderAddr) {
@@ -91,6 +91,7 @@ export function handleTrade(event: Trade): void {
     updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.buyer, 'Trade', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     updateOwnedTokenCount(event.params.buyer.toHexString(), event.params._nft.toHexString(), true, event.block.timestamp)
     updateOwnedTokenCount(event.params._seller.toHexString(), event.params._nft.toHexString(), false, event.block.timestamp)
+    updateTotalVolume(event.params._nft, ContractName.ERC_721, event.params._price)
     ev.save();
     let account = fetchOrCreateAccount(event.params._seller);
     account.onSaleCount = account.onSaleCount.minus(BigInt.fromI32(1));
@@ -114,6 +115,7 @@ export function handleAcceptBid(event: AcceptBid): void {
     ev.price = event.params._price;
     ev.netPrice = event.params._netPrice;
     updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.bidder, 'AcceptBid', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
+    updateTotalVolume(event.params._nft, ContractName.ERC_721, event.params._price)
     ev.save();
   }
   if (evAsk && evAsk.event == "AskNew") {
