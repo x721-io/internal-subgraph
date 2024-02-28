@@ -71,7 +71,7 @@ export function updateOnSaleCount1155(accountAddress: Address, collection: Addre
             account.save()
         }
     } else {
-        let isOnSaleBefore = updateSaleStatus1155(accountAddress, collection, tokenId, true);
+        let isOnSaleBefore = updateSaleStatus1155(accountAddress, collection, tokenId, false);
         let account = fetchOrCreateAccount(accountAddress);
         if (isOnSaleBefore) {
             account.onSaleCount = account.onSaleCount.minus(BigInt.fromI32(1));
