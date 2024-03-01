@@ -1,21 +1,6 @@
 ## Description
 The NFT Marketplace Subgraph is a specialized indexing system built on decentralized infrastructure to efficiently capture and manage events occurring within a smart contract powering an NFT marketplace. This subgraph monitors and extracts essential data from events such as NFT creation, transfers, sales, and auctions, organizing it into a structured format for easy querying and analysis.
 
-
-# Protocol subgraph
-The [subgraph](https://thegraph.com/explorer/subgraph/rarible/protocol) provides information on purchases at [Rarible](https://rarible.com), including commission amounts.
-
-Contracts support status in the current version:
-
-- [x] TokenSale
-- [x] ERC721SaleV1
-- [x] ERC721SaleV2
-- [x] ERC1155SaleV1
-- [x] ERC1155SaleV2
-- [x] ExchangeV1
-
-The graphql schema is still under heavy development and will likely have major changes and improvements.
-
 ## Installation/Development
 
 Please follow the official [documentation](https://thegraph.com/docs/en/quick-start/).
@@ -81,12 +66,6 @@ $ yarn run start:prod
 - **onSaleCount** - number of nft on sales
 - **holdingCount** - number of nft owner by user
 
-**OwnedTokenCount** - ???
-
-**AccountCollectionOwnership** - ???
-
-**OnSaleStatus1155** - ???
-
 **ERC721Contract** - represents for collection nft type ERC721
 - **id** - index of collection
 - **asAccount** - `Account`
@@ -95,7 +74,7 @@ $ yarn run start:prod
 - **symbol** - a shorthand representation of a particular cryptocurrency asset
 - **tokens** - `ERC721Token`
 - **transfers** - `ERC721Transfer`
-- **txCreation** - ???
+- **txCreation** - creation hash of this collection
 - **count** - number of nft created in this collection
 - **holderCount** - number of owner of this collection
 - **createAt** - time this collection create
@@ -111,7 +90,7 @@ $ yarn run start:prod
 - **uri** - it's a string of characters that provides a standardized way to identify and access a resource
 - **transfers** - `ERC721Transfer`
 - **creators** - `ERC721Creator`
-- **txCreation** - ???
+- **txCreation** - creation hash of this NFT
 - **createAt** - the time this nft was created
 
 **ERC721Transfer** - represents for each transfer each nft
@@ -133,7 +112,7 @@ $ yarn run start:prod
 - **tokens** - `ERC1155Token`
 - **balances** - `ERC1155Balance`
 - **transfers** - `ERC1155Transfer`
-- **txCreation** - ???
+- **txCreation** - creation hash of this collection
 - **count** - number of nft created in this collection
 - **holderCount** - number of owner of this collection
 - **createAt** - time this collection create
@@ -165,7 +144,7 @@ $ yarn run start:prod
 - **balances** - `ERC1155Balance`
 - **transfers** - `ERC1155Transfer`
 - **creators** - `ERC1155Creator`
-- **txCreation** - ???
+- **txCreation** - creation hash of this NFT
 - **createAt** - the time this nft was created
 
 **ERC1155Balance** - represents for value of nft 
@@ -259,6 +238,8 @@ $ yarn run start:prod
 - **lastBlock** - `Block` of the last event
 - **contract** - `ContractType`
 
+**OwnedTokenCount**, **AccountCollectionOwnership**, **OnSaleStatus1155** => These 3 contracts serve as middlestate for other function
+
 ## Enumerations
 
 **Operation** - enumerates operation
@@ -299,75 +280,11 @@ $ yarn run start:prod
 - **ERC1155SaleV2**
 - **ExchangeV1**
 
-## Queries
 
-HTTP queries can be accessed at: https://api.thegraph.com/subgraphs/name/rarible/protocol.
-
-**List of deals**
-```GraphQL
-{
-    deals (first: 10) {
-        seller
-        buyer
-        sellTokenId
-        sellToken
-        buyToken
-        sellAmount
-        buyAmount
-        price
-        fee
-        txHash
-        blockNumber
-        blockTime
-        contract
-    }
-}
-```
-> The number of entities can be limited with `first` flag
-
-**List of deals specified by a contract**
-```GraphQL
-{
-    deals (where: { contract: ExchangeV1 }) {
-        seller
-        buyer
-        sellTokenId
-        sellToken
-        buyToken
-        sellAmount
-        buyAmount
-        price
-        fee
-        txHash
-        blockNumber
-        blockTime
-        contract
-    }
-}
-```
-> see `ContractType` enumeration for possible `contract` values
-
-**List of counters for contracts**
-```GraphQL
-{
-    counters {
-        count
-        firstBlock {
-            blockNumber
-            blockTime
-        }
-        lastBlock {
-            blockNumber
-            blockTime
-        }
-        contract
-    }
-}
-```
 
 ## Suggestions
 
-You are welcome to [suggest features](https://github.com/rarible/protocol/discussions) and [report bugs found](https://github.com/rarible/protocol/issues)!
+You are welcome to [report bugs found](https://github.com/unicornultrafoundation/u2u-marketplace-subgraph/issues)!
 
 ## License
 
