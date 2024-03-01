@@ -246,10 +246,6 @@ $ yarn run start:prod
 - **Ask**
 - **Offer**
 
-**ActionState** - enumerates action state
-- **PENDING**
-- **OfPENDINGfer**
-
 **SellStatus** - enumerates sell status
 - **AskNew**
 - **AskCancel**
@@ -271,15 +267,6 @@ $ yarn run start:prod
 **DealType** - enumerates deal initiation methods
 - **Order**
 - **Bid**
-
-**ContractType** - enumeration for contracts
-- **TokenSale**
-- **ERC721SaleV1**
-- **ERC721SaleV2**
-- **ERC1155SaleV1**
-- **ERC1155SaleV2**
-- **ExchangeV1**
-
 
 
 ## Suggestions
