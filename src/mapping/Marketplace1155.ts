@@ -8,7 +8,7 @@ import {
   OfferCancel,
 } from "../../generated/ERC1155Marketplace/ERC1155Marketplace"
 import { ERC1155Contract, ERC1155Token, MarketEvent1155 } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155, updateTotalVolume } from "../utils";
+import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
 import { ContractAddress, ContractName } from "../enum";
 
 
@@ -140,6 +140,7 @@ export function handleBuy(event: Buy): void {
     );
   }
   updateTotalVolume(Address.fromString(transaction.address!), ContractName.ERC_1155, event.params.price)
+  updateTotalVolumeMarket(event.address,ContractName.ERC_1155, event.params.netPrice, event.params.quantity)
   transaction.save();
 
   updateBlockEntity(

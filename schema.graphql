@@ -264,6 +264,15 @@ type RoyaltiesRegistry @entity(immutable: true){
 # 	totalCollection: BigInt!
 # 	totalProtocolFee: BigInt!
 # }
+type MarketVolume1155 @entity{
+	id: String!
+	totalVolume: BigInt!,
+}
+
+type MarketVolume721 @entity{
+	id: String!
+	totalVolume: BigInt!,
+}
 
 enum ActionState {
   PENDING

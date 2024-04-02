@@ -1,6 +1,6 @@
 {
     "network": "testnet",
-    "startBlock": "10466045",
+    "startBlock": "17466045",
     "erc721factory": {
       "address": "0x2d710bce9e3e9501d69f657bfa29f2dc21cd5b14"
     },

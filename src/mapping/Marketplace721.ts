@@ -8,7 +8,7 @@ import {
   CancelBid
 } from "../../generated/ERC721Marketplace/ERC721Marketplace"
 import { ERC721Token, MarketEvent721 } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateTotalVolume } from "../utils";
+import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
 import { ContractAddress, ContractName } from "../enum";
 
 function createEvent(contract: Address, tokenId: BigInt, bidderAddr: Address | null = null): MarketEvent721 {
@@ -65,7 +65,7 @@ export function handleAskCancel(event: AskCancel): void {
     ev.txHash = event.transaction.hash.toHexString();
     ev.from = event.params._seller.toHexString();
     ev.nftId = nft.id;
-    updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, Address.fromString(ContractAddress.ZERO), 'AskCancel', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
+    // updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, Address.fromString(ContractAddress.ZERO), 'AskCancel', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
     ev.save();
     let account = fetchOrCreateAccount(event.params._seller);
     account.onSaleCount = account.onSaleCount.minus(BigInt.fromI32(1));
@@ -92,6 +92,7 @@ export function handleTrade(event: Trade): void {
     updateOwnedTokenCount(event.params.buyer.toHexString(), event.params._nft.toHexString(), true, event.block.timestamp)
     updateOwnedTokenCount(event.params._seller.toHexString(), event.params._nft.toHexString(), false, event.block.timestamp)
     updateTotalVolume(event.params._nft, ContractName.ERC_721, event.params._price)
+    updateTotalVolumeMarket(event.address,ContractName.ERC_721, event.params._netPrice, BigInt.fromI32(1))
     ev.save();
     let account = fetchOrCreateAccount(event.params._seller);
     account.onSaleCount = account.onSaleCount.minus(BigInt.fromI32(1));
