@@ -37,6 +37,10 @@
       "address": "0x9397153A85A1f67e1edb21F4cD53c3C1C8c04Ee4",
       "name" : "U2NFT_ODYSSEAN_VOYAGE"
     },
+    "u2unft_uniceran": {
+      "address": "0x9397153A85A1f67e1edb21F4cD53c3C1C8c04Ee4",
+      "name" : "U2NFT_UNICERAN"
+    },
     "u2unft_odyssean_voyage_test": {
       "address": "0x83160a1e0310E6701ddb28b30dA1D8E653bd8134",
       "name" : "U2NFT_ODYSSEAN_VOYAGE_TEST"
