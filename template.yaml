@@ -98,6 +98,8 @@ dataSources:
           handler: handleBid
         - event: CancelBid(indexed address,indexed address,uint256)
           handler: handleCancelBid
+        - event: ProtocolFee(uint256)
+          handler: handleGetFee
 
   - kind: ethereum/contract
     name: ERC1155Marketplace
@@ -129,6 +131,8 @@ dataSources:
           handler: handleOfferNew
         - event: OfferCancel(uint256)
           handler: handleOfferCancel
+        - event: ProtocolFee(uint256)
+          handler: handleGetFee
   - kind: ethereum/contract
     name: NFT
     network: {{network}}

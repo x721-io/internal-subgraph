@@ -6,9 +6,10 @@ import {
   OfferAccept,
   OfferNew,
   OfferCancel,
+  ProtocolFee
 } from "../../generated/ERC1155Marketplace/ERC1155Marketplace"
-import { ERC1155Contract, ERC1155Token, MarketEvent1155 } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155, updateTotalVolume } from "../utils";
+import { ERC1155Contract, ERC1155Token, MarketEvent1155, MarketFee } from "../../generated/schema"
+import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
 import { ContractAddress, ContractName } from "../enum";
 
 
@@ -140,6 +141,8 @@ export function handleBuy(event: Buy): void {
     );
   }
   updateTotalVolume(Address.fromString(transaction.address!), ContractName.ERC_1155, event.params.price)
+  updateTotalVolumeMarket(event.address, ContractName.ERC_1155, event.params.netPrice, event.params.quantity)
+  updateTotalTransactionCollection(nft.contract, ContractName.ERC_1155)
   transaction.save();
 
   updateBlockEntity(
@@ -167,12 +170,13 @@ export function handleAcceptOffer(event: OfferAccept): void {
       transaction.event = "Bid"
     }
     updateTotalVolume(Address.fromString(transaction.address!), ContractName.ERC_1155, event.params.price)
+    updateTotalVolumeMarket(event.address, ContractName.ERC_1155, event.params.netPrice, event.params.quantity)
     transaction.save()
 
     let nft = ERC1155Token.load(transaction.nftId!);
     if (!nft) return;
 
-    
+    updateTotalTransactionCollection(nft.contract, ContractName.ERC_1155)
     if (!transaction.address) return;
     updateBlockEntity( 
       event, Address.fromString(transaction.address!), BigInt.fromString(nft.tokenId),
@@ -180,3 +184,16 @@ export function handleAcceptOffer(event: OfferAccept): void {
       event.params.quantity, Address.fromString(transaction.quoteToken!)
     );
   }
+
+export function handleGetFee(event: ProtocolFee): void {
+  let marketFee = MarketFee.load(event.address.toHexString());
+  if(marketFee){
+    marketFee.totalFee = marketFee.totalFee.plus(event.params.protocolFee);
+    marketFee.save()
+  }else{
+    let newMarketplaceFee = new MarketFee(event.address.toHexString());
+    newMarketplaceFee.totalFee = BigInt.fromI32(0);
+    newMarketplaceFee.type = ContractName.ERC_1155
+    newMarketplaceFee.save()
+  }
+}

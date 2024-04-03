@@ -7,9 +7,10 @@ import {
   Bid,
   CancelBid
 } from "../../generated/ERC721Marketplace/ERC721Marketplace"
-import { ERC721Token, MarketEvent721 } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateTotalVolume } from "../utils";
+import { ERC721Token, MarketEvent721, MarketFee } from "../../generated/schema"
+import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
 import { ContractAddress, ContractName } from "../enum";
+import { ProtocolFee } from "../../generated/ERC1155Marketplace/ERC1155Marketplace";
 
 function createEvent(contract: Address, tokenId: BigInt, bidderAddr: Address | null = null): MarketEvent721 {
   if (!bidderAddr) {
@@ -92,6 +93,8 @@ export function handleTrade(event: Trade): void {
     updateOwnedTokenCount(event.params.buyer.toHexString(), event.params._nft.toHexString(), true, event.block.timestamp)
     updateOwnedTokenCount(event.params._seller.toHexString(), event.params._nft.toHexString(), false, event.block.timestamp)
     updateTotalVolume(event.params._nft, ContractName.ERC_721, event.params._price)
+    updateTotalVolumeMarket(event.address, ContractName.ERC_721, event.params._netPrice,BigInt.fromI32(1))
+    updateTotalTransactionCollection(nft.contract, ContractName.ERC_721)
     ev.save();
     let account = fetchOrCreateAccount(event.params._seller);
     account.onSaleCount = account.onSaleCount.minus(BigInt.fromI32(1));
@@ -116,6 +119,8 @@ export function handleAcceptBid(event: AcceptBid): void {
     ev.netPrice = event.params._netPrice;
     updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.bidder, 'AcceptBid', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     updateTotalVolume(event.params._nft, ContractName.ERC_721, event.params._price)
+    updateTotalVolumeMarket(event.address, ContractName.ERC_721, event.params._netPrice,BigInt.fromI32(1))
+    updateTotalTransactionCollection(nft.contract, ContractName.ERC_721)
     ev.save();
   }
   if (evAsk && evAsk.event == "AskNew") {
@@ -157,5 +162,18 @@ export function handleCancelBid(event: CancelBid): void {
     ev.nftId = nft.id;
     updateBlockEntity(event, event.params._nft, event.params._tokenId, Address.fromString(ContractAddress.ZERO), event.params.bidder, 'CancelBid', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
     ev.save();
+  }
+}
+
+export function handleGetFee(event: ProtocolFee): void {
+  let marketFee = MarketFee.load(event.address.toHexString());
+  if(marketFee){
+    marketFee.totalFee = marketFee.totalFee.plus(event.params.protocolFee);
+    marketFee.save()
+  }else{
+    let newMarketplaceFee = new MarketFee(event.address.toHexString());
+    newMarketplaceFee.totalFee = BigInt.fromI32(0);
+    newMarketplaceFee.type = ContractName.ERC_721
+    newMarketplaceFee.save()
   }
 }
