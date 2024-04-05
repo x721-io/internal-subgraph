@@ -85,6 +85,7 @@ type ERC721Contract @entity {
 	holderCount: BigInt!
 	createAt: BigInt
 	volume: BigInt!
+	transactionCount: BigInt!
 }
 type ERC721Token @entity {
 	id: ID!
@@ -123,6 +124,7 @@ type ERC1155Contract @entity {
 	holderCount: BigInt!
 	createAt: BigInt
 	volume: BigInt!
+	transactionCount: BigInt!
 }
 
 type ERC1155Creator @entity {
@@ -264,6 +266,18 @@ type RoyaltiesRegistry @entity(immutable: true){
 # 	totalCollection: BigInt!
 # 	totalProtocolFee: BigInt!
 # }
+
+type MarketVolume @entity{
+	id: String!
+	type: String!
+	totalVolume: BigInt!,
+}
+
+type MarketFee @entity{
+	id: String!
+	type: String!
+	totalFee: BigInt!,
+}
 
 enum ActionState {
   PENDING

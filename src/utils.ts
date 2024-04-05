@@ -1,4 +1,4 @@
-import { AccountCollectionOwnership, Block, ERC1155Contract, ERC1155Token, ERC721Contract, ERC721Token, OnSaleStatus1155, OwnedTokenCount } from "../generated/schema"
+import { AccountCollectionOwnership, Block, ERC1155Contract, ERC1155Token, ERC721Contract, ERC721Token, MarketVolume, OnSaleStatus1155, OwnedTokenCount } from "../generated/schema"
 import { Account, ERC1155Balance } from "../generated/schema"
 import { Address, BigInt, ethereum, log, store } from "@graphprotocol/graph-ts/index"
 import { ContractName } from './enum'
@@ -228,3 +228,51 @@ export function updateBlockEntity(event: ethereum.Event, contract: Address, toke
     block.save()
   }
 }
+
+export function updateTotalVolumeMarket(collectionAddress: Address, type: string, netPrice: BigInt ,quantity: BigInt): void {
+    log.info('===============updateTotalVolumeMarket==================: {} {}, {}, {}', [collectionAddress.toHexString(), type.toString(), netPrice.toString(), quantity.toString()]);
+    if (type === 'ERC721') {
+        let contract = MarketVolume.load(collectionAddress.toHexString());
+        if (contract) {
+            let volume = netPrice.times(quantity)
+            contract.totalVolume = contract.totalVolume.plus(volume);
+            contract.save()
+        } else {
+            let newcontract = new MarketVolume(collectionAddress.toHexString());
+            newcontract.totalVolume = BigInt.fromI32(0);
+            newcontract.type = type;
+            newcontract.save()
+        }
+    } else {
+        let volume = netPrice.times(quantity)
+        let contract = MarketVolume.load(collectionAddress.toHexString());
+        if (contract) {
+            contract.totalVolume = contract.totalVolume.plus(volume);
+            contract.save();
+        }else{
+            let newcontract = new MarketVolume(collectionAddress.toHexString());
+            newcontract.totalVolume = BigInt.fromI32(0);
+            newcontract.type = type;
+            newcontract.save()
+        }
+    }
+}
+
+export function updateTotalTransactionCollection(collectionAddress: string, type: string): void {
+    log.info('========updateTotalTransactionCollection=======: {} {}', [collectionAddress, type.toString()]);
+    if (type === 'ERC721') {
+        let contract = ERC721Contract.load(collectionAddress);
+        if (contract) {
+            contract.transactionCount = contract.transactionCount.plus(BigInt.fromI32(1));
+            contract.save()
+        }
+    } else {
+        let contract = ERC1155Contract.load(collectionAddress);
+        if (contract) {
+            contract.transactionCount = contract.transactionCount.plus(BigInt.fromI32(1));
+            contract.save();
+        }
+    }
+}
+
+
