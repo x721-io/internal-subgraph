@@ -37,6 +37,8 @@ export function handleAskNew(event: AskNew): void {
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
 
   if (nft) {
+    let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    const checkNFT = ERC721Token.load(id);
     log.info('creating new event', []);
     ev.event = "AskNew";
     ev.timestamp = event.block.timestamp;
@@ -47,6 +49,14 @@ export function handleAskNew(event: AskNew): void {
     ev.nftId = nft.id;
     ev.quoteToken = event.params._quoteToken. toHexString();
     ev.price = event.params._price;
+    // extend
+    ev.nftIdExtend = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    ev.tokenId = event.params._tokenId.toString();
+    ev.addressExtend = event.params._nft.toHexString();
+    ev.flagExtend = false;
+    if(checkNFT == null){
+      ev.flagExtend = true;
+    }
     updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, Address.fromString(ContractAddress.ZERO), 'AskNew', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
     let account = fetchOrCreateAccount(event.params._seller);
@@ -79,6 +89,8 @@ export function handleTrade(event: Trade): void {
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
 
   if (nft) {
+    let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    const checkNFT = ERC721Token.load(id);
     ev.event = "Trade";
     ev.timestamp = event.block.timestamp;
     ev.address = event.params._nft.toHexString();
@@ -89,6 +101,14 @@ export function handleTrade(event: Trade): void {
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;
     ev.netPrice = event.params._netPrice;
+    // extend
+    ev.nftIdExtend = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    ev.tokenId = event.params._tokenId.toString();
+    ev.addressExtend = event.params._nft.toHexString();
+    ev.flagExtend = false;
+    if(checkNFT == null){
+      ev.flagExtend = true;
+    }
     updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.buyer, 'Trade', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     updateOwnedTokenCount(event.params.buyer.toHexString(), event.params._nft.toHexString(), true, event.block.timestamp)
     updateOwnedTokenCount(event.params._seller.toHexString(), event.params._nft.toHexString(), false, event.block.timestamp)
@@ -107,6 +127,8 @@ export function handleAcceptBid(event: AcceptBid): void {
   let evAsk = MarketEvent721.load(generateCombineKey([event.params._nft.toString(), event.params._tokenId.toString()]));
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
   if (nft) {
+    let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    const checkNFT = ERC721Token.load(id);
     ev.txHash = event.transaction.hash.toHexString();
     ev.timestamp = event.block.timestamp;
     ev.address = event.params._nft.toHexString();
@@ -117,6 +139,14 @@ export function handleAcceptBid(event: AcceptBid): void {
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;
     ev.netPrice = event.params._netPrice;
+    // extend
+    ev.nftIdExtend = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    ev.tokenId = event.params._tokenId.toString();
+    ev.addressExtend = event.params._nft.toHexString();
+    ev.flagExtend = false;
+    if(checkNFT == null){
+      ev.flagExtend = true;
+    }
     updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.bidder, 'AcceptBid', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     updateTotalVolume(event.params._nft, ContractName.ERC_721, event.params._price)
     updateTotalVolumeMarket(event.address, ContractName.ERC_721, event.params._netPrice,BigInt.fromI32(1))
@@ -136,6 +166,8 @@ export function handleBid(event: Bid): void {
   let ev = createEvent(event.params._nft, event.params._tokenId, event.params.bidder);
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
   if (nft) {
+    let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    const checkNFT = ERC721Token.load(id);
     ev.event = "Bid";
     ev.timestamp = event.block.timestamp;
     ev.address = event.params._nft.toHexString();
@@ -145,6 +177,14 @@ export function handleBid(event: Bid): void {
     ev.nftId = nft.id;
     ev.quoteToken = event.params._quoteToken.toHexString();
     ev.price = event.params._price;
+    // extend
+    ev.nftIdExtend = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    ev.tokenId = event.params._tokenId.toString();
+    ev.addressExtend = event.params._nft.toHexString();
+    ev.flagExtend = false;
+    if(checkNFT == null){
+      ev.flagExtend = true;
+    }
     updateBlockEntity(event, event.params._nft, event.params._tokenId, Address.fromString(ContractAddress.ZERO), event.params.bidder, 'Bid', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
   }
@@ -154,12 +194,22 @@ export function handleCancelBid(event: CancelBid): void {
   let ev = createEvent(event.params._nft, event.params._tokenId, event.params.bidder);
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
   if (nft) {
+    let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    const checkNFT = ERC721Token.load(id);
     ev.timestamp = event.block.timestamp;
     ev.txHash = event.transaction.hash.toHexString();
     ev.address = event.params._nft.toHexString();
     ev.event = "CancelBid";
     ev.to = event.params.bidder.toHexString();
     ev.nftId = nft.id;
+    // extend
+    ev.nftIdExtend = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
+    ev.tokenId = event.params._tokenId.toString();
+    ev.addressExtend = event.params._nft.toHexString();
+    ev.flagExtend = false;
+    if(checkNFT == null){
+      ev.flagExtend = true;
+    }
     updateBlockEntity(event, event.params._nft, event.params._tokenId, Address.fromString(ContractAddress.ZERO), event.params.bidder, 'CancelBid', BigInt.fromI32(0), BigInt.fromI32(1), Address.fromString(ev.quoteToken!));
     ev.save();
   }

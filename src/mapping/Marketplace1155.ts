@@ -9,7 +9,7 @@ import {
   ProtocolFee
 } from "../../generated/ERC1155Marketplace/ERC1155Marketplace"
 import { ERC1155Contract, ERC1155Token, MarketEvent1155, MarketFee } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
+import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket, generateCombineKey } from "../utils";
 import { ContractAddress, ContractName } from "../enum";
 
 
@@ -18,6 +18,8 @@ export function handleAskNew(event: AskNew): void {
   // const nft = ERC1155Token.load(event.params.tokenId.toString());
   const nft = fetchOrCreateERC1155Tokens(event.params.nft.toHexString(), event.params.tokenId.toString())
   if (nft) {
+    let id = generateCombineKey([event.params.nft.toHexString(), event.params.tokenId.toString()]);
+    const checkToken = ERC1155Token.load(id);
     transaction.operation = "Ask"
     transaction.from = event.params.seller.toHexString();
     transaction.to = null;
@@ -30,6 +32,14 @@ export function handleAskNew(event: AskNew): void {
     transaction.timestamp = event.block.timestamp;
     transaction.operationId = event.params.askId;
     transaction.address = event.params.nft.toHexString();
+    // extend
+    transaction.nftIdExtend = generateCombineKey([event.params.nft.toHexString(), event.params.tokenId.toString()]);
+    transaction.tokenId = event.params.tokenId.toString();
+    transaction.addressExtend = event.params.nft.toHexString();
+    transaction.flagExtend = false;
+    if(checkToken == null){
+      transaction.flagExtend = true;
+    }
     transaction.save()
     updateOnSaleCount1155(event.params.seller, event.params.nft, event.params.tokenId, true);
     updateBlockEntity(
@@ -43,6 +53,8 @@ export function handleOfferNew(event: OfferNew): void {
   let transaction = new MarketEvent1155(event.params.offerId.toString() + ' - Offer')
   const nft = fetchOrCreateERC1155Tokens(event.params.nft.toHexString(), event.params.tokenId.toString())
   if (nft) {
+    let id = generateCombineKey([event.params.nft.toHexString(), event.params.tokenId.toString()]);
+    const checkToken = ERC1155Token.load(id);
     transaction.operation = "Offer"
     transaction.to = event.params.buyer.toHexString();
     transaction.from = null;
@@ -55,6 +67,14 @@ export function handleOfferNew(event: OfferNew): void {
     transaction.timestamp = event.block.timestamp
     transaction.operationId = event.params.offerId;
     transaction.address = event.params.nft.toHexString();
+    // extend
+    transaction.nftIdExtend = generateCombineKey([event.params.nft.toHexString(), event.params.tokenId.toString()]);
+    transaction.tokenId = event.params.tokenId.toString();
+    transaction.addressExtend = event.params.nft.toHexString();
+    transaction.flagExtend = false;
+    if(checkToken == null){
+      transaction.flagExtend = true;
+    }
     transaction.save()
     updateBlockEntity(
       event, event.params.nft, event.params.tokenId,
@@ -72,6 +92,7 @@ export function handleAskCancel(event: AskCancel): void {
     if (transaction.from != null && transaction.nftId != null) {
       updateERC1155Balance(Address.fromString(transaction.from as string), transaction.nftId as string, transaction.quantity.times(BigInt.fromI32(-1)), transaction.address!); // Subtract value
     }
+  transaction.save()
   if (!transaction || !transaction.nftId || !transaction.from) return;
 
   let nft = ERC1155Token.load(transaction.nftId!);
@@ -80,7 +101,6 @@ export function handleAskCancel(event: AskCancel): void {
   let contract = ERC1155Contract.load(nft.contract);
   if (!contract) return;
 
-  transaction.save()
   updateOnSaleCount1155(Address.fromString(transaction.from!), Address.fromString(transaction.address!), BigInt.fromString(nft.tokenId), false);
   updateBlockEntity(
     event, Address.fromString(contract.id), BigInt.fromString(nft.tokenId),
