@@ -174,13 +174,15 @@ export function updateOwnedTokenCount(accountId: string, contractAddress: string
     let isOwner = ownedTokenCount.count.gt(BigInt.fromI32(0));
 
     // if (isERC721) {
-    let contract721 = ERC721Contract.load(contractAddress)!;
-    if (!wasOwner && isOwner) {
-        contract721.holderCount = contract721.holderCount.plus(BigInt.fromI32(1));
-    } else if (wasOwner && !isOwner) {
-        contract721.holderCount = contract721.holderCount.minus(BigInt.fromI32(1));
+    let contract721 = ERC721Contract.load(contractAddress);
+    if(contract721){
+        if (!wasOwner && isOwner) {
+            contract721.holderCount = contract721.holderCount.plus(BigInt.fromI32(1));
+        } else if (wasOwner && !isOwner) {
+            contract721.holderCount = contract721.holderCount.minus(BigInt.fromI32(1));
+        }
+        contract721.save();
     }
-    contract721.save();
     ownedTokenCount.timestamp = timestamp
     ownedTokenCount.save();
 }
