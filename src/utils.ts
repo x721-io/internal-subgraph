@@ -2,6 +2,7 @@ import { AccountCollectionOwnership, Block, ERC1155Contract, ERC1155Token, ERC72
 import { Account, ERC1155Balance } from "../generated/schema"
 import { Address, BigInt, ethereum, log, store } from "@graphprotocol/graph-ts/index"
 import { ContractAddress, ContractName } from './enum'
+import { ERC721Proxy } from "../generated/templates";
 
 export function fetchOrCreateAccount(address: Address): Account {
     let accountId = address.toHex();
@@ -34,6 +35,8 @@ export function fetchOrCreateERC721Contract(contractAddress: string, txHash: str
       contract.transactionCount=  BigInt.fromI32(0);
       contract.createAt = BigInt.fromI32(0);
       contract.save()
+      ERC721Proxy.create(Address.fromString(contractAddress))
+
     }
     return contract
 }
