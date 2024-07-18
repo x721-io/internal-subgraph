@@ -1,7 +1,7 @@
 import { AccountCollectionOwnership, Block, ERC1155Contract, ERC1155Token, ERC721Contract, ERC721Token, MarketVolume, OnSaleStatus1155, OwnedTokenCount } from "../generated/schema"
 import { Account, ERC1155Balance } from "../generated/schema"
 import { Address, BigInt, ethereum, log, store } from "@graphprotocol/graph-ts/index"
-import { ContractName } from './enum'
+import { ContractAddress, ContractName } from './enum'
 
 export function fetchOrCreateAccount(address: Address): Account {
     let accountId = address.toHex();
@@ -19,12 +19,42 @@ export function generateCombineKey(keys: string[]): string {
     
     return keys.join('-');
 }
-export function fetchOrCreateERC721Tokens(contractAddress: string, tokenId: string): ERC721Token {
+export function fetchOrCreateERC721Contract(contractAddress: string, txHash: string): ERC721Contract {
+    let contract = ERC721Contract.load(contractAddress)
+    if (contract == null) {
+        // contract = new ERC721Contract(contractAddress)
+        contract = new ERC721Contract(contractAddress);
+      contract.name = null;
+      contract.symbol = null;
+      contract.txCreation = txHash
+      contract.count = BigInt.fromI32(0);
+      contract.volume = BigInt.fromI32(0);
+      contract.asAccount = ContractAddress.ZERO
+      contract.holderCount = BigInt.fromI32(0);
+      contract.transactionCount=  BigInt.fromI32(0);
+      contract.createAt = BigInt.fromI32(0);
+      contract.save()
+    }
+    return contract
+}
+export function fetchOrCreateERC721Tokens(contractAddress: string, tokenId: string, txHash: string, owner: string): ERC721Token {
     let id = generateCombineKey([contractAddress, tokenId]);
     log.warning('generated id: {}',[id])
     let token = ERC721Token.load(id);
     if (token == null) {
+        let account = fetchOrCreateAccount(Address.fromString(owner))
         token = new ERC721Token(id);
+        token.contract = fetchOrCreateERC721Contract(contractAddress, txHash).id
+        token.tokenId = tokenId
+        token.identifier = BigInt.fromString(tokenId);
+        token.owner = account.id
+        token.txCreation = txHash
+        let zeroAccount = fetchOrCreateAccount(Address.fromString(ContractAddress.ZERO));
+        token.createAt = BigInt.fromI32(0);
+        updateContractCount(contractAddress, BigInt.fromI32(1), 'ERC721');    
+        token.approval = zeroAccount.id;
+        token.uri = ""; // Set the URI based on your logic
+        token.save();
     }
     return token;
 }
@@ -174,13 +204,15 @@ export function updateOwnedTokenCount(accountId: string, contractAddress: string
     let isOwner = ownedTokenCount.count.gt(BigInt.fromI32(0));
 
     // if (isERC721) {
-    let contract721 = ERC721Contract.load(contractAddress)!;
-    if (!wasOwner && isOwner) {
-        contract721.holderCount = contract721.holderCount.plus(BigInt.fromI32(1));
-    } else if (wasOwner && !isOwner) {
-        contract721.holderCount = contract721.holderCount.minus(BigInt.fromI32(1));
+    let contract721 = ERC721Contract.load(contractAddress);
+    if(contract721){
+        if (!wasOwner && isOwner) {
+            contract721.holderCount = contract721.holderCount.plus(BigInt.fromI32(1));
+        } else if (wasOwner && !isOwner) {
+            contract721.holderCount = contract721.holderCount.minus(BigInt.fromI32(1));
+        }
+        contract721.save();
     }
-    contract721.save();
     ownedTokenCount.timestamp = timestamp
     ownedTokenCount.save();
 }
