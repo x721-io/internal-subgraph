@@ -34,7 +34,7 @@ function createEvent(contract: Address, tokenId: BigInt, bidderAddr: Address | n
 export function handleAskNew(event: AskNew): void {
   let ev = createEvent(event.params._nft, event.params._tokenId);
   // const nft = ERC721Token.load(generateCombineKey([event.params._nft.toString(), event.params._tokenId.toString()]));
-  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
+  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString(), event.transaction.hash.toHexString(), event.params._seller.toHexString());
 
   if (nft) {
     let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
@@ -67,7 +67,7 @@ export function handleAskNew(event: AskNew): void {
 
 export function handleAskCancel(event: AskCancel): void {
   let ev = createEvent(event.params._nft, event.params._tokenId);
-  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
+  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString(), event.transaction.hash.toHexString(), event.params._seller.toHexString());
 
   if (nft) {
     ev.event = "AskCancel";
@@ -86,7 +86,7 @@ export function handleAskCancel(event: AskCancel): void {
 
 export function handleTrade(event: Trade): void {
   let ev = createEvent(event.params._nft, event.params._tokenId);
-  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
+  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString(), event.transaction.hash.toHexString(), event.params.buyer.toHexString());
 
   if (nft) {
     let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
@@ -125,7 +125,7 @@ export function handleTrade(event: Trade): void {
 export function handleAcceptBid(event: AcceptBid): void {
   let ev = createEvent(event.params._nft, event.params._tokenId, event.params.bidder);
   let evAsk = MarketEvent721.load(generateCombineKey([event.params._nft.toString(), event.params._tokenId.toString()]));
-  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
+  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString(), event.transaction.hash.toHexString(), event.params.bidder.toHexString());
   if (nft) {
     let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
     const checkNFT = ERC721Token.load(id);
@@ -164,7 +164,7 @@ export function handleAcceptBid(event: AcceptBid): void {
 
 export function handleBid(event: Bid): void {
   let ev = createEvent(event.params._nft, event.params._tokenId, event.params.bidder);
-  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
+  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString(), event.transaction.hash.toHexString(), event.params.bidder.toHexString());
   if (nft) {
     let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
     const checkNFT = ERC721Token.load(id);
@@ -192,7 +192,7 @@ export function handleBid(event: Bid): void {
 
 export function handleCancelBid(event: CancelBid): void {
   let ev = createEvent(event.params._nft, event.params._tokenId, event.params.bidder);
-  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString());
+  const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString(), event.transaction.hash.toHexString(), event.params.bidder.toHexString());
   if (nft) {
     let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
     const checkNFT = ERC721Token.load(id);
