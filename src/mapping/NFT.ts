@@ -131,7 +131,7 @@ export function handleRoyaltiesSet(event: RoyaltiesSet): void {
 }
 
 export function handleTransfer(event: Transfer): void {
-  if (event.params.to.toHexString() == ContractAddress.erc721marketplace) {
+  if (event.params.to.toHexString() == ContractAddress.erc721marketplace.toLowerCase()) {
     return;
   }
   if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc721marketplace)) {

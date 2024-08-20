@@ -25,6 +25,27 @@ dataSources:
         - event: Create721RaribleUserProxy(address)
           handler: handle721UserProxyLegacy
   - kind: ethereum/contract
+    name: ERC721FactoryLegacyMemeverse
+    network: {{network}}
+    source:
+      address: '{{erc721LegacyFactoryMemeverse.address}}'
+      abi: ERC721LegacyFactoryMemeverse
+      startBlock: {{erc721LegacyFactoryMemeverse.startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/CollectionLegacy.ts
+      entities:
+        - Collection
+      abis:
+        - name: ERC721LegacyFactoryMemeverse
+          file: ./abis/ERC721LegacyFactoryMemeverse.json
+      eventHandlers:
+        - event: ProxyCreated(indexed address,bytes32)
+          handler: handleProxy721Created
+
+  - kind: ethereum/contract
     name: ERC721Factory
     network: {{network}}
     source:
