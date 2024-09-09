@@ -2,7 +2,7 @@ import { AccountCollectionOwnership, Block, ERC1155Contract, ERC1155Token, ERC72
 import { Account, ERC1155Balance } from "../generated/schema"
 import { Address, BigInt, ethereum, log, store } from "@graphprotocol/graph-ts/index"
 import { ContractAddress, ContractName } from './enum'
-import { ERC721Proxy } from "../generated/templates";
+import { ERC721Proxy, ERC1155Proxy } from "../generated/templates";
 
 export function fetchOrCreateAccount(address: Address): Account {
     let accountId = address.toHex();
@@ -24,7 +24,7 @@ export function fetchOrCreateERC721Contract(contractAddress: string, txHash: str
     let contract = ERC721Contract.load(contractAddress)
     if (contract == null) {
         // contract = new ERC721Contract(contractAddress)
-        contract = new ERC721Contract(contractAddress);
+      contract = new ERC721Contract(contractAddress);
       contract.name = null;
       contract.symbol = null;
       contract.txCreation = txHash
@@ -36,7 +36,6 @@ export function fetchOrCreateERC721Contract(contractAddress: string, txHash: str
       contract.createAt = BigInt.fromI32(0);
       contract.save()
       ERC721Proxy.create(Address.fromString(contractAddress))
-
     }
     return contract
 }
@@ -61,14 +60,56 @@ export function fetchOrCreateERC721Tokens(contractAddress: string, tokenId: stri
     }
     return token;
 }
-export function fetchOrCreateERC1155Tokens(contractAddress: string, tokenId: string): ERC1155Token {
-    let id = generateCombineKey([contractAddress, tokenId]);
+// export function fetchOrCreateERC1155Tokens(contractAddress: string, tokenId: string): ERC1155Token {
+//     let id = generateCombineKey([contractAddress, tokenId]);
+//     let token = ERC1155Token.load(id);
+//     if (token == null) {
+//         token = new ERC1155Token(id);
+//     }
+//     return token;
+// }
+export function fetchOrCreateERC1155Contract(contractAddress: string, txHash: string): ERC1155Contract {
+  let contract = ERC1155Contract.load(contractAddress)
+  if (contract == null) {
+      // contract = new ERC721Contract(contractAddress)
+    contract = new ERC1155Contract(contractAddress);
+    contract.name = null;
+    contract.symbol = null;
+    contract.txCreation = txHash
+    contract.count = BigInt.fromI32(0);
+    contract.volume = BigInt.fromI32(0);
+    contract.asAccount = ContractAddress.ZERO
+    contract.holderCount = BigInt.fromI32(0);
+    contract.transactionCount=  BigInt.fromI32(0);
+    contract.createAt = BigInt.fromI32(0);
+    contract.save()
+    ERC1155Proxy.create(Address.fromString(contractAddress))
+  }
+  return contract
+}
 
-    let token = ERC1155Token.load(id);
-    if (token == null) {
-        token = new ERC1155Token(id);
-    }
-    return token;
+export function fetchOrCreateERC1155Tokens(contractAddress: string, tokenId: string, txHash: string, owner: string ): ERC1155Token {
+  let id = generateCombineKey([contractAddress, tokenId]);
+  let token = ERC1155Token.load(id);
+  if (token == null) {
+    token = new ERC1155Token(id);
+    token.contract = fetchOrCreateERC1155Contract(contractAddress, txHash).id
+    token.tokenId = tokenId;
+    token.identifier = BigInt.fromString(tokenId);
+    token.txCreation = txHash
+    token.createAt = BigInt.fromI32(0);
+    updateContractCount(contractAddress, BigInt.fromI32(1), 'ERC1155');
+    let balanceId = generateCombineKey([contractAddress, tokenId])
+    let totalSupply = new ERC1155Balance(balanceId);
+    totalSupply.value = BigInt.fromI32(0).toBigDecimal();
+    totalSupply.valueExact = BigInt.fromI32(0);
+    totalSupply.contract = fetchOrCreateERC1155Contract(contractAddress, txHash).id;
+    totalSupply.token = token.id;
+    totalSupply.save();
+    token.totalSupply = totalSupply.id;
+    token.save();
+  }
+  return token;
 }
 
 export function updateSaleStatus1155(accountAddress: Address, collection: Address, tokenId: BigInt, status: boolean): boolean {

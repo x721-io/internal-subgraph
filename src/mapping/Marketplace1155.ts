@@ -16,7 +16,7 @@ import { ContractAddress, ContractName } from "../enum";
 export function handleAskNew(event: AskNew): void {
   let transaction = new MarketEvent1155(event.params.askId.toString() + ' - Ask')
   // const nft = ERC1155Token.load(event.params.tokenId.toString());
-  const nft = fetchOrCreateERC1155Tokens(event.params.nft.toHexString(), event.params.tokenId.toString())
+  const nft = fetchOrCreateERC1155Tokens(event.params.nft.toHexString(), event.params.tokenId.toString(),event.transaction.hash.toHexString(),event.params.seller.toHexString())
   if (nft) {
     let id = generateCombineKey([event.params.nft.toHexString(), event.params.tokenId.toString()]);
     const checkToken = ERC1155Token.load(id);
@@ -51,7 +51,7 @@ export function handleAskNew(event: AskNew): void {
 }
 export function handleOfferNew(event: OfferNew): void {
   let transaction = new MarketEvent1155(event.params.offerId.toString() + ' - Offer')
-  const nft = fetchOrCreateERC1155Tokens(event.params.nft.toHexString(), event.params.tokenId.toString())
+  const nft = fetchOrCreateERC1155Tokens(event.params.nft.toHexString(), event.params.tokenId.toString(),event.transaction.hash.toHexString(), event.transaction.from.toHexString())
   if (nft) {
     let id = generateCombineKey([event.params.nft.toHexString(), event.params.tokenId.toString()]);
     const checkToken = ERC1155Token.load(id);
@@ -135,8 +135,8 @@ export function handleOfferCancel(event: OfferCancel): void {
 export function handleBuy(event: Buy): void {
   let transaction = MarketEvent1155.load(event.params.askId.toString() + ' - Ask');
   if (!transaction || !transaction.nftId || !transaction.from) return;
-
-
+  
+  
   transaction.to = event.params.buyer.toHexString();
   transaction.quantity = transaction.quantity.minus(event.params.quantity);
   transaction.netPrice = event.params.netPrice;
