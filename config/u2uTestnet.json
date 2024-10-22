@@ -33,6 +33,10 @@
       "address": "0xb840c3dE304d8D2726EA973f9A944923cA86E111",
       "startBlock": "15098490"
     },
+    "erc721LegacyFactoryMemeverse": {
+      "address": "0xcfAdaa4F84e55B3268eB9792b333f3Bf50B6E6b9",
+      "startBlock": "17635832"
+    },
     "u2unft_odyssean_voyage": {
       "address": "0x9397153A85A1f67e1edb21F4cD53c3C1C8c04Ee4",
       "name" : "U2NFT_ODYSSEAN_VOYAGE"

@@ -1,13 +1,14 @@
 
 import { Create721RaribleUserProxy as Create721Legacy, CreateERC721RaribleUser } from "../../generated/ERC721FactoryLegacy/ERC721LegacyFactory";
 import { Account, ERC721Contract, ERC721Token } from "../../generated/schema";
-import { NFTLegacy } from "../../generated/templates";
+import { ERC721Proxy, NFTLegacy } from "../../generated/templates";
 import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateContractCount } from "../utils";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 // import {  ERC721Proxy as erc721Contract} from '../../generated/templates/ERC721Proxy/ERC721Proxy'
 import { NFTLegacy as erc721Contract } from "../../generated/templates/NFTLegacy/NFTLegacy";
 import {ERC721LegacyFactory as factoryContract } from "../../generated/ERC721FactoryLegacy/ERC721LegacyFactory"
 import { ContractAddress } from "../enum";
+import { ProxyCreated } from "../../generated/ERC721FactoryLegacyMemeverse/ERC721LegacyFactoryMemeverse";
 
 export function handle721UserProxyLegacy(event: Create721Legacy): void {
     let newToken = new ERC721Contract(event.params.proxy.toHexString());
@@ -15,6 +16,7 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
     newToken.txCreation = event.transaction.hash.toHexString();
     newToken.count = BigInt.fromI32(0);
     newToken.holderCount = BigInt.fromI32(0);
+    newToken.transactionCount = BigInt.fromI32(0);
     newToken.volume = BigInt.fromI32(0);
     newToken.createAt = event.block.timestamp;
     NFTLegacy.create(event.params.proxy);
@@ -50,6 +52,34 @@ export function handle721UserProxyLegacy(event: Create721Legacy): void {
             token.save();
           }
     }
+}
+
+export function handleProxy721Created(event: ProxyCreated) : void {
+  let collection = ERC721Contract.load(event.params._address.toHexString());
+  if (collection !== null) {
+    collection.name = "";
+    collection.symbol ="";
+    collection.count = BigInt.fromI32(0);
+    collection.holderCount = BigInt.fromI32(0);
+    collection.volume = BigInt.fromI32(0);
+    collection.transactionCount=  BigInt.fromI32(0);
+    collection.save();
+  }
+  else {
+    let newCollection = new ERC721Contract(event.params._address.toHexString());
+    newCollection.name = "";
+    newCollection.symbol = "";
+    newCollection.txCreation = event.transaction.hash.toHexString();
+    newCollection.asAccount = fetchOrCreateAccount(event.transaction.from).id;
+    newCollection.holderCount = BigInt.fromI32(0);
+    newCollection.transactionCount=  BigInt.fromI32(0);
+    newCollection.count = BigInt.fromI32(0);
+    newCollection.volume = BigInt.fromI32(0);
+    newCollection.createAt = event.block.timestamp;
+    newCollection.save()
+    ERC721Proxy.create(event.params._address);
+
+  }
 }
 
 // export function handle721UserRaribleLegacy(event: CreateERC721RaribleUser): void {
