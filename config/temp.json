@@ -1,6 +1,6 @@
 {
     "network": "testnet",
-    "startBlock": "25803933",
+    "startBlock": "10466045",
     "erc721factory": {
       "address": "0x2d710bce9e3e9501d69f657bfa29f2dc21cd5b14"
     },
@@ -9,6 +9,12 @@
     },
     "exchangev2": {
       "address" : "0x8AEb29DCe7F69ee6D70387f98b65Eab27870cd9C"
+    },
+    "erc721marketplace": {
+      "address": "0x77700afc1183e520f6ce28e5ee95411cc88cf36b"
+    },
+    "erc1155marketplace": {
+      "address": "0x46948c71e0b09ddddc8e7feed92332dd5b19b5fa"
     },
     "erc721Nonfactory": {
       "address": "0x34adacbbb61ab0345094ffdfe2a6a737530bf155"
@@ -34,6 +40,10 @@
     "u2unft_odyssean_voyage": {
       "address": "0x9397153A85A1f67e1edb21F4cD53c3C1C8c04Ee4",
       "name" : "U2NFT_ODYSSEAN_VOYAGE"
+    },
+    "u2unft_odyssean_voyage_test": {
+      "address": "0x83160a1e0310E6701ddb28b30dA1D8E653bd8134",
+      "name" : "U2NFT_ODYSSEAN_VOYAGE_TEST"
     },
     "MVTLAND": {
       "address": "0xceA129368E02f8d7d917A0154Ee7B49B47619c7E",
