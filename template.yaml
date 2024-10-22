@@ -89,71 +89,71 @@ dataSources:
           handler: handle1155Proxy
         - event: Create1155RaribleUserProxy(address)
           handler: handle1155UserProxy
-  - kind: ethereum/contract
-    name: ERC721Marketplace
-    network: {{network}}
-    source:
-      address: '{{erc721marketplace.address}}'
-      abi: ERC721Marketplace
-      startBlock: {{startBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./src/mapping/Marketplace721.ts
-      entities:
-        - MarketEvent721
-      abis:
-        - name: ERC721Marketplace
-          file: ./abis/ERC721Marketplace.json
-      eventHandlers:
-        - event: AskNew(indexed address,indexed address,uint256,address,uint256)
-          handler: handleAskNew
-        - event: AskCancel(indexed address,indexed address,uint256)
-          handler: handleAskCancel
-        - event: Trade(indexed address,indexed address,indexed address,uint256,address,uint256,uint256)
-          handler: handleTrade
-        - event: AcceptBid(indexed address,indexed address,indexed address,uint256,address,uint256,uint256)
-          handler: handleAcceptBid
-        - event: Bid(indexed address,indexed address,uint256,address,uint256)
-          handler: handleBid
-        - event: CancelBid(indexed address,indexed address,uint256)
-          handler: handleCancelBid
-        - event: ProtocolFee(uint256)
-          handler: handleGetFee
+  # - kind: ethereum/contract
+  #   name: ERC721Marketplace
+  #   network: {{network}}
+  #   source:
+  #     address: '{{erc721marketplace.address}}'
+  #     abi: ERC721Marketplace
+  #     startBlock: {{startBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.6
+  #     language: wasm/assemblyscript
+  #     file: ./src/mapping/Marketplace721.ts
+  #     entities:
+  #       - MarketEvent721
+  #     abis:
+  #       - name: ERC721Marketplace
+  #         file: ./abis/ERC721Marketplace.json
+  #     eventHandlers:
+  #       - event: AskNew(indexed address,indexed address,uint256,address,uint256)
+  #         handler: handleAskNew
+  #       - event: AskCancel(indexed address,indexed address,uint256)
+  #         handler: handleAskCancel
+  #       - event: Trade(indexed address,indexed address,indexed address,uint256,address,uint256,uint256)
+  #         handler: handleTrade
+  #       - event: AcceptBid(indexed address,indexed address,indexed address,uint256,address,uint256,uint256)
+  #         handler: handleAcceptBid
+  #       - event: Bid(indexed address,indexed address,uint256,address,uint256)
+  #         handler: handleBid
+  #       - event: CancelBid(indexed address,indexed address,uint256)
+  #         handler: handleCancelBid
+  #       - event: ProtocolFee(uint256)
+  #         handler: handleGetFee
 
-  - kind: ethereum/contract
-    name: ERC1155Marketplace
-    network: {{network}}
-    source:
-      address: '{{erc1155marketplace.address}}'
-      abi: ERC1155Marketplace
-      startBlock: {{startBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./src/mapping/Marketplace1155.ts
-      entities:
-        - MarketEvent1155
-      abis:
-        - name: ERC1155Marketplace
-          file: ./abis/ERC1155Marketplace.json
-      eventHandlers:
-        - event: AskNew(uint256,address,address,uint256,uint256,address,uint256)
-          handler: handleAskNew
-        - event: AskCancel(uint256)
-          handler: handleAskCancel
-        - event: Buy(uint256,address,uint256,uint256,uint256)
-          handler: handleBuy
-        - event: OfferAccept(uint256,address,uint256,uint256,uint256)
-          handler: handleAcceptOffer
-        - event: OfferNew(uint256,address,address,uint256,uint256,address,uint256)
-          handler: handleOfferNew
-        - event: OfferCancel(uint256)
-          handler: handleOfferCancel
-        - event: ProtocolFee(uint256)
-          handler: handleGetFee
+  # - kind: ethereum/contract
+  #   name: ERC1155Marketplace
+  #   network: {{network}}
+  #   source:
+  #     address: '{{erc1155marketplace.address}}'
+  #     abi: ERC1155Marketplace
+  #     startBlock: {{startBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.6
+  #     language: wasm/assemblyscript
+  #     file: ./src/mapping/Marketplace1155.ts
+  #     entities:
+  #       - MarketEvent1155
+  #     abis:
+  #       - name: ERC1155Marketplace
+  #         file: ./abis/ERC1155Marketplace.json
+  #     eventHandlers:
+  #       - event: AskNew(uint256,address,address,uint256,uint256,address,uint256)
+  #         handler: handleAskNew
+  #       - event: AskCancel(uint256)
+  #         handler: handleAskCancel
+  #       - event: Buy(uint256,address,uint256,uint256,uint256)
+  #         handler: handleBuy
+  #       - event: OfferAccept(uint256,address,uint256,uint256,uint256)
+  #         handler: handleAcceptOffer
+  #       - event: OfferNew(uint256,address,address,uint256,uint256,address,uint256)
+  #         handler: handleOfferNew
+  #       - event: OfferCancel(uint256)
+  #         handler: handleOfferCancel
+  #       - event: ProtocolFee(uint256)
+  #         handler: handleGetFee
   - kind: ethereum/contract
     name: NFT
     network: {{network}}
@@ -343,6 +343,30 @@ dataSources:
           handler: handleTranferBatch
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingleNoFactory
+
+  - kind: ethereum/contract
+    name: ORDERExchangeV2
+    network: {{network}}
+    source: 
+      address: '{{exchangev2.address}}'
+      abi: Order
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mapping/ExchangeV2.ts
+      entities:
+        - Order
+      abis:
+        - name: Order
+          file: ./abis/Order.json
+      eventHandlers:
+        - event: FillOrder(address,address,bytes,uint16,uint256)
+          handler: handleFillOrder 
+        - event: CancelOrder(address,bytes,uint16)
+          handler: handleCancleOrder
+
 templates:
   - kind: ethereum/contract
     name: NFTLegacy

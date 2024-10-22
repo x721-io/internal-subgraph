@@ -6,8 +6,8 @@ export namespace DealType {
 export namespace ContractAddress {
     export const ZERO = "0x0000000000000000000000000000000000000000"
     export const WETH9 = "0x59541A6A47C410270BF419aCabe40963d75Fce5D"
-    export const erc721marketplace = "0x948bb8360ca57d61004e6e24862d5510dc1d25be"
-    export const erc1155marketplace = "0x873d2c86044c44aa29209250bdbf46d381124fa5"
+    export const erc721marketplace = ""
+    export const erc1155marketplace = ""
 }
 
 export namespace ContractName {

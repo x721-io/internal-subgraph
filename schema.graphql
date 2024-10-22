@@ -39,7 +39,7 @@ type Account @entity {
 	ERC1155transferFromEvent: [ERC1155Transfer!]! @derivedFrom(field: "from")
 	ERC1155transferToEvent: [ERC1155Transfer!]! @derivedFrom(field: "to")
 	events: [Event!]! @derivedFrom(field: "emitter")
-  	asERC721: ERC721Contract
+  asERC721: ERC721Contract
 	ERC721tokens: [ERC721Token!]! @derivedFrom(field: "owner")
 	ERC721transferFromEvent: [ERC721Transfer!]! @derivedFrom(field: "from")
 	ERC721transferToEvent: [ERC721Transfer!]! @derivedFrom(field: "to")
@@ -303,7 +303,22 @@ type OwnerContract @entity {
 	timestamp: BigInt!
 }
 
+type Order @entity{
+  id: ID!
+  maker: Account!,
+  taker: Account,
+  sig: String!,
+  index: Int!
+  status: OrderStatus!
+  timestamp: BigInt!
+}
 enum ActionState {
   PENDING
   EXECUTED
 }
+
+enum OrderStatus {
+  CANCELED
+  FILLED
+}
+
