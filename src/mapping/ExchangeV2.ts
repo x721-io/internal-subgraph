@@ -1,52 +1,48 @@
-import { MatchOrdersCall, DirectAcceptBidCall, DirectPurchaseCall } from "../../generated/ExchangeV2/ExchangeV2"
-import { BigInt } from "@graphprotocol/graph-ts"
-import { initDeal } from '../factory'
-import { calculatePriceAndFee } from '../utils'
+// import { MatchOrdersCall, DirectAcceptBidCall, DirectPurchaseCall } from "../../generated/ExchangeV2/ExchangeV2"
+import { MatchOrdersCall, DirectAcceptBidCall, FillOrder, CancelOrder } from "../../generated/ORDERExchangeV2/Order";
+import { BigInt, log } from "@graphprotocol/graph-ts"
+// import { initDeal } from '../factory'
+// import { calculatePriceAndFee } from '../utils'
 import { ContractAddress, ContractName, DealType } from "../enum"
 import { Address } from "@graphprotocol/graph-ts/index"
+import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
+import { Order} from "../../generated/schema";
 
-export function handleMatchOrders(event: MatchOrdersCall): void {
-    // let deal = initDeal(event, ContractName.EXCHANGE_V2)
-    // if (event.params.buyTokenId != BigInt.fromI32(0) && event.params.sellTokenId == BigInt.fromI32(0)){
-    //     deal.type = DealType.BID
-    // }
-    // if (deal.type == DealType.ORDER) {
-    //     deal.seller = event.params.owner
-    //     deal.buyer = event.params.buyer
-    //     deal.sellTokenId = event.params.sellTokenId
-    //     deal.sellToken = event.params.sellToken
-    //     deal.buyToken = event.params.buyToken
-    //     deal.sellAmount = event.params.amount
-    //     if (event.params.amount == BigInt.fromI32(0)){
-    //         deal.buyAmount = event.params.amount
-    //     } else {
-    //         deal.buyAmount = event.params.buyValue.times(event.params.amount).div(event.params.sellValue)
-    //     }
-    // } else if (deal.type == DealType.BID) {
-    //     deal.seller = event.params.buyer
-    //     deal.buyer = event.params.owner
-    //     deal.sellTokenId = event.params.buyTokenId
-    //     deal.sellToken = event.params.buyToken
-    //     deal.buyToken = event.params.sellToken
-    //     if (event.params.amount == BigInt.fromI32(0)){
-    //         deal.sellAmount = event.params.amount
-    //     } else {
-    //         deal.sellAmount = event.params.buyValue.times(event.params.amount).div(event.params.sellValue)
-    //     }
-    //     deal.buyAmount = event.params.amount
-    // }
-
-    // if (deal.buyToken == Address.fromString(ContractAddress.ZERO)) {
-    //     deal.buyToken = Address.fromString(ContractAddress.WETH9)
-    // }
-    // calculatePriceAndFee(deal)
-    // deal.save()
+export function handleFillOrder(event : FillOrder ): void {
+    let id = generateCombineKey([event.params.sig.toHexString(), event.params.index.toString()])
+    let order = Order.load(id);
+    if(!order){
+        order = new Order(id);
+        order.maker = fetchOrCreateAccount(event.params.maker).id;
+        if(event.params.taker !== Address.fromString(ContractAddress.ZERO)){
+            order.taker = fetchOrCreateAccount(event.params.taker).id;
+        }
+        order.sig = event.params.sig.toHexString();
+        order.index = event.params.index;
+        order.status = 'FILLED';
+        order.timestamp = event.block.timestamp;
+    }
+    order.save();
 }
 
-export function handleDirectAcceptBid(event: DirectAcceptBidCall ) {
-
+export function handleCancleOrder(event: CancelOrder): void {
+    let id = generateCombineKey([event.params.sig.toHexString(), event.params.index.toString()]);
+    let order = Order.load(id);
+    if(!order){
+        order = new Order(id);
+        order.maker = fetchOrCreateAccount(event.params.maker).id;
+        order.sig = event.params.sig.toHexString();
+        order.taker = null;
+        order.index = event.params.index;
+        order.status = 'CANCELED';
+        order.timestamp = event.block.timestamp;
+    }
+    order.save();
 }
+// export function handleDirectAcceptBid(event: DirectAcceptBidCall ) {
 
-export function handleDirectPurchase(event: DirectPurchaseCall) {
+// }
+
+// export function handleDirectPurchase(event: DirectPurchaseCall) {
     
-}
+// }
