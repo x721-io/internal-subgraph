@@ -4,6 +4,7 @@ import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, 
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateContractCount, updateERC1155Balance, updateOwnedTokenCount, updateOwner, updateOwner1155 , updateOwner721 } from "../utils";
 import { ContractAddress } from "../enum";
+import { handleTransferOrder } from "./ExchangeV2";
 export function handleApproval(event: Approval): void {
   // Logic to handle the Approval event
 }
@@ -136,6 +137,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   updateOwner721(event.params.from, event.params.to, event.address, event.params.tokenId.toString(),BigInt.fromI32(1),event.block.timestamp,'ERC721');
+  handleTransferOrder(event.params.from, event.params.to, event.params.tokenId.toString(), event.address, event.block.timestamp,'ERC721', BigInt.fromI32(1))
 
   if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc721marketplace)) {
     updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
@@ -223,7 +225,6 @@ export function handleTransferSingle(event: TransferSingle): void {
   }
 
   updateOwner1155(event.params.from, event.params.to, event.address, event.params.id.toString(),event.params.value,event.block.timestamp,'ERC1155');
-
   let transaction = Transaction.load(event.transaction.hash.toHex());
   if (transaction == null) {
     transaction = new Transaction(event.transaction.hash.toHex());
@@ -272,6 +273,7 @@ export function handleTransferSingle(event: TransferSingle): void {
   //   updateOwnedTokenCountERC1155(event.params.to.toHexString(), event.address.toHexString(), true, event.params.value, event.block.timestamp)
   // }
   transfer.save();
+  handleTransferOrder(event.params.from, event.params.to,  event.params.id.toString(), event.address, event.block.timestamp,'ERC1155',event.params.value)
 }
 
 export function handleTranferBatch(event: TransferBatch): void {
@@ -324,6 +326,7 @@ export function handleTranferBatch(event: TransferBatch): void {
       updateBlockEntity(event, event.address, event.params.ids[i], event.params.from, event.params.to, 'Transfer', BigInt.fromI32(0), event.params.values[i], Address.fromString(ContractAddress.ZERO));
     }
     transfer.save();
+    handleTransferOrder(event.params.from, event.params.to,  event.params.ids[i].toString(),event.address ,event.block.timestamp,'ERC1155', event.params.values[i])
   }
 }
 export function handleSupply(event: Supply): void {
@@ -397,7 +400,12 @@ export function handle721Creators(event: Creators): void {
     // Initialize other necessary fields for Collection
     collection.txCreation = event.transaction.hash.toHexString();
     collection.createAt = event.block.timestamp;
-    collection.save();
+    // collection.asAccount = fetchOrCreateAccount(event.transaction.to!).id;
+    // collection.count = BigInt.fromI32(0);
+    // collection.holderCount = BigInt.fromI32(0);
+    // collection.volume = BigInt.fromI32(0);
+    // collection.transactionCount = BigInt.fromI32(0);
+    collection.save()
   }
 
   let creatorsArray = event.params.creators;
@@ -412,7 +420,6 @@ export function handle721Creators(event: Creators): void {
       // Initialize other necessary fields for Creator
       creator.save();
     }
-
     // let collectionCreatorId = collection.id + "-" + creatorId;
     let collectionCreatorId = generateCombineKey([collection.id, creatorId]);
     let collectionCreator = new ERC721Creator(collectionCreatorId);
