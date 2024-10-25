@@ -11,10 +11,10 @@
     "address" : "0xbB3074305ba67c2E8c9af6dE2ADCbc970C1a59Fa"
   },
   "erc721marketplace": {
-    "address": "0x52b9abd261bb733b44b06148fd30f40290a6e017"
+    "address": "0x6e548721e579441768177cdb64d275c76c1e0e52"
   },
   "erc1155marketplace": {
-    "address": "0x571e3b002ee611fb0fd240c0ca2c85b6dd4e7e33"
+    "address": "0x47b8df4044cb8d570679607914488e1b932db537"
   },
   "erc721Nonfactory": {
     "address": "0xC102BfEeE0674798Df49618E12b45FcD8e7C0EC0"
@@ -34,8 +34,8 @@
     "name" : "u2uni",
     "startBlock": "6288730"
   },
-"royaltiesRegistry": {
-    "address": "0x2Ed0dA2fE3703081BdeE5aa69D7a5623be0B5CA0",
-    "startBlock" : "5310000"
+  "royaltiesRegistry": {
+    "address": "0x2ed0da2fe3703081bdee5aa69d7a5623be0b5ca0",
+    "startBlock" : "7329797"
   }
 }
