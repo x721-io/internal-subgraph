@@ -2,10 +2,10 @@
   "network": "mainnet",
   "startBlock": "5310000",
   "erc721factory": {
-    "address": "0xb284d587035A43BdeD5f9a31716F7253d1D52c73"
+    "address": "0xbffb662ea0cc38a47379d458b35d1becd6da9115"
   },
   "erc1155factory": {
-    "address": "0xEB0B78C2c44911d647fd9d9B9314bEBD6d7961a4"
+    "address": "0xc8f6adc33a1b4010cabbbacbbdf79aaaee33fcd5"
   },
   "exchangev2": {
     "address" : "0xbB3074305ba67c2E8c9af6dE2ADCbc970C1a59Fa"
@@ -20,10 +20,10 @@
     "address": "0xC102BfEeE0674798Df49618E12b45FcD8e7C0EC0"
   },
   "erc721Base": {
-    "address": "0x173BC76E109697d1c65D864072847f0Cf3743B82"
+    "address": "0x7ddb1accb3160cf6ba4fee23e26b6d9ad45bc824"
   },
   "erc1155Base": {
-    "address": "0x68f903865e703dA4de7804d2973182896EfE073C"
+    "address": "0xDa4a022bBC044B8097159C8f4527FE7c6111a70C"
   },
   "royaltiesRegistry": {
     "address": "0x511d07480ee6ac8cde1da324ee2814288594604b",
