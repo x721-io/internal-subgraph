@@ -124,7 +124,7 @@ export function handleTrade(event: Trade): void {
 
 export function handleAcceptBid(event: AcceptBid): void {
   let ev = createEvent(event.params._nft, event.params._tokenId, event.params.bidder);
-  let evAsk = MarketEvent721.load(generateCombineKey([event.params._nft.toString(), event.params._tokenId.toString()]));
+  let evAsk = MarketEvent721.load(generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]));
   const nft = fetchOrCreateERC721Tokens(event.params._nft.toHexString(), event.params._tokenId.toString(), event.transaction.hash.toHexString(), event.params.bidder.toHexString());
   if (nft) {
     let id = generateCombineKey([event.params._nft.toHexString(), event.params._tokenId.toString()]);
