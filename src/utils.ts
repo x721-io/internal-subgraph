@@ -358,7 +358,7 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
     let contractId = contractAddress.toHexString();
     let contract = Contract.load(contractId);
   
-    let ownerContractId = generateCombineKey([contractAddress.toHexString(), user.toHexString(), tokenId.toString()]);
+    let ownerContractId = generateCombineKey([contractAddress.toHexString(), user.toHexString()]);
     let ownerContract = OwnerContract.load(ownerContractId);
     if (!ownerContract) {
         // If OwnerContract does not exist, create a new one with the initial count
