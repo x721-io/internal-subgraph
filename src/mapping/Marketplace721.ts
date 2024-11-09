@@ -8,7 +8,7 @@ import {
   CancelBid
 } from "../../generated/ERC721Marketplace/ERC721Marketplace"
 import { ERC721Token, MarketEvent721, MarketFee } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
+import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateOwner, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
 import { ContractAddress, ContractName } from "../enum";
 import { ProtocolFee } from "../../generated/ERC1155Marketplace/ERC1155Marketplace";
 
@@ -112,6 +112,8 @@ export function handleTrade(event: Trade): void {
     updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, event.params.buyer, 'Trade', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     updateOwnedTokenCount(event.params.buyer.toHexString(), event.params._nft.toHexString(), true, event.block.timestamp)
     updateOwnedTokenCount(event.params._seller.toHexString(), event.params._nft.toHexString(), false, event.block.timestamp)
+    // updateOwner(event.params.buyer, event.params._nft, event.params._tokenId.toString(),true, event.block.timestamp)
+    updateOwner(event.params._seller, event.params._nft, event.params._tokenId.toString(),false ,BigInt.fromI32(1), event.block.timestamp)
     updateTotalVolume(event.params._nft, ContractName.ERC_721, event.params._price)
     updateTotalVolumeMarket(event.address, ContractName.ERC_721, event.params._netPrice,BigInt.fromI32(1))
     updateTotalTransactionCollection(nft.contract, ContractName.ERC_721)
