@@ -1,4 +1,4 @@
-import { AccountCollectionOwnership, Block, ERC1155Contract, ERC1155Token, ERC721Contract, ERC721Token, MarketVolume, OnSaleStatus1155, OwnedTokenCount } from "../generated/schema"
+import { AccountCollectionOwnership, Block, Contract, ERC1155Contract, ERC1155Token, ERC721Contract, ERC721Token, MarketVolume, OnSaleStatus1155, OwnedTokenCount, OwnerContract } from "../generated/schema"
 import { Account, ERC1155Balance } from "../generated/schema"
 import { Address, BigInt, ethereum, log, store } from "@graphprotocol/graph-ts/index"
 import { ContractAddress, ContractName } from './enum'
@@ -352,3 +352,57 @@ export function updateTotalTransactionCollection(collectionAddress: string, type
 }
 
 
+export function updateOwner(user: Address, contractAddress: Address, tokenId: String, increment: boolean ,amount: BigInt , timestamp: BigInt): void {
+    // ----------------------------------------------------------------------------
+    // Try to load or create the Contract entity
+    let contractId = contractAddress.toHexString();
+    let contract = Contract.load(contractId);
+  
+    let ownerContractId = generateCombineKey([contractAddress.toHexString(), user.toHexString(), tokenId.toString()]);
+    let ownerContract = OwnerContract.load(ownerContractId);
+    if (!ownerContract) {
+        // If OwnerContract does not exist, create a new one with the initial count
+        ownerContract = new OwnerContract(ownerContractId);
+        ownerContract.user = user.toHexString();
+        ownerContract.contract = contractAddress.toHexString();
+        ownerContract.count = amount;
+        ownerContract.timestamp = timestamp;
+        ownerContract.save();
+        if(!contract){
+          contract = new Contract(contractId);
+          contract.contract = contractId;
+          contract.count = BigInt.fromI32(1);
+        }else{
+          contract.count = contract.count.plus(BigInt.fromI32(1));
+        }
+        contract.save();
+        // If the Contract does not exist, create it with an initial count of 1
+    } else {
+      let preCount = ownerContract.count
+      let currenCount = ownerContract.count.plus(amount)
+      if (increment == true) {
+          ownerContract.count = ownerContract.count.plus(amount);
+      } else {
+          ownerContract.count = ownerContract.count.minus(amount);
+      }
+      if (ownerContract.count <= BigInt.fromI32(0)) {
+        ownerContract.count = BigInt.fromI32(0);
+          
+      if (!contract) {
+          contract = new Contract(contractId);
+          contract.contract = contractId;
+          contract.count = BigInt.fromI32(1);
+      } else {
+          // If the contract exists, increment the count by amount
+          contract.count = contract.count.minus(BigInt.fromI32(1));
+          if(contract.count <= BigInt.fromI32(0)){
+              contract.count = BigInt.fromI32(0);
+          }
+          contract.save();
+      }
+      }else if(preCount == BigInt.fromI32(0) || currenCount > BigInt.fromI32(0)){
+        ownerContract.count = ownerContract.count.plus(amount)
+      }
+      ownerContract.save();
+    }
+  }
