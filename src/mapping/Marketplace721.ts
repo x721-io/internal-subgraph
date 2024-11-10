@@ -153,6 +153,7 @@ export function handleAcceptBid(event: AcceptBid): void {
     updateTotalVolume(event.params._nft, ContractName.ERC_721, event.params._price)
     updateTotalVolumeMarket(event.address, ContractName.ERC_721, event.params._netPrice,BigInt.fromI32(1))
     updateTotalTransactionCollection(nft.contract, ContractName.ERC_721)
+    updateOwner(event.params._seller, event.params._nft, event.params._tokenId.toString(),false ,BigInt.fromI32(1), event.block.timestamp)
     ev.save();
   }
   if (evAsk && evAsk.event == "AskNew") {
