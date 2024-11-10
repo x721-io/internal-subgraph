@@ -379,11 +379,13 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
         // If the Contract does not exist, create it with an initial count of 1
     } else {
       let preCount = ownerContract.count
-      let currenCount = ownerContract.count.plus(amount)
+      let currenCount = ownerContract.count;
       if (increment == true) {
           ownerContract.count = ownerContract.count.plus(amount);
+          currenCount = currenCount.plus(amount);
       } else {
           ownerContract.count = ownerContract.count.minus(amount);
+          currenCount = currenCount.minus(amount);
       }
       if (ownerContract.count <= BigInt.fromI32(0)) {
         ownerContract.count = BigInt.fromI32(0);
@@ -402,6 +404,9 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
       }
       }else if(preCount == BigInt.fromI32(0) || currenCount > BigInt.fromI32(0)){
         ownerContract.count = ownerContract.count.plus(amount)
+        if(contract){
+            contract.count = contract.count.plus(BigInt.fromI32(1));
+        }
       }
       ownerContract.save();
     }
