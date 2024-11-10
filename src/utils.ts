@@ -358,7 +358,7 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
     let contractId = contractAddress.toHexString();
     let contract = Contract.load(contractId);
   
-    let ownerContractId = generateCombineKey([contractAddress.toHexString(), user.toHexString(), tokenId.toString()]);
+    let ownerContractId = generateCombineKey([contractAddress.toHexString(), user.toHexString()]);
     let ownerContract = OwnerContract.load(ownerContractId);
     if (!ownerContract) {
         // If OwnerContract does not exist, create a new one with the initial count
@@ -405,4 +405,62 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
       }
       ownerContract.save();
     }
+  }
+
+  export function updateOwnerv2(from: Address, to: Address ,contractAddress: Address, tokenId: String,amount: BigInt , timestamp: BigInt): void {
+    // // ----------------------------------------------------------------------------
+    // Try to load or create the Contract entity
+    let contractId = contractAddress.toHexString();
+    let contract = Contract.load(contractId);
+    
+
+    let fromID = generateCombineKey([contractAddress.toHexString(), from.toHexString()])
+    let toID = generateCombineKey([contractAddress.toHexString(), to.toHexString()])
+    
+    if(!contract){
+        contract = new Contract(contractId);
+        contract.contract = contractAddress.toHexString();
+        contract.count = BigInt.fromI32(1);
+    }
+    
+    // Load the "from" owner record
+    let ownerFrom = OwnerContract.load(fromID);
+    if (!ownerFrom) {
+      ownerFrom = new OwnerContract(fromID);
+      ownerFrom.contract = contractAddress.toHexString();
+      ownerFrom.count = amount.neg();
+      ownerFrom.user = from.toHexString();
+    } else {
+      ownerFrom.count = ownerFrom.count.minus(amount);
+    }
+
+    // Load the "to" owner record
+    let ownerTo = OwnerContract.load(toID);
+    if (!ownerTo) {
+      ownerTo = new OwnerContract(toID);
+      ownerTo.contract = contractAddress.toHexString();
+      ownerTo.count = amount;
+      ownerTo.user = to.toHexString();
+      // Increment contract count if "to" didn't exist before and addresses are valid
+      if (to.toHexString() != ContractAddress.ZERO && to.toHexString() != ContractAddress.erc721marketplace && to.toHexString() != ContractAddress.erc721marketplace) {
+        contract.count = contract.count.plus(BigInt.fromI32(1));
+      }
+      // Increment contract count as "to" didn't exist before
+      contract.count = contract.count.plus(BigInt.fromI32(1));
+    } else {
+      let preCount = ownerTo.count;
+      ownerTo.count = ownerTo.count.plus(amount);
+
+      if(preCount == BigInt.fromI32(0) && ownerTo.count > BigInt.fromI32(0) && to.toHexString() != ContractAddress.ZERO && to.toHexString() != ContractAddress.erc721marketplace && to.toHexString() != ContractAddress.erc721marketplace ){
+        contract.count = contract.count.plus(BigInt.fromI32(1));
+      }
+    }
+    // Adjust contract count based on "from" quantity
+    if (ownerFrom.count <= (BigInt.zero()) && to.toHexString() != ContractAddress.ZERO && to.toHexString() != ContractAddress.erc721marketplace && to.toHexString() != ContractAddress.erc721marketplace) {
+      contract.count = contract.count.minus(BigInt.fromI32(1));
+    }
+    // Save changes
+    ownerFrom.save();
+    ownerTo.save();
+    contract.save();
   }

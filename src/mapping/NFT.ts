@@ -2,7 +2,7 @@ import { Account, Creator, ERC1155Balance, ERC1155Contract, ERC1155Creator, ERC1
 import { Approval, ApprovalForAll, BaseUriChanged, CreateERC721Rarible, CreateERC721RaribleUser, Creators, DefaultApproval, MinterStatusChanged, RoyaltiesSet, Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { CreateERC1155Rarible, CreateERC1155RaribleUser, Supply, TransferBatch, TransferSingle, URI } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateContractCount, updateERC1155Balance, updateOwnedTokenCount, updateOwner } from "../utils";
+import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateContractCount, updateERC1155Balance, updateOwnedTokenCount, updateOwner, updateOwnerv2 } from "../utils";
 import { ContractAddress } from "../enum";
 export function handleApproval(event: Approval): void {
   // Logic to handle the Approval event
@@ -134,13 +134,14 @@ export function handleTransfer(event: Transfer): void {
   if (event.params.to.toHexString() == ContractAddress.erc721marketplace.toLowerCase()) {
     return;
   }
+  updateOwnerv2(event.params.from, event.params.to, event.address , event.params.tokenId.toString() , BigInt.fromI32(1) , event.block.timestamp);
   if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc721marketplace)) {
     updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
-    updateOwner(event.params.from, event.address, event.params.tokenId.toString(), false ,BigInt.fromI32(1), event.block.timestamp)
+    // updateOwner(event.params.from, event.address, event.params.tokenId.toString(), false ,BigInt.fromI32(1), event.block.timestamp)
   }
   if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc721marketplace)) {
     updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
-    updateOwner(event.params.to, event.address, event.params.tokenId.toString(),true ,BigInt.fromI32(1), event.block.timestamp)
+    // updateOwner(event.params.to, event.address, event.params.tokenId.toString(),true ,BigInt.fromI32(1), event.block.timestamp)
   }
   let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
   let token = ERC721Token.load(tokenId);
@@ -221,12 +222,13 @@ export function handleTransferSingle(event: TransferSingle): void {
     return;
   }
 
-  if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc1155marketplace)) {
-    updateOwner(event.params.from, event.address , event.params.id.toString(), false, event.params.value , event.block.timestamp)
-  }
-  if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
-    updateOwner(event.params.to, event.address, event.params.id.toString() ,true, event.params.value, event.block.timestamp)
-  }
+  updateOwnerv2(event.params.from, event.params.to, event.address , event.params.id.toString() , event.params.value  , event.block.timestamp);
+  // if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc1155marketplace)) {
+  //   updateOwner(event.params.from, event.address , event.params.id.toString(), false, event.params.value , event.block.timestamp)
+  // }
+  // if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
+  //   updateOwner(event.params.to, event.address, event.params.id.toString() ,true, event.params.value, event.block.timestamp)
+  // }
 
   let transaction = Transaction.load(event.transaction.hash.toHex());
   if (transaction == null) {
@@ -290,12 +292,13 @@ export function handleTranferBatch(event: TransferBatch): void {
     transaction.save();
   }
   for (let i = 0; i < event.params.ids.length; i++) {
-    if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc1155marketplace)) {
-      updateOwner(event.params.from, event.address , event.params.ids[i].toString(), false, event.params.values[i], event.block.timestamp)
-    }
-    if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
-      updateOwner(event.params.to, event.address, event.params.ids[i].toString(),true,event.params.values[i], event.block.timestamp)
-    }
+    updateOwnerv2(event.params.from, event.params.to, event.address ,event.params.ids[i].toString() , event.params.values[i], event.block.timestamp);
+    // if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc1155marketplace)) {
+    //   updateOwner(event.params.from, event.address , event.params.ids[i].toString(), false, event.params.values[i], event.block.timestamp)
+    // }
+    // if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
+    //   updateOwner(event.params.to, event.address, event.params.ids[i].toString(),true,event.params.values[i], event.block.timestamp)
+    // }
     // if (event.params.from != Address.fromString(ContractAddress.ZERO)) {
     //   updateOwnedTokenCountERC1155(event.params.from.toHexString(), event.address.toHexString(), false, event.params.values[i],event.block.timestamp)
     // }

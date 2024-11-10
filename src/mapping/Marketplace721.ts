@@ -113,7 +113,7 @@ export function handleTrade(event: Trade): void {
     updateOwnedTokenCount(event.params.buyer.toHexString(), event.params._nft.toHexString(), true, event.block.timestamp)
     updateOwnedTokenCount(event.params._seller.toHexString(), event.params._nft.toHexString(), false, event.block.timestamp)
     // updateOwner(event.params.buyer, event.params._nft, event.params._tokenId.toString(),true, event.block.timestamp)
-    updateOwner(event.params._seller, event.params._nft, event.params._tokenId.toString(),false ,BigInt.fromI32(1), event.block.timestamp)
+    // updateOwner(event.params._seller, event.params._nft, event.params._tokenId.toString(),false ,BigInt.fromI32(1), event.block.timestamp)
     updateTotalVolume(event.params._nft, ContractName.ERC_721, event.params._price)
     updateTotalVolumeMarket(event.address, ContractName.ERC_721, event.params._netPrice,BigInt.fromI32(1))
     updateTotalTransactionCollection(nft.contract, ContractName.ERC_721)
