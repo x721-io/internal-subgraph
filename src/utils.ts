@@ -430,8 +430,12 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
       ownerFrom.contract = contractAddress.toHexString();
       ownerFrom.count = amount.neg();
       ownerFrom.user = from.toHexString();
+      ownerFrom.timestamp = timestamp;
     } else {
       ownerFrom.count = ownerFrom.count.minus(amount);
+    }
+    if(ownerFrom.count <= BigInt.fromI32(0)){
+      ownerFrom.count = BigInt.fromI32(0)
     }
 
     // Load the "to" owner record
@@ -441,22 +445,19 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
       ownerTo.contract = contractAddress.toHexString();
       ownerTo.count = amount;
       ownerTo.user = to.toHexString();
+      ownerTo.timestamp = timestamp;
       // Increment contract count if "to" didn't exist before and addresses are valid
       if (to.toHexString() != ContractAddress.ZERO && to.toHexString() != ContractAddress.erc721marketplace && to.toHexString() != ContractAddress.erc721marketplace) {
         contract.count = contract.count.plus(BigInt.fromI32(1));
       }
-      // Increment contract count as "to" didn't exist before
-      contract.count = contract.count.plus(BigInt.fromI32(1));
     } else {
-      let preCount = ownerTo.count;
       ownerTo.count = ownerTo.count.plus(amount);
-
-      if(preCount == BigInt.fromI32(0) && ownerTo.count > BigInt.fromI32(0) && to.toHexString() != ContractAddress.ZERO && to.toHexString() != ContractAddress.erc721marketplace && to.toHexString() != ContractAddress.erc721marketplace ){
+      if(ownerTo.count > BigInt.fromI32(0) && to.toHexString() != ContractAddress.ZERO && to.toHexString() != ContractAddress.erc721marketplace && to.toHexString() != ContractAddress.erc721marketplace ){
         contract.count = contract.count.plus(BigInt.fromI32(1));
       }
     }
-    // Adjust contract count based on "from" quantity
-    if (ownerFrom.count <= (BigInt.zero()) && to.toHexString() != ContractAddress.ZERO && to.toHexString() != ContractAddress.erc721marketplace && to.toHexString() != ContractAddress.erc721marketplace) {
+    // // // Adjust contract count based on "from" quantity
+    if (ownerFrom.count <= BigInt.fromI32(0) && from.toHexString() != ContractAddress.ZERO && from.toHexString() != ContractAddress.erc721marketplace && from.toHexString() != ContractAddress.erc721marketplace) {
       contract.count = contract.count.minus(BigInt.fromI32(1));
     }
     // Save changes
