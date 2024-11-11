@@ -163,7 +163,7 @@ export function handleBuy(event: Buy): void {
   updateTotalVolume(Address.fromString(transaction.address!), ContractName.ERC_1155, event.params.price)
   updateTotalVolumeMarket(event.address, ContractName.ERC_1155, event.params.netPrice, event.params.quantity)
   updateTotalTransactionCollection(nft.contract, ContractName.ERC_1155)
-  updateOwner(Address.fromString(transaction.from!) , Address.fromString(contract.id) , nft.tokenId , false, event.params.quantity, event.block.timestamp)
+  // updateOwner(Address.fromString(transaction.from!) , Address.fromString(contract.id) , nft.tokenId , false, event.params.quantity, event.block.timestamp)
   transaction.save();
 
   updateBlockEntity(
