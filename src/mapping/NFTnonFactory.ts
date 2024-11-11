@@ -2,7 +2,7 @@ import { ERC1155Balance, ERC1155Contract, ERC1155Token, ERC1155Transfer, ERC721C
 import { Transfer } from "../../generated/templates/ERC721Proxy/ERC721Proxy";
 import { TransferSingle, TransferBatch } from "../../generated/templates/ERC1155Proxy/ERC1155Proxy";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance, updateContractCount, updateOwnedTokenCount, updateOwner } from "../utils";
+import { fetchOrCreateAccount, generateCombineKey, updateBlockEntity, updateERC1155Balance, updateContractCount, updateOwnedTokenCount, updateOwner, updateOwnerv2 } from "../utils";
 import { ContractAddress } from "../enum";
   export function handleTransfer(event: Transfer): void {
     if (event.params.to.toHexString() == ContractAddress.erc721marketplace) {
@@ -27,13 +27,12 @@ import { ContractAddress } from "../enum";
       contract.createAt = event.block.timestamp;
       contract.save()
     }
+    updateOwnerv2(event.params.from, event.params.to, event.address, event.params.tokenId.toString(),BigInt.fromI32(1),event.block.timestamp,'ERC721');
     if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc721marketplace)) {
       updateOwnedTokenCount(event.params.from.toHexString(), event.address.toHexString(), false, event.block.timestamp)
-      updateOwner(event.params.from, event.address, event.params.tokenId.toString(), false ,BigInt.fromI32(1), event.block.timestamp)
     }
     if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc721marketplace)) {
       updateOwnedTokenCount(event.params.to.toHexString(), event.address.toHexString(), true, event.block.timestamp)
-      updateOwner(event.params.to, event.address, event.params.tokenId.toString(),true ,BigInt.fromI32(1), event.block.timestamp)
     }
     log.warning('transfer nè: {} {} {}', [event.address.toHexString(), event.params.from.toHexString(), event.params.to.toHexString()])
     let tokenId = generateCombineKey([event.address.toHexString(), event.params.tokenId.toString()]);
@@ -99,13 +98,7 @@ import { ContractAddress } from "../enum";
       return;
     }
 
-    if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc1155marketplace)) {
-      updateOwner(event.params.from, event.address , event.params.id.toString(), false, event.params.value , event.block.timestamp)
-    }
-    if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
-      updateOwner(event.params.to, event.address, event.params.id.toString() ,true, event.params.value, event.block.timestamp)
-    }
-
+    updateOwnerv2(event.params.from, event.params.to, event.address, event.params.id.toString(),event.params.value,event.block.timestamp,'ERC1155');
     let contract = ERC1155Contract.load(event.address.toHex());
     if (contract !== null) {
       contract.name = null;
@@ -230,12 +223,7 @@ import { ContractAddress } from "../enum";
     }
     for (let i = 0; i < event.params.ids.length; i++) {
       let tokenId = generateCombineKey([event.address.toHexString(), event.params.ids[i].toString()]);
-      if (event.params.from != Address.fromString(ContractAddress.ZERO) && event.params.to != Address.fromString(ContractAddress.erc1155marketplace)) {
-        updateOwner(event.params.from, event.address , event.params.ids[i].toString(), false, event.params.values[i], event.block.timestamp)
-      }
-      if (event.params.to != Address.fromString(ContractAddress.ZERO) && event.params.from != Address.fromString(ContractAddress.erc1155marketplace)) {
-        updateOwner(event.params.to, event.address, event.params.ids[i].toString(),true,event.params.values[i], event.block.timestamp)
-      }
+      updateOwnerv2(event.params.from, event.params.to, event.address, event.params.ids[i].toString() ,event.params.values[i] ,event.block.timestamp,'ERC1155');
       let token = ERC1155Token.load(tokenId);
       if (token == null) {
         token = new ERC1155Token(tokenId);
