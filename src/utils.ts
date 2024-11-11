@@ -434,7 +434,7 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
     } else {
       ownerFrom.count = ownerFrom.count.minus(amount);
     }
-    if(ownerFrom.count <= BigInt.fromI32(0)){
+    if(ownerFrom.count.le(BigInt.fromI32(0))){
       ownerFrom.count = BigInt.fromI32(0)
     }
 
@@ -447,17 +447,17 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
       ownerTo.user = to.toHexString();
       ownerTo.timestamp = timestamp;
       // Increment contract count if "to" didn't exist before and addresses are valid
-      if (to.toHexString() != ContractAddress.ZERO && to.toHexString() != ContractAddress.erc721marketplace && to.toHexString() != ContractAddress.erc721marketplace) {
+      if (to.toHexString() != ContractAddress.ZERO && (to.toHexString() != ContractAddress.erc721marketplace.toLowerCase()) && (to.toHexString() != ContractAddress.erc1155marketplace.toLowerCase())) {
         contract.count = contract.count.plus(BigInt.fromI32(1));
       }
     } else {
       ownerTo.count = ownerTo.count.plus(amount);
-      if(ownerTo.count > BigInt.fromI32(0) && to.toHexString() != ContractAddress.ZERO && to.toHexString() != ContractAddress.erc721marketplace && to.toHexString() != ContractAddress.erc721marketplace ){
+      if(ownerTo.count.gt(BigInt.fromI32(0)) && to.toHexString() != ContractAddress.ZERO && (to.toHexString() != ContractAddress.erc721marketplace.toLowerCase()) && (to.toHexString() != ContractAddress.erc1155marketplace.toLowerCase())){
         contract.count = contract.count.plus(BigInt.fromI32(1));
       }
     }
     // // // Adjust contract count based on "from" quantity
-    if (ownerFrom.count <= BigInt.fromI32(0) && from.toHexString() != ContractAddress.ZERO && from.toHexString() != ContractAddress.erc721marketplace && from.toHexString() != ContractAddress.erc721marketplace) {
+    if (ownerFrom.count.le(BigInt.fromI32(0)) && from.toHexString() != ContractAddress.ZERO && (from.toHexString() != ContractAddress.erc721marketplace.toLowerCase()) && (from.toHexString()!= ContractAddress.erc1155marketplace.toLowerCase())) {
       contract.count = contract.count.minus(BigInt.fromI32(1));
     }
     // Save changes
