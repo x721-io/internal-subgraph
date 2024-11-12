@@ -9,7 +9,7 @@ import {
   ProtocolFee
 } from "../../generated/ERC1155Marketplace/ERC1155Marketplace"
 import { ERC1155Contract, ERC1155Token, MarketEvent1155, MarketFee } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket, generateCombineKey, updateOwner } from "../utils";
+import { fetchOrCreateAccount, fetchOrCreateERC1155Tokens, updateBlockEntity, updateERC1155Balance, updateOnSaleCount1155, updateSaleStatus1155, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket, generateCombineKey, updateOwner, updateOwner1155 } from "../utils";
 import { ContractAddress, ContractName } from "../enum";
 
 
@@ -42,6 +42,7 @@ export function handleAskNew(event: AskNew): void {
     }
     transaction.save()
     updateOnSaleCount1155(event.params.seller, event.params.nft, event.params.tokenId, true);
+    updateOwner1155(event.params.seller, event.address, event.params.nft, event.params.tokenId.toString(),event.params.quantity,event.block.timestamp,'ERC1155');
     updateBlockEntity(
       event, event.params.nft, event.params.tokenId,
       event.params.seller, Address.fromString(transaction.from!), 'AskNew', event.params.pricePerUnit,

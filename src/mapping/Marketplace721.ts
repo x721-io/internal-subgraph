@@ -8,7 +8,7 @@ import {
   CancelBid
 } from "../../generated/ERC721Marketplace/ERC721Marketplace"
 import { ERC721Token, MarketEvent721, MarketFee } from "../../generated/schema"
-import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateOwner, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
+import { fetchOrCreateAccount, fetchOrCreateERC721Tokens, generateCombineKey, updateBlockEntity, updateOwnedTokenCount, updateOwner, updateOwner721, updateTotalTransactionCollection, updateTotalVolume, updateTotalVolumeMarket } from "../utils";
 import { ContractAddress, ContractName } from "../enum";
 import { ProtocolFee } from "../../generated/ERC1155Marketplace/ERC1155Marketplace";
 
@@ -59,6 +59,9 @@ export function handleAskNew(event: AskNew): void {
     }
     updateBlockEntity(event, event.params._nft, event.params._tokenId, event.params._seller, Address.fromString(ContractAddress.ZERO), 'AskNew', event.params._price, BigInt.fromI32(1), event.params._quoteToken);
     ev.save();
+    
+    updateOwner721(event.params._seller, event.address, event.params._nft, event.params._tokenId.toString(),BigInt.fromI32(1),event.block.timestamp,'ERC721');
+    
     let account = fetchOrCreateAccount(event.params._seller);
     account.onSaleCount = account.onSaleCount.plus(BigInt.fromI32(1));
     account.save();
