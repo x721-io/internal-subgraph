@@ -470,11 +470,11 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
       }
     }
 
-    log.info('=========Delete Owner From Count 12345234536757=======: {}, {} , {} , {}', [ownerFrom.user.toString(), ownerFrom.count.toString(), ownerTo.user, ownerTo.count.toString() ,contract.contract.toString()])
+    // log.info('=========Delete Owner From Count 12345234536757=======: {}, {} , {} , {}', [ownerFrom.user.toString(), ownerFrom.count.toString(), ownerTo.user, ownerTo.count.toString() ,contract.contract.toString()])
     // // // Adjust contract count based on "from" quantity
     if (ownerFrom.count.equals(BigInt.fromI32(0)) && from.toHexString() != ContractAddress.ZERO) {
       if(type == 'ERC721' && (from.toHexString() != ContractAddress.erc721marketplace.toLowerCase())){
-        log.info('=========Delete Owner From Count 6=======: {}, {} , {} ', [ownerFrom.user.toString(), contract.contract.toString(),ownerFrom.count.toString()])
+        // log.info('=========Delete Owner From Count 6=======: {}, {} , {} ', [ownerFrom.user.toString(), contract.contract.toString(),ownerFrom.count.toString()])
         contract.count = contract.count.minus(BigInt.fromI32(1));
       }
       if(type == 'ERC1155' && (from.toHexString()!= ContractAddress.erc1155marketplace.toLowerCase())){
