@@ -2,31 +2,31 @@
   "network": "mainnet",
   "startBlock": "5310000",
   "erc721factory": {
-    "address": "0xbffb662ea0cc38a47379d458b35d1becd6da9115"
+    "address": "0x30b4ce0d2c9bb5eb803fbc1309811b355b9268ab"
   },
   "erc1155factory": {
-    "address": "0xc8f6adc33a1b4010cabbbacbbdf79aaaee33fcd5"
+    "address": "0x5e5ac4dd6c586d8fc809c7dbb8d261fb2ab86fa8"
   },
   "exchangev2": {
     "address" : "0xbB3074305ba67c2E8c9af6dE2ADCbc970C1a59Fa"
   },
   "erc721marketplace": {
-    "address": "0x52b9abd261bb733b44b06148fd30f40290a6e017"
+    "address": "0x80a2d549e5e5d32e0f009c3a23422d89777f5eed"
   },
   "erc1155marketplace": {
-    "address": "0x571e3b002ee611fb0fd240c0ca2c85b6dd4e7e33"
+    "address": "0xc4b56a14c2cc7300391d4d9fa30c7a2a1f1a76b2"
   },
   "erc721Nonfactory": {
     "address": "0xC102BfEeE0674798Df49618E12b45FcD8e7C0EC0"
   },
   "erc721Base": {
-    "address": "0x7ddb1accb3160cf6ba4fee23e26b6d9ad45bc824"
+    "address": "0x24ac3a41a0c67970ed16bd79a64d08a7f4f4e352"
   },
   "erc1155Base": {
-    "address": "0xDa4a022bBC044B8097159C8f4527FE7c6111a70C"
+    "address": "0xccf9fa2245394aca5c96038e4b8e493d11255f1b"
   },
   "royaltiesRegistry": {
-    "address": "0x511d07480ee6ac8cde1da324ee2814288594604b",
+    "address": "0xb084b960cd3ca5c2f4dffba994635ef36faef563",
     "startBlock" : "20100500"
   }
 }
