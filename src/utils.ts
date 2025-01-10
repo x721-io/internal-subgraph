@@ -407,10 +407,13 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
     let contractId = contractAddress.toHexString();
     let contract = Contract.load(contractId);
     
-    log.info('=========Delete updateOwner1155=======: from: {}, to: {}, contract:{}, amount:{}', [from.toHexString(), to.toHexString() ,contractAddress.toHexString(), amount.toString()])
 
     let fromID = generateCombineKey([contractAddress.toHexString(), from.toHexString()])
     let toID = generateCombineKey([contractAddress.toHexString(), to.toHexString()])
+
+    if(fromID == toID){
+      return;
+    }
     
     if(!contract){
         contract = new Contract(contractId);
@@ -480,7 +483,11 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
 
     let fromID = generateCombineKey([contractAddress.toHexString(), from.toHexString()])
     let toID = generateCombineKey([contractAddress.toHexString(), to.toHexString()])
-    
+
+    if(fromID == toID){
+      return;
+    }
+
     if(!contract){
         contract = new Contract(contractId);
         contract.contract = contractAddress.toHexString();
@@ -509,7 +516,6 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
       ownerTo.count = amount;
       ownerTo.user = to.toHexString();
       ownerTo.timestamp = timestamp;
-      
       // Increment contract count if "to" didn't exist before and addresses are valid
       if (to.toHexString() != ContractAddress.ZERO) {
         contract.count = contract.count.plus(BigInt.fromI32(1));
@@ -517,7 +523,7 @@ export function updateOwner(user: Address, contractAddress: Address, tokenId: St
     } else {
       let preCount = ownerTo.count;
       ownerTo.count = ownerTo.count.plus(amount);
-      if(preCount.equals(BigInt.fromI32(0)) && ownerTo.count.gt(BigInt.fromI32(0)) && to.toHexString() != ContractAddress.ZERO){
+      if((preCount.equals(BigInt.fromI32(0))) && (amount.gt(BigInt.fromI32(0)))){
         contract.count = contract.count.plus(BigInt.fromI32(1));
       }
     }
