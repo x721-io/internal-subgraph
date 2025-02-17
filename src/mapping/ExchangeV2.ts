@@ -24,6 +24,8 @@ export function handleFillOrder(event : FillOrder ): void {
         order.filledQty = event.params.currentFilledValue;
         order.timestamp = event.block.timestamp;
         order.nonce = event.params.randomValue;
+        order.tokenId = event.params.takeAssetId;
+        order.orderType = getOrderType(event.params.orderType);
     }
     order.save();
 }
@@ -66,3 +68,22 @@ export function handleTransferOrder(from: Address, to:Address, tokenId: string, 
     }
     orderTransfer.save();
 }
+
+function getOrderType(value: number): string | null {
+    // return OrderType[value]
+    if(value == 0){
+        return  'SINGLE'
+    }
+    if(value == 1){
+        return 'BULK'
+    }
+    if(value == 2){
+        return 'BID'
+    }
+    if(value == 3) {
+        return 'BID_COLLECTION'
+    }
+    else {
+        return 'NULL'
+    }
+  }

@@ -6,8 +6,8 @@ export namespace DealType {
 export namespace ContractAddress {
     export const ZERO = "0x0000000000000000000000000000000000000000"
     export const WETH9 = "0x59541A6A47C410270BF419aCabe40963d75Fce5D"
-    export const erc721marketplace = "0xcC84E04388B201b49Bb3a5C9cc6Bf7907024A589"
-    export const erc1155marketplace = "0xe6B23f494ca1e49fE76cc3A606bfbAB45585AB43"
+    export const erc721marketplace = "0x000000000000000000000000000000000000dEaD"
+    export const erc1155marketplace = "0x000000000000000000000000000000000000dEaD"
 }
 
 export namespace ContractName {
@@ -19,4 +19,11 @@ export namespace ContractName {
 
 export namespace Coefficient {
     export const FEE = "0.05"
+}
+
+export enum OrderType {
+    SINGLE,
+    BULK,
+    BID,
+    BID_COLLECTION,
 }
