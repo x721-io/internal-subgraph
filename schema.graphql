@@ -305,9 +305,9 @@ type OwnerContract @entity {
 
 type Order @entity{
   id: ID!
-  maker: Account!,
-  taker: Account,
-  sig: String!,
+  maker: Account!
+  taker: Account
+  sig: String!
   index: Int!
   status: OrderStatus!
   takeQty: BigInt!
@@ -315,6 +315,8 @@ type Order @entity{
   nonce: BigInt!
   timestamp: BigInt!
   remaining: BigInt
+  orderType: String
+  tokenId: BigInt
 }
 
 type OrderTransfer @entity{
@@ -345,5 +347,4 @@ enum OrderStatusTransfer {
   TRANSFER
   TRANSFERFILLED
 }
-
 

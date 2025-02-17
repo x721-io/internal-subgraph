@@ -20,3 +20,10 @@ export namespace ContractName {
 export namespace Coefficient {
     export const FEE = "0.05"
 }
+
+export enum OrderType {
+    SINGLE,
+    BULK,
+    BID,
+    BID_COLLECTION,
+}

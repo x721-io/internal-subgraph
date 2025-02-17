@@ -297,7 +297,7 @@ dataSources:
         - name: Order
           file: ./abis/Order.json
       eventHandlers:
-        - event: FillOrder(address,address,bytes,uint16,uint256,uint256,uint256)
+        - event: FillOrder(uint8,address,address,bytes,uint16,uint256,uint256,uint256,uint256)
           handler: handleFillOrder 
         - event: CancelOrder(address,bytes,uint16)
           handler: handleCancleOrder
